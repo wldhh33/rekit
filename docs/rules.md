@@ -59,7 +59,7 @@
 ## 4. 可复现验证
 
 ```bash
-python -m pytest -q                      # 20 项（判据 7 + 解析 6 + 边界 7）
+python -m pytest -q                      # 25 项（判据 7 + 解析 6 + 边界 7 + 基准 5）
 python -m rekit triage tests/fixtures/hello_rs.exe \
                       tests/fixtures/hello_rs.packed.exe -o out.json -m out.md
 ```
