@@ -6,12 +6,13 @@ v0.1 只有 triage；unpack / symbols 是空实现，接口先定下来，避免
 
 from __future__ import annotations
 
-from . import symbols, triage, unpack
+from . import map, symbols, triage, unpack
 
 REGISTRY = {
     triage.NAME: triage,
     unpack.NAME: unpack,
+    map.NAME: map,
     symbols.NAME: symbols,
 }
 
-__all__ = ["REGISTRY", "triage", "unpack", "symbols"]
+__all__ = ["REGISTRY", "triage", "unpack", "map", "symbols"]

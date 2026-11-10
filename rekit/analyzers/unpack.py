@@ -1,19 +1,23 @@
-"""unpack 分析器 —— 静态脱壳（v0.2 目标，当前为空实现）。
+"""unpack 分析器 —— 静态脱壳 UPX（PE32+ / NRV2B / NRV2E）。
 
-接口先定死，v0.2 用学习项目里已验证的探针实现：
-`实践/2026-11-10-samples/upx_static_probe.py` 已证明纯静态可解出 UPX PackHeader、
-NRV2B 解压、filter 0x49 反过滤，`.text` / `.pdata` 与原件逐字节相同。
-v0.2 还差 rebuildImports / rebuildRelocs / rebuildTls 与按原布局写文件。
+不调用 ``upx -d``：PackHeader → 解压 → 反过滤 → IAT/重定位重建 → 按原布局写文件，
+每一步都输出"通过/失败 + 证据"。实现与学习项目的 ``工具库/pe/unpack_upx.py``
+共用同一份代码（后者现在是 ``rekit.core.upx`` 的薄包装），避免两份实现漂移。
 """
 
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Any
+
+from ..core.upx import unpack_many
+
 NAME = "unpack"
-DESCRIPTION = "静态脱壳（UPX 优先）：OEP 定位 + 解压 + IAT 重建 —— v0.2 未实现"
-PLANNED_VERSION = "0.2.0"
+DESCRIPTION = "静态脱壳（UPX / PE32+）：PackHeader → NRV2B/NRV2E → 反过滤 → IAT/重定位重建"
+VERSION = "0.2.0"
 
 
-def run(paths: list[str]) -> dict:
-    raise NotImplementedError(
-        f"unpack 在 v{PLANNED_VERSION} 实现；当前版本只提供 triage。"
-    )
+def run(paths: list[str], out_dir: str | None = None,
+        verify_only: bool = False) -> dict[str, Any]:
+    payload = unpack_many(paths, Path(out_dir) if out_dir else None, verify_only=verify_only)
+    return {"analyzer": NAME, "results": payload["results"], "errors": payload["errors"]}

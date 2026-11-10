@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rekit"
-version = "0.1.0"
+version = "0.2.0"
 description = "Modular binary analysis pipeline: triage → unpack → symbols → report, every conclusion traceable to bytes"
 readme = "README.md"
 requires-python = ">=3.10"

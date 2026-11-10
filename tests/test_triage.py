@@ -77,13 +77,6 @@ def test_cli_writes_json_and_markdown(tmp_path):
     assert "判据说明与边界" in md
 
 
-def test_cli_unpack_reports_planned_version():
-    proc = subprocess.run([sys.executable, "-m", "rekit", "unpack", str(RAW)],
-                          cwd=ROOT, capture_output=True, text=True)
-    assert proc.returncode == 2
-    assert "0.2.0" in proc.stderr
-
-
 # --------------------------------------------------------------------------
 # 真实世界的边界：不存在的文件、非 PE、目录、写不出去的输出路径
 # --------------------------------------------------------------------------

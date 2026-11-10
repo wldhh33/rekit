@@ -44,6 +44,28 @@ DIR_NAMES = [
 ]
 
 MEM_EXECUTE = 0x20000000
+MEM_READ = 0x40000000
+MEM_WRITE = 0x80000000
+
+# 加载器映射分类：RVA 在文件里有没有对应字节
+MAP_HEADERS = "headers"        # 头部区，1:1 映射
+MAP_FILE = "file"              # 文件有字节，loader 原样映射
+MAP_ZERO = "zero_fill"         # 内存有、文件无（VirtualSize > RawSize，或 VirtualSize=0 时的 .bss 尾部）
+MAP_SLACK = "file_slack"       # 文件有、内存无（RawSize > VirtualSize，填充/末尾对齐）
+MAP_PAD = "align_pad"          # 节末尾到 SectionAlignment 边界，loader 补零
+MAP_GAP = "gap"                # 落在 SizeOfImage 内但不属于任何节
+MAP_BEYOND = "beyond_image"    # >= SizeOfImage
+
+
+def align_up(value: int, alignment: int) -> int:
+    if not alignment:
+        return value
+    return (value + alignment - 1) // alignment * alignment
+
+
+def effective_vsize(section: "Section") -> int:
+    """PE 规范：VirtualSize=0 时 loader 用 SizeOfRawData 作为内存长度。"""
+    return section.virtual_size or section.size_of_raw_data
 
 
 class PEError(Exception):
@@ -250,6 +272,146 @@ class PE:
         if delta >= s.size_of_raw_data:
             return None
         return s.pointer_to_raw_data + delta
+
+    # ---------- 加载器映射（D4） ----------
+    def section_map(self) -> list[dict[str, Any]]:
+        """每个节的「RVA 区间 ↔ FOA 区间」对照，附带文件多出/内存补零。
+
+        与 `rva_to_foa` 的区别：这里描述 loader 的映射结果，不判断单点是否可读。
+        - 内存区间按 VirtualSize（为 0 时用 RawSize）向上取到 SectionAlignment；
+        - 文件区间是 RawPtr..RawPtr+RawSize；
+        - `file_slack` = 文件里有、但超出 VirtualSize 不会被映射的字节；
+        - `zero_fill` = 内存里有、文件里没有的字节（BSS/解压区）。
+        """
+        rows: list[dict[str, Any]] = []
+        for s in self.sections:
+            vs = effective_vsize(s)
+            mem_end = align_up(s.virtual_address + vs, self.section_alignment)
+            rows.append({
+                "index": s.index,
+                "name": s.name,
+                "rva_start": s.virtual_address,
+                "rva_end": s.virtual_address + vs,
+                "mem_end": mem_end,
+                "foa_start": s.pointer_to_raw_data,
+                "foa_end": s.pointer_to_raw_data + s.size_of_raw_data,
+                "virtual_size": s.virtual_size,
+                "raw_size": s.size_of_raw_data,
+                "file_backed": min(vs, s.size_of_raw_data),
+                "file_slack": max(0, s.size_of_raw_data - vs),
+                "zero_fill": max(0, vs - s.size_of_raw_data),
+                "align_pad": mem_end - (s.virtual_address + vs),
+                "executable": s.is_executable,
+                "readable": bool(s.characteristics & MEM_READ),
+                "writable": bool(s.characteristics & MEM_WRITE),
+            })
+        return rows
+
+    def map_rva(self, rva: int) -> dict[str, Any]:
+        """判断某个 RVA 在文件/内存里的归属，返回 kind + 证据说明。
+
+        kind 取值见模块常量 MAP_*；`foa` 仅当 kind=file/headers 时非 None。
+        """
+        if rva < 0:
+            return {"rva": rva, "kind": "invalid", "section": None, "foa": None,
+                    "detail": "非法 RVA（负数）"}
+        if rva < self.size_of_headers:
+            return {"rva": rva, "kind": MAP_HEADERS, "section": None, "foa": rva,
+                    "detail": f"RVA 0x{rva:X} < SizeOfHeaders=0x{self.size_of_headers:X}，头部按 1:1 映射"}
+        if rva >= self.size_of_image:
+            return {"rva": rva, "kind": MAP_BEYOND, "section": None, "foa": None,
+                    "detail": f"RVA 0x{rva:X} >= SizeOfImage=0x{self.size_of_image:X}，loader 不会映射"}
+
+        for s in self.sections:
+            vs = effective_vsize(s)
+            start = s.virtual_address
+            end = align_up(start + vs, self.section_alignment)
+            if not (start <= rva < end):
+                continue
+            off = rva - start
+            backed = min(vs, s.size_of_raw_data)
+            if off < backed:
+                foa = s.pointer_to_raw_data + off
+                return {"rva": rva, "kind": MAP_FILE, "section": s.name, "foa": foa,
+                        "detail": f"节 {s.name} 内偏移 0x{off:X} < 文件长度 0x{backed:X}，"
+                                  f"FOA=0x{foa:X}"}
+            if off < vs:
+                return {"rva": rva, "kind": MAP_ZERO, "section": s.name, "foa": None,
+                        "detail": f"节 {s.name} 内偏移 0x{off:X} 在 "
+                                  f"[RawSize=0x{s.size_of_raw_data:X}, VirtualSize=0x{vs:X})，"
+                                  f"内存补零、文件里没有"}
+            if off < s.size_of_raw_data:
+                foa = s.pointer_to_raw_data + off
+                return {"rva": rva, "kind": MAP_SLACK, "section": s.name, "foa": None,
+                        "detail": f"节 {s.name} 内偏移 0x{off:X} >= VirtualSize=0x{vs:X}，"
+                                  f"文件字节在 FOA=0x{foa:X} 但不被映射"}
+            return {"rva": rva, "kind": MAP_PAD, "section": s.name, "foa": None,
+                    "detail": f"节 {s.name} 末尾对齐填充 0x{off:X}（VirtualSize=0x{vs:X}，"
+                              f"SectionAlignment=0x{self.section_alignment:X}），loader 补零"}
+
+        return {"rva": rva, "kind": MAP_GAP, "section": None, "foa": None,
+                "detail": f"RVA 0x{rva:X} 在 SizeOfImage 内但不属于任何节"}
+
+    def loader_notes(self) -> list[str]:
+        """加载器视角的不一致项：文件有/内存无、截断、未对齐、重叠、入口不在代码节。"""
+        notes: list[str] = []
+        size = len(self.data)
+        for s in self.sections:
+            vs = effective_vsize(s)
+            if s.pointer_to_raw_data + s.size_of_raw_data > size and s.size_of_raw_data:
+                notes.append(
+                    f"节 {s.name} 原始数据越界：FOA 0x{s.pointer_to_raw_data:X}+0x{s.size_of_raw_data:X} "
+                    f"> 文件 0x{size:X}（文件被截断，loader 会补零）")
+            if s.size_of_raw_data > vs:
+                notes.append(
+                    f"节 {s.name} 文件多出 0x{s.size_of_raw_data - vs:X} 字节（RawSize > VirtualSize），"
+                    f"这些字节不会被映射")
+            if vs > s.size_of_raw_data:
+                notes.append(
+                    f"节 {s.name} 内存补零 0x{vs - s.size_of_raw_data:X} 字节（VirtualSize > RawSize）")
+            if self.section_alignment and s.virtual_address % self.section_alignment:
+                notes.append(
+                    f"节 {s.name} VA 0x{s.virtual_address:X} 未按 SectionAlignment=0x{self.section_alignment:X} "
+                    f"对齐，loader 会向下取整")
+            if s.pointer_to_raw_data and self.file_alignment and \
+                    s.pointer_to_raw_data % self.file_alignment:
+                notes.append(
+                    f"节 {s.name} RawPtr 0x{s.pointer_to_raw_data:X} 未按 "
+                    f"FileAlignment=0x{self.file_alignment:X} 对齐")
+        spans = sorted((s.virtual_address, effective_vsize(s), s.name) for s in self.sections)
+        for (a_start, a_size, a_name), (b_start, _b_size, b_name) in zip(spans, spans[1:]):
+            if a_start + a_size > b_start:
+                notes.append(f"节 {a_name} 与 {b_name} 的 RVA 区间重叠")
+        last_end = max((s.virtual_address + effective_vsize(s) for s in self.sections), default=0)
+        if self.size_of_image < last_end:
+            notes.append(
+                f"SizeOfImage=0x{self.size_of_image:X} 小于末节结束 0x{last_end:X}，镜像会被截断")
+        if self.entry_rva:
+            s = self.section_of_rva(self.entry_rva)
+            if s is not None and not s.is_executable:
+                notes.append(f"入口 RVA 0x{self.entry_rva:X} 落在不可执行节 {s.name}")
+        return notes
+
+    def format_map(self, probes: list[int] | None = None) -> dict[str, Any]:
+        """map 命令的完整载荷：节表对照 + loader 提示 + RVA 探针。"""
+        return {
+            "file": self.path,
+            "format": self.pe_format,
+            "arch": self.arch,
+            "image_base": f"0x{self.image_base:X}",
+            "size_of_image": f"0x{self.size_of_image:X}",
+            "size_of_headers": f"0x{self.size_of_headers:X}",
+            "section_alignment": f"0x{self.section_alignment:X}",
+            "file_alignment": f"0x{self.file_alignment:X}",
+            "sections": [
+                {**row,
+                 "rva": f"0x{row['rva_start']:X}-0x{row['rva_end']:X}",
+                 "foa": f"0x{row['foa_start']:X}-0x{row['foa_end']:X}"}
+                for row in self.section_map()
+            ],
+            "notes": self.loader_notes(),
+            "probes": [self.map_rva(r) for r in (probes or [])],
+        }
 
     # ---------- 导入 / 导出 ----------
     def imports(self) -> list[Import]:

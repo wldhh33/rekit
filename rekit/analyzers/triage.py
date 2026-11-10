@@ -9,12 +9,11 @@ v0.1 是 PE 加壳/结构异常的启发式，不是"是恶意软件"的结论�
 
 from __future__ import annotations
 
-import glob
-import os
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-from ..core.pe import PE, PE_EXTS, PEError
+from ..core.files import expand_paths
+from ..core.pe import PE, PEError
 
 NAME = "triage"
 DESCRIPTION = "PE 概览 + 加壳/结构异常评分（组合判据，带置信度与证据偏移）"
@@ -179,26 +178,11 @@ def analyze_file(path: str) -> TriageResult:
     )
 
 
-def _expand(paths: list[str]) -> list[str]:
-    out: list[str] = []
-    for p in paths:
-        if any(ch in p for ch in "*?["):
-            out.extend(sorted(glob.glob(p)))
-        elif os.path.isdir(p):
-            out.extend(sorted(
-                os.path.join(p, n) for n in os.listdir(p)
-                if os.path.isfile(os.path.join(p, n)) and n.lower().endswith(PE_EXTS)
-            ))
-        else:
-            out.append(p)
-    return out
-
-
 def run(paths: list[str]) -> dict[str, Any]:
     """对若干文件跑 triage，返回可直接落盘的结构（JSON 友好）。"""
     results: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
-    files = _expand(paths)
+    files = expand_paths(paths)
     if not files:
         # 空目录 / 通配符无匹配 / 全是非 PE 扩展名：显式报错，不假装"成功处理 0 个文件"
         return {"analyzer": NAME, "results": [], "errors": [{
