@@ -42,13 +42,21 @@ def cmd_triage(args: argparse.Namespace) -> int:
     for e in payload["errors"]:
         print(f"[跳过] {e['file']}: {e['error']}", file=sys.stderr)
 
-    if args.json:
-        _write_json(args.json, payload)
-        print(f"[JSON] {args.json}")
-    if args.markdown:
-        with open(args.markdown, "w", encoding="utf-8") as f:
-            f.write(render_triage(payload, __version__))
-        print(f"[MD]   {args.markdown}")
+    if args.json or args.markdown:
+        try:
+            if args.json:
+                _write_json(args.json, payload)
+                print(f"[JSON] {args.json}")
+            if args.markdown:
+                with open(args.markdown, "w", encoding="utf-8") as f:
+                    f.write(render_triage(payload, __version__))
+                print(f"[MD]   {args.markdown}")
+        except OSError as e:
+            print(f"[输出失败] {type(e).__name__}: {e}（目录不存在或无写权限）", file=sys.stderr)
+            return 1
+
+    if len(payload["results"]) + len(payload["errors"]) > 1:
+        print(f"[汇总] 成功 {len(payload['results'])} / 失败 {len(payload['errors'])}")
 
     if payload["results"] or not payload["errors"]:
         return 0

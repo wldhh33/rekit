@@ -185,7 +185,14 @@ def run(paths: list[str]) -> dict[str, Any]:
     """对若干文件跑 triage，返回可直接落盘的结构（JSON 友好）。"""
     results: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
-    for path in _expand(paths):
+    files = _expand(paths)
+    if not files:
+        # 空目录 / 通配符无匹配 / 全是非 PE 扩展名：显式报错，不假装"成功处理 0 个文件"
+        return {"analyzer": NAME, "results": [], "errors": [{
+            "file": ", ".join(paths),
+            "error": "NoFilesFound: 没有匹配到可分析的文件（检查路径、扩展名或通配符）",
+        }]}
+    for path in files:
         try:
             results.append(analyze_file(path).as_dict())
         except (PEError, OSError) as e:

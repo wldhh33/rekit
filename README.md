@@ -100,6 +100,27 @@ def run(paths: list[str]) -> dict: ...           # 返回 JSON 友好结构
 在 `rekit/analyzers/__init__.py` 的 `REGISTRY` 注册，再在 `rekit/cli.py` 加子命令即可。
 架构、证据链规则与版本路线见 [DESIGN.md](DESIGN.md)；判据阈值与误报边界见 [docs/rules.md](docs/rules.md)。
 
+## English quickstart
+
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest -q
+python -m rekit triage tests/fixtures/hello_rs.exe tests/fixtures/hello_rs.packed.exe -o out.json -m out.md
+```
+
+```
+normal    无   0分  未发现加壳迹象                      tests\fixtures\hello_rs.exe
+upx       高  12分  UPX（节名成对 + 高熵 + 导入截断）     tests\fixtures\hello_rs.packed.exe
+```
+
+Every verdict is a weighted sum of six signals (`triage.py`), and each signal carries an `evidence` string with a
+**file offset** (`FO 0x…`) so you can re-check it in a hex editor. Thresholds, sample table and known bypasses live in
+[docs/rules.md](docs/rules.md); the System32 batch run (140 files, 0 errors, ~22 ms/file) is in
+[docs/triage-batch.md](docs/triage-batch.md).
+
+Exit codes: `0` success (at least one file analysed) · `1` nothing analysed or output write failed · `2` subcommand not implemented yet.
+`errors[]` is always emitted — failed inputs are never silently skipped.
+
 ## 许可 / License
 
 MIT，见 [LICENSE](LICENSE)。
