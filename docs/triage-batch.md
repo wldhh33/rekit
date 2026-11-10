@@ -65,12 +65,24 @@ python -m rekit triage @files -o sys32_140.json -m sys32_140.md
 
 ## 5. 复现
 
+**一条命令复现本文所有数字**（140 个文件、0 失败、11 个 1 分、S6 提到 5 时的 7.9% 假阳性）：
+
+```bash
+python -m pytest tests/test_baseline.py -q
+```
+
+基准数据是同一次真实跑批的快照（`tests/baseline/sys32_140.json`，只含 basename，不含系统文件）。
+任何权重/阈值/判定分支的改动都会让它失败——这是故意的，调权重必须同时更新基准并说明理由。
+
+重新采集基准（仅在本机、需要 System32 时）：
+
 ```powershell
 cd d:\逆向学习\rekit
-python -m pytest -q                     # 20 项（含本轮新增的 7 项边界测试）
+python -m pytest -q                     # 25 项（含边界与基准测试）
 $files = Get-ChildItem C:\Windows\System32 -File |
          Where-Object {$_.Extension -in '.exe','.dll','.sys'} |
          Select-Object -First 140 -ExpandProperty FullName
-python -m rekit triage @files -o out.json -m out.md
-python ..\实践\2026-11-10-rekit-batch\summarize.py out.json
+python -m rekit triage @files -o ..\实践\2026-11-10-rekit-batch\sys32_140.json -m ..\实践\2026-11-10-rekit-batch\sys32_140.md
+python ..\实践\2026-11-10-rekit-batch\summarize.py ..\实践\2026-11-10-rekit-batch\sys32_140.json
+python ..\实践\2026-11-10-rekit-batch\make_baseline.py
 ```

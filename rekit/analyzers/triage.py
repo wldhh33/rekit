@@ -72,6 +72,36 @@ class TriageResult:
         return d
 
 
+def score_of(signals: list[Signal]) -> int:
+    """命中信号权重求和。独立成函数，便于回归测试复算基准数据。"""
+    return sum(s.weight for s in signals if s.hit)
+
+
+def verdict_of(score: int, signals: list[Signal]) -> str:
+    """判定规则集中在这里：调阈值/权重时，tests/test_baseline.py 会立刻报警。"""
+    hit = {s.id for s in signals if s.hit}
+    if "S1_upx_section_pair" in hit:
+        return "upx"
+    if score >= 5:
+        return "packed?"
+    if score >= 2:
+        return "odd"
+    return "normal"
+
+
+def _shell_guess(score: int, signals: list[Signal], has_upx0: bool, has_upx1: bool,
+                 max_ent: float, dlls: int, ratio: float) -> str:
+    if has_upx0 and has_upx1 and max_ent > HIGH_ENTROPY:
+        if dlls >= MIN_DLLS_FOR_RATIO and ratio < TRUNCATED_RATIO:
+            return "UPX（节名成对 + 高熵 + 导入截断）"
+        return "UPX（节名成对 + 高熵）"
+    if score >= 5:
+        return "未知加壳/打包（启发式，需 unpack 或动态复核）"
+    if score >= 2:
+        return "节结构可疑，不足以定性"
+    return "未发现加壳迹象"
+
+
 def _confidence(score: int) -> str:
     if score >= 9:
         return "高"
@@ -120,28 +150,11 @@ def analyze_file(path: str) -> TriageResult:
                f"导入函数数={funcs}（此条仅作参考，不能单独定案：静态链接产物也可能为空）"),
     ]
 
-    score = sum(s.weight for s in signals if s.hit)
+    score = score_of(signals)
     confidence = _confidence(score)
 
-    if has_upx0 and has_upx1 and max_ent > HIGH_ENTROPY:
-        shell_guess = "UPX（节名成对 + 高熵 + 导入截断）" if (
-            dlls >= MIN_DLLS_FOR_RATIO and ratio < TRUNCATED_RATIO
-        ) else "UPX（节名成对 + 高熵）"
-    elif score >= 5:
-        shell_guess = "未知加壳/打包（启发式，需 unpack 或动态复核）"
-    elif score >= 2:
-        shell_guess = "节结构可疑，不足以定性"
-    else:
-        shell_guess = "未发现加壳迹象"
-
-    if has_upx0 and has_upx1:
-        verdict = "upx"
-    elif score >= 5:
-        verdict = "packed?"
-    elif score >= 2:
-        verdict = "odd"
-    else:
-        verdict = "normal"
+    shell_guess = _shell_guess(score, signals, has_upx0, has_upx1, max_ent, dlls, ratio)
+    verdict = verdict_of(score, signals)
 
     return TriageResult(
         file=path,

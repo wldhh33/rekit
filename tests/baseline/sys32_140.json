@@ -1,0 +1,1290 @@
+{
+ "note": "System32 前 140 个 PE 的 triage 结果快照，用于回归测试；只含 basename，不含系统文件本身",
+ "source": "C:\\\\Windows\\\\System32，按名称排序取前 140 个 .exe/.dll/.sys",
+ "tool_version": "0.1.0",
+ "errors": 0,
+ "files": [
+  {
+   "file": "0ae3b998-9a38-4b72-a4c4-06849441518d_Servicing-Stack.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 1.299,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "3bc29097-7317-41d3-93b9-38a48f99d48a_mssrch.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 1.257,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "4545ffe2-0dc4-4df4-9d02-299ef204635e_hvsocket.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 1.263,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "69fe178f-26e7-43a9-aa7d-2b616b672dde_eventlogservice.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 1.297,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "6bea57fb-8dfb-4177-9ae8-42e8b3529933_RuntimeDeviceInstall.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 1.319,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "ACPBackgroundManagerPolicy.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.032,
+   "imports": 185,
+   "dlls": 39
+  },
+  {
+   "file": "AIComponentMgmt.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.142,
+   "imports": 131,
+   "dlls": 35
+  },
+  {
+   "file": "APHostClient.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.886,
+   "imports": 94,
+   "dlls": 24
+  },
+  {
+   "file": "APHostRes.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 3.343,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "APHostService.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.039,
+   "imports": 179,
+   "dlls": 30
+  },
+  {
+   "file": "APMon.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.296,
+   "imports": 344,
+   "dlls": 44
+  },
+  {
+   "file": "APMonUI.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.986,
+   "imports": 104,
+   "dlls": 10
+  },
+  {
+   "file": "ARP.EXE",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.533,
+   "imports": 71,
+   "dlls": 18
+  },
+  {
+   "file": "AarSvc.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.174,
+   "imports": 203,
+   "dlls": 40
+  },
+  {
+   "file": "AboutSettingsHandlers.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.326,
+   "imports": 341,
+   "dlls": 67
+  },
+  {
+   "file": "AboveLockAppHost.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.052,
+   "imports": 178,
+   "dlls": 46
+  },
+  {
+   "file": "AcGenral.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.187,
+   "imports": 349,
+   "dlls": 55
+  },
+  {
+   "file": "AcLayers.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.125,
+   "imports": 220,
+   "dlls": 7
+  },
+  {
+   "file": "AcSpecfc.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.087,
+   "imports": 160,
+   "dlls": 12
+  },
+  {
+   "file": "AcWinRT.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.969,
+   "imports": 85,
+   "dlls": 26
+  },
+  {
+   "file": "AcXtrnal.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.131,
+   "imports": 43,
+   "dlls": 5
+  },
+  {
+   "file": "AccountHealth.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.096,
+   "imports": 96,
+   "dlls": 22
+  },
+  {
+   "file": "AccountsRt.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.081,
+   "imports": 204,
+   "dlls": 37
+  },
+  {
+   "file": "ActionCenter.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.199,
+   "imports": 125,
+   "dlls": 31
+  },
+  {
+   "file": "ActionCenterCPL.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.894,
+   "imports": 291,
+   "dlls": 29
+  },
+  {
+   "file": "ActionQueue.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.275,
+   "imports": 121,
+   "dlls": 22
+  },
+  {
+   "file": "ActivationClient.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.911,
+   "imports": 116,
+   "dlls": 31
+  },
+  {
+   "file": "ActivationManager.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.175,
+   "imports": 332,
+   "dlls": 57
+  },
+  {
+   "file": "ActiveSyncCsp.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.036,
+   "imports": 98,
+   "dlls": 20
+  },
+  {
+   "file": "ActiveSyncProvider.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.321,
+   "imports": 392,
+   "dlls": 44
+  },
+  {
+   "file": "AdaptiveCards.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.88,
+   "imports": 95,
+   "dlls": 24
+  },
+  {
+   "file": "AddressParser.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.931,
+   "imports": 49,
+   "dlls": 14
+  },
+  {
+   "file": "AdvancedEmojiDS.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.999,
+   "imports": 116,
+   "dlls": 31
+  },
+  {
+   "file": "AgentGovernanceCSP.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.35,
+   "imports": 282,
+   "dlls": 35
+  },
+  {
+   "file": "AggregatorHost.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.252,
+   "imports": 194,
+   "dlls": 39
+  },
+  {
+   "file": "ApiSetHost.AppExecutionAlias.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.164,
+   "imports": 203,
+   "dlls": 41
+  },
+  {
+   "file": "AppContracts.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.112,
+   "imports": 216,
+   "dlls": 45
+  },
+  {
+   "file": "AppExtension.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.104,
+   "imports": 166,
+   "dlls": 39
+  },
+  {
+   "file": "AppHostRegistrationVerifier.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.847,
+   "imports": 197,
+   "dlls": 36
+  },
+  {
+   "file": "AppInstallerBackgroundUpdate.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.814,
+   "imports": 91,
+   "dlls": 19
+  },
+  {
+   "file": "AppInstallerPrompt.Desktop.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.889,
+   "imports": 105,
+   "dlls": 27
+  },
+  {
+   "file": "AppListBackupLauncher.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.027,
+   "imports": 111,
+   "dlls": 28
+  },
+  {
+   "file": "AppLockerCSP.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.217,
+   "imports": 196,
+   "dlls": 30
+  },
+  {
+   "file": "AppMon.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.066,
+   "imports": 111,
+   "dlls": 28
+  },
+  {
+   "file": "AppReadiness.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.236,
+   "imports": 263,
+   "dlls": 56
+  },
+  {
+   "file": "AppResolver.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.211,
+   "imports": 284,
+   "dlls": 50
+  },
+  {
+   "file": "AppXApplicabilityBlob.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.088,
+   "imports": 108,
+   "dlls": 21
+  },
+  {
+   "file": "AppXDeploymentClient.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.299,
+   "imports": 229,
+   "dlls": 36
+  },
+  {
+   "file": "AppXDeploymentExtensions.desktop.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.324,
+   "imports": 578,
+   "dlls": 77
+  },
+  {
+   "file": "AppXDeploymentExtensions.onecore.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.343,
+   "imports": 609,
+   "dlls": 76
+  },
+  {
+   "file": "AppXDeploymentServer.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.378,
+   "imports": 585,
+   "dlls": 57
+  },
+  {
+   "file": "Apphlpdm.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.325,
+   "imports": 82,
+   "dlls": 21
+  },
+  {
+   "file": "ApplicationControlCSP.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.908,
+   "imports": 128,
+   "dlls": 27
+  },
+  {
+   "file": "ApplicationFrame.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.196,
+   "imports": 205,
+   "dlls": 41
+  },
+  {
+   "file": "ApplicationFrameHost.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.972,
+   "imports": 99,
+   "dlls": 23
+  },
+  {
+   "file": "ApplicationTargetedFeatureDatabase.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.216,
+   "imports": 173,
+   "dlls": 29
+  },
+  {
+   "file": "ApplyTrustOffline.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.628,
+   "imports": 353,
+   "dlls": 52
+  },
+  {
+   "file": "AppointmentActivation.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.998,
+   "imports": 127,
+   "dlls": 29
+  },
+  {
+   "file": "AppointmentApis.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.146,
+   "imports": 150,
+   "dlls": 33
+  },
+  {
+   "file": "ApproveChildRequest.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 7.291,
+   "imports": 158,
+   "dlls": 22
+  },
+  {
+   "file": "AppxAllUserStore.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.273,
+   "imports": 187,
+   "dlls": 28
+  },
+  {
+   "file": "AppxApplicabilityEngine.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.164,
+   "imports": 142,
+   "dlls": 24
+  },
+  {
+   "file": "AppxPackaging.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.34,
+   "imports": 219,
+   "dlls": 40
+  },
+  {
+   "file": "AppxSip.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.313,
+   "imports": 184,
+   "dlls": 43
+  },
+  {
+   "file": "AppxStreamingDataSourcePS.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 3.701,
+   "imports": 30,
+   "dlls": 13
+  },
+  {
+   "file": "AppxSysprep.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.16,
+   "imports": 173,
+   "dlls": 40
+  },
+  {
+   "file": "Apx01000.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.246,
+   "imports": 125,
+   "dlls": 31
+  },
+  {
+   "file": "ApxSvc.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.837,
+   "imports": 115,
+   "dlls": 27
+  },
+  {
+   "file": "AssignedAccessRuntime.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.017,
+   "imports": 99,
+   "dlls": 35
+  },
+  {
+   "file": "AtBroker.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.143,
+   "imports": 170,
+   "dlls": 7
+  },
+  {
+   "file": "AudioEndpointBuilder.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.185,
+   "imports": 196,
+   "dlls": 41
+  },
+  {
+   "file": "AudioEng.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 7.476,
+   "imports": 296,
+   "dlls": 47
+  },
+  {
+   "file": "AudioHandlers.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.212,
+   "imports": 231,
+   "dlls": 54
+  },
+  {
+   "file": "aadWamExtension.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.097,
+   "imports": 149,
+   "dlls": 33
+  },
+  {
+   "file": "aadauthhelper.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.261,
+   "imports": 216,
+   "dlls": 43
+  },
+  {
+   "file": "aadcloudap.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.315,
+   "imports": 236,
+   "dlls": 39
+  },
+  {
+   "file": "aadjcsp.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.883,
+   "imports": 99,
+   "dlls": 25
+  },
+  {
+   "file": "aadtb.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.196,
+   "imports": 193,
+   "dlls": 31
+  },
+  {
+   "file": "accessibilitycpl.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.213,
+   "imports": 366,
+   "dlls": 35
+  },
+  {
+   "file": "accountaccessor.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.17,
+   "imports": 199,
+   "dlls": 27
+  },
+  {
+   "file": "acledit.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.528,
+   "imports": 23,
+   "dlls": 3
+  },
+  {
+   "file": "aclui.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.178,
+   "imports": 339,
+   "dlls": 12
+  },
+  {
+   "file": "acmigration.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.325,
+   "imports": 326,
+   "dlls": 15
+  },
+  {
+   "file": "acppage.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.141,
+   "imports": 205,
+   "dlls": 11
+  },
+  {
+   "file": "acproxy.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 3.786,
+   "imports": 44,
+   "dlls": 6
+  },
+  {
+   "file": "activeds.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.143,
+   "imports": 75,
+   "dlls": 17
+  },
+  {
+   "file": "actxprxy.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.392,
+   "imports": 128,
+   "dlls": 14
+  },
+  {
+   "file": "adhapi.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.982,
+   "imports": 58,
+   "dlls": 20
+  },
+  {
+   "file": "adhsvc.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.839,
+   "imports": 165,
+   "dlls": 34
+  },
+  {
+   "file": "adprovider.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.998,
+   "imports": 162,
+   "dlls": 32
+  },
+  {
+   "file": "adpsvc.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.476,
+   "imports": 277,
+   "dlls": 46
+  },
+  {
+   "file": "adsldp.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.155,
+   "imports": 194,
+   "dlls": 17
+  },
+  {
+   "file": "adsldpc.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.225,
+   "imports": 143,
+   "dlls": 19
+  },
+  {
+   "file": "adsmsext.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.881,
+   "imports": 74,
+   "dlls": 19
+  },
+  {
+   "file": "adsnt.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.137,
+   "imports": 78,
+   "dlls": 19
+  },
+  {
+   "file": "adtschema.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 3.793,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "advapi32.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.22,
+   "imports": 656,
+   "dlls": 35
+  },
+  {
+   "file": "advapi32res.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 1.338,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "advpack.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.164,
+   "imports": 218,
+   "dlls": 9
+  },
+  {
+   "file": "aeevts.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 3.483,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "aeinv.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.416,
+   "imports": 396,
+   "dlls": 12
+  },
+  {
+   "file": "aemarebackup.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.464,
+   "imports": 329,
+   "dlls": 52
+  },
+  {
+   "file": "aepic.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.428,
+   "imports": 411,
+   "dlls": 61
+  },
+  {
+   "file": "agentactivationruntime.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.3,
+   "imports": 183,
+   "dlls": 26
+  },
+  {
+   "file": "agentactivationruntimestarter.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 4.221,
+   "imports": 48,
+   "dlls": 12
+  },
+  {
+   "file": "agentactivationruntimewindows.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.242,
+   "imports": 371,
+   "dlls": 52
+  },
+  {
+   "file": "aidd.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.46,
+   "imports": 257,
+   "dlls": 37
+  },
+  {
+   "file": "aitstatic.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 7.744,
+   "imports": 200,
+   "dlls": 7
+  },
+  {
+   "file": "alg.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.163,
+   "imports": 147,
+   "dlls": 29
+  },
+  {
+   "file": "amsi.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.046,
+   "imports": 97,
+   "dlls": 24
+  },
+  {
+   "file": "amsiproxy.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 4.63,
+   "imports": 19,
+   "dlls": 7
+  },
+  {
+   "file": "amstream.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.921,
+   "imports": 90,
+   "dlls": 9
+  },
+  {
+   "file": "apds.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.093,
+   "imports": 168,
+   "dlls": 11
+  },
+  {
+   "file": "apisampling.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.248,
+   "imports": 247,
+   "dlls": 35
+  },
+  {
+   "file": "apisetschema.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 4.309,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "appfootprint.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.461,
+   "imports": 262,
+   "dlls": 42
+  },
+  {
+   "file": "apphelp.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.315,
+   "imports": 252,
+   "dlls": 25
+  },
+  {
+   "file": "appidapi.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.888,
+   "imports": 110,
+   "dlls": 21
+  },
+  {
+   "file": "appidcertstorecheck.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 4.58,
+   "imports": 66,
+   "dlls": 20
+  },
+  {
+   "file": "appidpolicyconverter.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.105,
+   "imports": 142,
+   "dlls": 30
+  },
+  {
+   "file": "appidsvc.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.968,
+   "imports": 155,
+   "dlls": 28
+  },
+  {
+   "file": "appidtel.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 4.632,
+   "imports": 59,
+   "dlls": 4
+  },
+  {
+   "file": "appinfo.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.184,
+   "imports": 288,
+   "dlls": 47
+  },
+  {
+   "file": "appinfoext.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 3.657,
+   "imports": 28,
+   "dlls": 13
+  },
+  {
+   "file": "appraiser.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.444,
+   "imports": 563,
+   "dlls": 28
+  },
+  {
+   "file": "apprepapi.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 3.655,
+   "imports": 26,
+   "dlls": 12
+  },
+  {
+   "file": "appsruprov.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.095,
+   "imports": 182,
+   "dlls": 38
+  },
+  {
+   "file": "appverif.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.185,
+   "imports": 153,
+   "dlls": 8
+  },
+  {
+   "file": "appverifUI.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.147,
+   "imports": 199,
+   "dlls": 15
+  },
+  {
+   "file": "archiveint.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.448,
+   "imports": 186,
+   "dlls": 36
+  },
+  {
+   "file": "asferror.dll",
+   "score": 1,
+   "verdict": "normal",
+   "hits": [
+    "S6_import_empty"
+   ],
+   "max_entropy": 1.305,
+   "imports": 0,
+   "dlls": 0
+  },
+  {
+   "file": "aspnet_counters.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.076,
+   "imports": 43,
+   "dlls": 4
+  },
+  {
+   "file": "asycfilt.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.18,
+   "imports": 57,
+   "dlls": 5
+  },
+  {
+   "file": "at.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.143,
+   "imports": 83,
+   "dlls": 21
+  },
+  {
+   "file": "atl.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.88,
+   "imports": 149,
+   "dlls": 4
+  },
+  {
+   "file": "atl100.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.264,
+   "imports": 95,
+   "dlls": 1
+  },
+  {
+   "file": "atlthunk.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 4.124,
+   "imports": 22,
+   "dlls": 5
+  },
+  {
+   "file": "atmlib.dll",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.784,
+   "imports": 86,
+   "dlls": 7
+  },
+  {
+   "file": "attrib.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 5.364,
+   "imports": 99,
+   "dlls": 11
+  },
+  {
+   "file": "audiodg.exe",
+   "score": 0,
+   "verdict": "normal",
+   "hits": [],
+   "max_entropy": 6.176,
+   "imports": 303,
+   "dlls": 50
+  }
+ ]
+}
