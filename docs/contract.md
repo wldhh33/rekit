@@ -175,3 +175,16 @@
 - 若要补 Windows CI：推送后新增 `windows-latest` 矩阵项，先确认
   `pip install -e ".[dev,funcs]"` 能装上 capstone，再用同一套 pytest 跑通；
   在那之前保持“未覆盖”的表述。
+
+### 5.1 推送通道留档（**非常规流程**）
+
+2026-11-11 发布 0.7.0 时，`github.com:443` 对 git 的 `info/refs`/上传反复 reset，
+而 `api.github.com` 可用。实际采用的通道是 **GitHub Git Data API 逐对象上传**：
+先 `POST /git/blobs` 上传缺失 blob，用 `base_tree` 组装 tree，再建 commit，
+**每一步都把返回的 tree/commit SHA 与本地逐一比对**，全部相等后才把
+`refs/heads/main` 以 `force=false` 快进；annotated tag 也用同样方式复刻，tag 对象 SHA 与本机一致。
+结果：远端与本地是同一组提交 SHA，没有改写历史、没有强推。
+
+**这不是常规发布流程，不要默认使用。** 它依赖 `GH_TOKEN`、要逐文件构造请求、
+失败时容易留下半成品对象；下次遇到同类断流，先解决直连（换网络/代理/DNS），
+只有直连确认不可恢复时才考虑本方法，且必须保留 SHA 校验与 `force=false` 两道约束。
