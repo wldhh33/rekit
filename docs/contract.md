@@ -163,8 +163,10 @@
 
 ## 5. CI 覆盖状态
 
-- 现状：GitHub Actions 只有 `ubuntu-latest` × Python 3.10 / 3.12；0.7.0 已推送，
-  CI 结果在推送后回填到本节。
+- 现状：GitHub Actions 只有 `ubuntu-latest` × Python 3.10 / 3.12；0.7.0 已推送。
+  0.7.0 主体提交 `1e1fec1` 的 CI run
+  [43032640890](https://github.com/wldhh33/rekit/actions/runs/43032640890) **全部通过**
+  （Python 3.10 / 3.12 两个矩阵项均绿）。tag 打在包含本节回填的提交上，其运行记录见 Actions 页。
 - **Windows 行为未覆盖**：GitHub Actions 的 `windows-latest` 没有实际跑过。因此不把
   ubuntu 的绿色结果当作跨平台验证，也不加入未验证的 Windows 矩阵项。
 - 本地证据（**不等于 CI 证据**）：本机 Windows 11 / Python 3.14 上
