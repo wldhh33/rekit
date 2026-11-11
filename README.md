@@ -4,16 +4,52 @@
 
 A modular binary-analysis pipeline CLI. **Orchestration + evidence chain + reproducibility**, no reinventing wheels.
 
-> **快**：500 个 System32 文件全量解析（头 / 节 / 导入 / 导出）**0.43 s**，同任务 pefile **2.50 s**
-> —— 约 **6×**；单文件中位数 0.55 ms vs 4.46 ms。代价是内存峰值 15.6 MiB vs 4.8 MiB。
-> 测量方法、分档数据与原因分析见 [docs/benchmark.md](docs/benchmark.md)。
+> **快（口径见下）**：500 个 System32 文件解析（头 / 节 / 导入 / 导出）**0.28 s**，
+> 同任务 pefile **2.57 s** —— 约 **9×**；单文件中位数 0.43 ms vs 4.66 ms。
+> 上一版报的 **6×** 是含「每文件 SHA256」的旧口径，两个数字不可直接比。
+> **代价**：内存峰值更高（tracemalloc 7.9 MiB vs 4.8 MiB）、冷启动更慢（28 ms vs 20 ms）。
+> 大文件已改 mmap + 分块读：230 MB 文件的结构解析峰值从 464 MiB 降到 26.8 MiB，
+> `triage`（含 SHA256 与全节熵）从 246.1 MiB / 10.63 s 降到 30.2 MiB / 4.87 s。
+> **这个倍数来自只解析导入导出的实现，功能补齐后倍数会下降。**
+> 基准日期 2026-11-11，语料与跑法见 [docs/benchmark.md](docs/benchmark.md)、内存改造见
+> [docs/memory.md](docs/memory.md)。
 
 ```
-rekit triage <path...>   → PE 概览、异常评分、壳识别   [v0.1 已实现]
-rekit unpack <path...>   → 静态脱壳（UPX 优先）        [v0.2 已实现]
-rekit map    <path...>   → 节 RVA↔FOA / 加载器映射      [v0.2 已实现]
-rekit symbols <path...>  → Ghidra headless 出函数边界  [v0.3 计划]
-rekit report             → Markdown + JSON            [随各段输出]
+rekit triage <path...>   → PE 概览、异常评分、壳识别   [v0.3 已实现]
+rekit unpack <path...>   → 静态脱壳（UPX 优先）        [v0.3 已实现]
+rekit map    <path...>   → 节 RVA↔FOA / 加载器映射      [v0.3 已实现]
+rekit funcs  <path...>   → 函数边界 + 证据来源          [v0.3 已实现]
+rekit data   <path...>   → 字符串 / 指针数组 / 结构体   [v0.4 已实现]
+rekit xref   <path...>   → 谁引用了这个字符串/地址/函数  [v0.5 已实现]
+rekit identify <path...> → 工具链族 + 壳判定 + 证据类型 + 位数范围  [v0.6 扩展 M4a/M4b]
+rekit symbols <path...>  → Ghidra headless 出函数边界  [计划]
+rekit report <sample>    → 单样本自动化报告（24 字段）+ 规则命中  [v0.6 新增 M5]
+```
+
+`rekit data` 的三条硬规则（详见 [docs/data.md](docs/data.md)）：
+
+- **C 串的"扫到不可打印字节为止"在 Go 上必然错**。go.exe 实测最长一条 56,098 字节，
+  9,273 条 Go 串里 **84.05%** 会被这样读穿。Go 串只有两条正确入口：调用点的相邻参数槽、
+  或 8 字节对齐的 `(ptr,len)` 头，每条结果带 `evidence`。
+- **"指向代码"不足以定义函数指针表**。`.got/.plt/IAT` 整节排除；剩下的靠
+  `authority_start_ratio`（命中 `.pdata`/`.eh_frame`/`.gopclntab` 起点的比例）判真假——
+  同节两组同 stride 的数据实测 0.0 vs 1.0。
+- **结构体只报偏移和宽度**（`[+0x18/8B]`），不猜类型；不做跨块值流，那是模拟执行的活。
+
+`rekit xref` 的硬规则（详见 [docs/xref.md](docs/xref.md)）：
+
+- **指令流只来自 `funcs` 的递归下降**，不写第二套线性扫描；召回上限 = 函数发现率。
+- 确定集只收 RIP 相对操作数、直接分支 `rel32`、重定位 addend；绝对立即数、
+  数据节指针、`.text` 字节扫描一律进疑似集。
+- `.text` 内搜索必须声明是**指令边界**还是**字节扫描**；字节扫描命中必须标注
+  “可能落在操作数内部”（`docs/rules.md` §0.1）。
+
+```bash
+# Go 二进制：字符串走双入口，数组与结构体同时出
+python -m rekit data C:\Program Files\Go\bin\go.exe -j go.json --csv go_strings.csv
+
+# 只想看 C 串（不需要 capstone）
+python -m rekit data notepad.exe --no-arrays --no-structs
 ```
 
 设计原则（Design principles）：
@@ -21,7 +57,8 @@ rekit report             → Markdown + JSON            [随各段输出]
 - **每条结论都能回指字节**：信号里带文件偏移（FO，file offset），不是"看起来很可疑"。
 - **可复现**：同一输入 + 同一命令 + 同一版本 → 同样的结果（除时间戳）。
 - **不重复造轮子**：解析用标准库手写（可控、可审计），符号用 Ghidra，脱壳复用已验证探针。
-- **依赖极少**：v0.2 运行时零第三方依赖，CLI 只用 `argparse`。
+- **依赖极少**：v0.4 的 `triage`/`unpack`/`map` 与 `data` 的纯字符串扫描零第三方依赖；
+  `funcs` 与 `data` 的 Go 串/结构体统计需要 capstone（`pip install -e ".[funcs]"`）。
 
 ---
 
@@ -39,6 +76,12 @@ python -m pip install -e .
 ```bash
 python -m pip install -e ".[dev]"
 python -m pytest -q
+```
+
+`funcs` 需要反汇编后端（capstone），单独装：
+
+```bash
+python -m pip install -e ".[dev,funcs]"
 ```
 
 > 若 `rekit` 命令不在 PATH（Windows 用户级安装的常见情况），用等价的 `python -m rekit`。
@@ -79,7 +122,7 @@ python -m rekit unpack tests/fixtures/hello_rs.packed.exe --verify-only
 PackHeader → 解压（adler 校验）→ 反过滤（覆盖 `BaseOfCode + SizeOfCode`）→ IAT 重建 →
 重定位重建 → `.rsrc` 重建（资源数据搬回 + 目录树重建）→ TLS 检查 → DOS stub + 原节表按原布局写文件。
 
-真实输出（2026-11-11，rekit 0.2.0）：
+真实输出（2026-11-11，rekit 0.3.0）：
 
 ```
 OK   tests\fixtures\hello_rs.packed.exe
@@ -126,7 +169,7 @@ python -m rekit map 样本/packed -j map.json
 说明某个 RVA 属于 `headers` / `file` / `zero_fill` / `file_slack` / `align_pad` / `gap` /
 `beyond_image` 的哪一种，并给出判据。
 
-真实输出（2026-11-11，rekit 0.2.0，UPX 加壳样本）：
+真实输出（2026-11-11，rekit 0.3.0，UPX 加壳样本）：
 
 ```
 ..\样本\packed\hello_rs.packed.exe  PE32+ AMD64  ImageBase=0x140000000  SectionAlign=0x1000 FileAlign=0x200
@@ -139,13 +182,181 @@ python -m rekit map 样本/packed -j map.json
 
 与 pefile 的 `get_offset_from_rva` 对照：120 个 System32 文件、1,790 个节起点/中点探针，0 差异。
 
+### 函数边界 / Funcs
+
+```bash
+# 权威表 + 递归下降 + 指针表；输出函数表（起点/终点/证据/口径）
+python -m rekit funcs tests/fixtures/hello_elf
+
+# 量化 B 层：穷举 + 不把 .eh_frame 当权威表；结构化落盘
+python -m rekit funcs 样本/noeh.so --exhaust full --no-eh-frame \
+  --json funcs.json --csv funcs.csv
+
+# 孤立桶精度验算：参照表（Ghidra CSV）只量精度、不参与发现
+python -m rekit funcs 样本/noeh.so --exhaust full --reference ghidra.csv
+
+# 冷启动：禁用导出/符号/权威表播种，只用代码与数据本身（模拟 strip + PIE 恶意样本）
+python -m rekit funcs 样本/stripped_pie --cold-start
+
+# 交叉引用：从字符串找引用者函数（确定集），数据指针/立即数单列为疑似
+python -m rekit xref tests/fixtures/gcc_o2.exe --string "hello from C, sum=%d leaf=%d"
+
+# 从函数入口找调用点
+python -m rekit xref tests/fixtures/gcc_o2.exe --va 0x1400034B0
+```
+
+PE64 用 `.pdata`、ELF64 用 `.eh_frame`、Go 用 `.gopclntab` 当权威函数表（A 层）；
+Go PE 没有同名节，按 pclntab 魔数在数据节里扫（`go_win.exe`：`.pdata` 1588 → `.gopclntab` 1890，
+表头 1892 里末尾 2 项是填充，已剔除）。Go 1.2–1.15 的旧头（`0xFFFFFFFB`）另走绝对
+PC 解析（`goCrackMe.exe` 实测 1836 函数、冷启动 93.85%）。
+没有权威表的样本走 B 层（可达 / 含孤立两个口径）。`.eh_frame_hdr` 缺失时自动退回
+线性扫描并标注。`.plt` 的误报单列，不混进 `.text` 的召回/误报。
+
+孤立桶（`B-isolated`）在 CLI / JSON / CSV 三处都硬标 **不可交付（内部参考）**：
+`isolated_metrics.deliverable` 恒 `false`，CSV `deliverable` 列对 `B-isolated` 行恒 `false`。
+非 x86（如 ARM64）只交权威表，B 层跳过并在 `notes` 写明。
+
+`--cold-start` 是贴近真实恶意样本的口径：导出表/符号/权威表都不参与播种，只剩入口、
+`.init_array`/TLS 回调、GOT、PIE 相对重定位、字符串/代码取址、数据节函数指针、
+间接调用（`call [reg+off]` 的块内有限值流 + 已知重定位槽位）、Go 的 `itab` 方法表，
+与 `call` 边不动点。四族基线：Clang strip+PIE 23.8%、Go linux 36.5%、Go PE 62.1%、
+Rust musl 42.3%（同二进制反事实口径 17.2% / 48.7% / 49.0% / 81.6%）；可达子集召回
+**85.6% / 50.3% / 75.5% / 91.0%**，`.text` 误报 2 / 5 / 5 / 5（严格误报率均 <0.3%），
+间接调用解析率 5.3% / 8.6% / 5.6% / 84.8%。
+Go 的 `moduledata`/`itab` 播种（`metrics.cold_start.itab`）在 `go_linux_amd64` 与
+`go_win.exe` 上分别把冷启动从 20.9%/25.9% 提到 36.4%/42.0%；随后指针槽位的两条修正
+（冷启动不再读 `.pdata` 判重、多块函数不再被"首个 jmp 栈平衡"误拒）把两族可达子集
+进一步推到 50.3%/75.5%，Clang 45.4% → 85.6%。缺口归因、Go 1.18–1.24 的实测版本范围与
+`icall` 的负结论见 [docs/funcs.md](docs/funcs.md) §6.1–§6.4。
+
+真实输出（2026-11-11，rekit 0.3.0，自带 ELF fixture，函数表 2848 行此处截断）：
+
+```
+tests\fixtures\hello_elf  ELF64  工具链=gcc(0.97)/gcc_x64  权威表=.eh_frame  2360 项
+  起点        终点        大小  证据                        组      口径    节
+  0x86600     0x8665F        95  entry                       直接引用  B 可达  .text
+  0x86663     0x86699        54  jmp                         直接引用  B 可达  .text
+  …
+  0x86820     0x86889       105  eh_frame                    权威表    A       .text
+  0x868C8     0x868CD         5  eh_frame+call               权威表    A       .text
+  …
+  [A 层] 起点 2360/2360  召回 100.0%  （.text 口径 2360 项，召回 100.0%）
+         严格误报 0（.text 0，.plt 单列 0）；权威表外 488 个入口
+  [自证]   不拿权威表播种：召回 81.6%，严格误报 432（.text 432）
+  [证据]   权威表 2360；直接引用 488
+```
+
+`[自证]` 是反事实口径：不拿权威表播种，只靠入口/导出/递归下降/指针表，
+用来证明召回不是"把答案当输入"得来的。
+
+### 工具链识别 / Identify
+
+```bash
+python -m rekit identify a.exe b.exe -j identify.json
+```
+
+输出 `family` / `bitness` / `scope` / `confidence` / `signals[]`（每条命中信号带偏移与
+`evidence_kind`）/ `conflicts[]`。三条硬规则：
+
+- **`unknown` 是合法结论，不硬猜**。`evidence_kind` 只有 `positive`（找到了什么：节、串、导入）
+  和 `absence`（只证明没找到什么）两种；**absence 类信号只能削弱置信度，不能单独构成族判定**。
+  `.rsrc` 缺失只在 MinGW 默认链接配方下指向 clang，显式加 manifest 就翻成 gcc、换 clang-cl
+  就变成 msvc——所以只有“无 `.rsrc`”命中时输出 `unknown`。
+- **`clang_x64` 是条件族**：strip 后与 MinGW-gcc 不可区分（8 源 × 2 工具链实验，唯一取值范围
+  不相交的特征就是 `.rsrc`，而它是驱动产物不是编译器指纹）。只有未 strip 且带
+  `clang version` 正向串时才判；M4a 的族数按其余 4 族计算。
+- **位数是独立字段**：x86 允许给 `msvc_x86`，但标 `scope=out_of_m4a`，不冒充 `msvc_x64`、
+  也不进 M4a 的 4 族计分。
+
+### 外部落差 / External gap
+
+> 看 `identify` 只该看这一节。自编样本上的高分不等于能力，**外部样本上的数才算数**。
+
+| 数据 | 规模 | 成绩 | 说明 |
+|---|---:|---|---|
+| 自编校准（开发期自检） | 30 | 27/30（计分 4 族 24/24；clang 3/6） | 拟合，不计判定 |
+| 自编测试（一次性，`signals-v1`） | 100 | 4 族 **80/80**（CI 83.9–100，达标）；clang 10/20；unknown 10 | 同风格分布内的能力 |
+| 外部 M3 十题 | 10 | **5/9**（x64 原生 PE；含 x86 为 7/9） | 真实第三方样本，最冷的水 |
+| 外部 System32 500 | 500 | 硬错 1/500；unknown 0.4%；packed FPR 0 | 系统 DLL 上不误报 |
+| 外部 `E_sys32` 200（留出） | 200 | 硬错 0/200；unknown 0；packed FPR 0 | FPR 结论稳定 |
+
+**怎么读**：
+
+- 自编 100% 只证明“在自编分布内可分”。测试源码与训练源码出自同一批人、同一风格，
+  真正的冷水只有 M3 的 **5/9** 与系统 DLL 上的 **0 误报**。M4b 的 UPX 100%（40/40）同理，
+  只说明同分布可分；它**只覆盖 UPX 5.0.0**，不是多壳族能力。
+- 对外最有意义的两个数是 **5/9** 和 **0/700**：前者说明真实样本还有判不出的（2 个 unknown、
+  1 个 packed、1 个 ELF 不支持），后者（`N_sys32` 500 + `E_sys32` 200）说明“不乱报”是稳的。
+  M4b 的 `E_sys32_b` 200 留出切片同样 0 次误报；按该切片计的 Wilson 95% 上界为 **1.88%**
+  （n=200，最保守），不能写成“FPR 已证明 ≤0.2%”。
+- 测试侧 100 个变体只评估一次，结果归档在 `实践/M4/eval/test_once.json`；未达标时的正确做法是
+  新建测试源码包重测，不在同一批数据上改信号后重跑。
+- **负样本口径（2026-11-22 定稿）**：测试侧没有负样本，**FPR 只由外部系统 DLL 集给出**
+  （`N_sys32` 500 开发期 + 每次只跑一次的 200 个留出切片）。不补建的公开理由：从同一
+  System32 池复制进 `corpus/test` 不是独立样本；真正的独立负样本需要第三方二进制与分发许可，
+  本机没有。因此表里的 FPR 只能说“System32 分布上的 FPR”，不能外推到任意干净程序；
+  精确率的分母也会显式计入外部负样本上的误报。
+
+### 壳判定 / Packer（M4b，UPX / 非 UPX）
+
+`identify` 追加 `kind=packer` 与 `packer` 块（`schema_version=2`），工具链字段一个字未改，
+读旧字段的消费者不受影响。口径是「**UPX / 非 UPX 判定**」，不宣称覆盖多壳族的识别能力。
+
+| 数据 | 规模 | 成绩 | 说明 |
+|---|---:|---|---|
+| 自编开发期（`N_sys32` 500） | 100 + 500 | UPX 100/100；packed 误报 0；证据覆盖率 100% | 拟合，不计判定 |
+| 自编测试（一次性，`m4b-signals-v1`） | 40 EXE + 20 DLL | 两个源各 20/20 **源级达标**；DLL 20/20 | 达标只看源级点估计 |
+| 外部 `E_sys32_b` 200 | 200 | 观测 0 次误报（n=200），Wilson 95% 上界 1.88% | 仅 System32 分布 |
+
+- **局限（原样保留，不因发布删改）**：只覆盖 **UPX 5.0.0** 的产物；**五族缺族**
+  （mpress / aspack / pecompact / fsg / petite，供给侧拿不到可验证来源）；**S7–S10 对
+  非 UPX 壳的泛化未测**。补族尝试未做（kkrunchy/Crinkler 会拖累主线）；单族 macro 不构成证据。
+- 测试侧只评估一次（`access_log.jsonl` 120 条），之后打包为 `corpus/test_sealed.7z` 并删除明文。
+- 完整报告：`实践/M4b/report_m4b.md`。
+
+### 自动化报告 / Report（M5）
+
+```bash
+# 一条命令：报告（Markdown/JSON）+ 规则命中 + 同源 .yar
+python -m rekit report samples/foo.dll --id foo --rules rules/m5.json \
+  -o reports/foo.md -j reports/foo.json --yar rules/m5.yar
+```
+
+24 个字段每个都带来源标记：**22 个自动推导 + 2 个人工判断**（「结论」「建议」）。
+报告头部先给统计口径，再列字段表，人工字段留空不预填。.NET 走 CLI 元数据
+（`#~` 表流的 TypeDef / MethodDef / AssemblyRef，纯标准库、不反编译）；
+Go 从 `_func.nameoff` 恢复函数名（1.2–1.15 旧格式与 1.16+/1.18+/1.20+ 分开处理，
+失败显式写「不可恢复」）；原生走 `.pdata` 函数区间。
+
+| 样本（单样本口径） | 自动结果 | 规则命中 |
+|---|---|---|
+| .NET `Accessibility.dll` | CLI `v4.0.30319`；TypeDef 11；MethodDef 55；引用 `mscorlib` | `dotnet_assembly` |
+| Go `goCrackMe.exe` | `go1.15.2`；函数名 **1836/1836**；`main.main` @ `0x4AC140` | `go_binary` |
+| 原生 Rust crackme | `.pdata` 函数 **467** | 无 |
+
+- **规则引擎叫「rekit 规则引擎」，不是 YARA 兼容实现**：JSON 条件布尔求值（`any`/`all`
+  + `eq/ne/gt/ge/lt/le/in`），事实来自 PE 结构，每条命中带证据偏移；不引入新评分，
+  **不参与 `identify` 的族/壳判定**。
+- **`.yar` 同源生成、只翻译 YARA 能表达的条件**：`dotnet_assembly`、`high_entropy_section`
+  无法表达故未生成；`upx_packed` 只翻译节名成对。头部注释逐条列出未翻译分支。
+- **真 YARA 校验（如实记录）**：`yara-python` 4.5.4 安装成功，`.yar` 编译通过、13 样本
+  求值完成，记录在 `rules/m5_validation.json`。通过只证明「能被 YARA 编译并求值」，
+  **不证明两套引擎语义等价**；.NET 样本上 rekit 命中而 YARA 不命中是明示差异。
+  校验未通过时头部写「不通过，本文件不可用」；装不上直接写「未经 YARA 校验」。
+- **误报只报观测值**：`N_sys32` 500 上 `go_binary` 0/500、`upx_packed` **0/500**
+  （Wilson 95% 上界 **0.76%**）、`high_entropy_section` 0/500、`dotnet_assembly` 2/500
+  （真实托管程序集，属真实语义命中）。不写「无误报」。
+- **复现**：不写时间戳/绝对路径/用户名，排序稳定；同一命令两次运行与已提交产物逐字节一致。
+- **边界**：每个家族只有 1 个真实样本，结论只描述「该样本的自动化报告」，不外推家族能力。
+  设计文档见 `计划/M5-真实家族自动化报告设计.md`（§0.0 长期约束）。
+
 ### 输出契约 / Output contract
 
 JSON 顶层：
 
 ```json
 {
-  "tool": "rekit", "version": "0.2.0", "generated_at": "…",
+  "tool": "rekit", "version": "0.3.0", "generated_at": "…",
   "analyzer": "triage",
   "results": [ { "file": "…", "verdict": "upx", "confidence": "高", "score": 12,
                  "signals": [ { "id": "S1_upx_section_pair", "weight": 4, "hit": true,
@@ -190,6 +401,47 @@ JSON 顶层：
               "detail": "节 UPX0 内偏移 0x0 在 [RawSize=0x0, VirtualSize=0x15000)，内存补零、文件里没有"}]
 }
 ```
+
+---
+
+## 性能基准 / Benchmark
+
+- 日期：2026-11-11；机器：Windows 11 build 26200 / Python 3.14.0 / pefile 2024.8.26。
+- 语料：`实践/2026-11-11-m1/sys32_500.csv` 的 500 个 System32 文件，未按大小或结果挑选；
+  大文件另用 `huge.csv` 的 5 个 23–230 MB 样本。
+- 任务：打开 + 节表/数据目录 + imports + exports；两侧同一子集，rekit 不建对象树、不解析重定位。
+- 方法：预热 10 个，3 轮取中位数；内存峰值用 tracemalloc 单跑一轮；冷启动是 3 次子进程 import 的中位数。
+
+| 指标 | rekit | pefile |
+|---|---:|---:|
+| 500 文件总耗时（中位数） | 0.28 s | 2.57 s |
+| 单文件中位耗时 | 0.43 ms | 4.66 ms |
+| 吞吐 | 1,810 文件/秒 | 195 文件/秒 |
+| tracemalloc 峰值（仅 Python 堆） | 7.9 MiB | 4.8 MiB |
+| 冷启动 import | 28 ms | 20 ms |
+
+复跑：
+
+```bash
+python rekit/bench/benchmark.py --from-csv 实践/2026-11-11-m1/sys32_500.csv \
+  --out rekit/docs/benchmark.md
+python rekit/bench/benchmark.py --from-csv 实践/2026-11-11-m1/huge.csv --per-file \
+  --out 实践/2026-11-11-m1/mem_after.md
+```
+
+**这个倍数只对「只解析导入导出」的子集成立**：加上重定位、资源、调试目录后 rekit 会做更多事，
+倍数会下降；它不等于"通用 PE 解析比 pefile 快 9 倍"。
+
+## 什么时候不该用它 / When not to use it
+
+- **需要重定位、资源、签名、调试目录**：v0.3 不解析这些数据目录，用 pefile / LIEF / Ghidra。
+- **需要完整对象模型**（每字段可写、可回写、可重打包）：rekit 只提供只读结构视图。
+- **单个文件特别大且要全量分析**：结构解析已走 mmap（230 MB 文件峰值 26.8 MiB、0.7 ms），
+  `triage` 也已改 1 MiB 分块读（同一文件 30.2 MiB、4.87 s），但仍要整文件算一遍 SHA256 与
+  全节熵，I/O 是硬成本。这类文件用 pefile 按需取字段更省事；超过 512 MiB 默认拒绝，
+  需显式 `--allow-large`。
+- **被当库高频 import / 上万次短解析**：冷启动 28 ms 略慢于 pefile 的 20 ms，
+  且每次构造 Section 对象；纯批量字段提取直接用 pefile 更成熟。
 
 ---
 
@@ -241,11 +493,18 @@ MIT，见 [LICENSE](LICENSE)。
 
 ## 状态 / Status
 
-v0.2.0 —— `triage` + `unpack` + `map`。`unpack` 覆盖 PE32+ 的 UPX（NRV2B / NRV2E / filter 0x49），
-`.text` 与原件逐字节一致、IAT / 重定位 / `.rsrc` 重建、按原布局写文件，7z 与 notepad
-两个真实样本的产物与 `upx -d` 零字节差；`map` 给出节 RVA↔FOA 对照与加载器视角
-（内存补零 / 文件松弛 / 未映射间隙），对 120 个 System32 文件 1,790 个探针与 pefile 零差异。
-32 位 PE、LZMA/CL1B 与多节 UPX2 壳仍在路线图上。`symbols` 是占位（退出码 2 并提示计划版本），
-不假装成功。
+v0.6.0 —— 在 v0.5 的 `xref`/`identify` 之上补完 **M4a 工具链族**、**M4b 壳判定**与
+**M5 自动化报告**（0.6.0 未对外发布过，三批工作合并为同一版本）：
+`identify` 输出 4 个计分工具链族（msvc / gcc / go / rust，`clang` 为条件族）+ `kind=packer`
+与 `packer` 块（`schema_version=2`），每条命中信号都带 `field/offset_kind/offset`；
+`report` 一条命令产出 24 字段报告（22 自动 + 2 人工，自动率 91.7%）+ 规则命中 + 同源 `.yar`。
+对外数字：自编测试 4 族 80/80、UPX 40/40（同分布可分，不作为能力证明）；真实第三方
+M3 十题 **5/9**；系统 DLL **0/700** 误报，M4b 留出切片 n=200 的 Wilson 95% 上界 **1.88%**。
+局限：壳判定**只覆盖 UPX 5.0.0**，五族缺族，S7–S10 对非 UPX 壳未测；M5 每个家族只有
+1 个真实样本，报告只描述「该样本」；规则引擎是自研的「rekit 规则引擎」，**不是 YARA
+兼容实现**，`.yar` 经真 YARA 4.5.4 编译校验通过但只翻译了可表达条件、**语义不等价**；
+规则不参与族/壳判定，`signals-*` 未改动。
+`unpack` 覆盖 PE32+ 的 UPX（NRV2B / NRV2E / filter 0x49）；32 位 PE、LZMA/CL1B 与多节 UPX2
+壳仍在路线图上。`symbols` 是占位（退出码 2 并提示计划版本），不假装成功。
 
 版本变更见 [CHANGELOG.md](CHANGELOG.md)。

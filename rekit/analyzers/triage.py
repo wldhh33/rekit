@@ -9,9 +9,13 @@ v0.1 是 PE 加壳/结构异常的启发式，不是"是恶意软件"的结论�
 
 from __future__ import annotations
 
+import hashlib
+import math
+from collections import Counter
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from ..contract import error_entry, no_files_entry
 from ..core.files import expand_paths
 from ..core.pe import PE, PEError
 
@@ -111,87 +115,126 @@ def _confidence(score: int) -> str:
     return "无"
 
 
-def analyze_file(path: str) -> TriageResult:
-    pe = PE(path)
-    names = [s.name for s in pe.sections]
-    imports = pe.imports()
-    funcs = len(imports)
-    dlls = len({i.dll for i in imports})
-    ratio = round(funcs / dlls, 2) if dlls else 0.0
+def _scan_file(path: str, sections: list[Any], chunk_size: int = 1 << 20) -> tuple[str, list[tuple[Any, float]]]:
+    """一次顺序读，同时算 sha256 和每个大节的熵。
 
-    big = [s for s in pe.sections if s.size_of_raw_data >= MIN_ENTROPY_SECTION]
-    top = max(big, key=lambda s: s.entropy) if big else None
-    max_ent = round(top.entropy, 3) if top else 0.0
+    峰值内存 ≈ `chunk_size`。对 200 MB 的文件，mmap 顺序扫一遍会让工作集涨到文件大小
+    （`PeakWorkingSetSize` 会把映射页算进去），所以这里用 `read()` 分块，页缓存不算工作集。
+    返回 `(sha256 十六进制, [(节, 熵), ...])`，节顺序与 `sections` 一致。
+    """
+    big = [s for s in sections if s.size_of_raw_data >= MIN_ENTROPY_SECTION]
+    counts = [[0] * 256 for _ in big]
+    seen = [0] * len(big)
+    hasher = hashlib.sha256()
+    with open(path, "rb") as fh:
+        pos = 0
+        while True:
+            chunk = fh.read(chunk_size)
+            if not chunk:
+                break
+            hasher.update(chunk)
+            end = pos + len(chunk)
+            for i, s in enumerate(big):
+                lo = max(pos, s.pointer_to_raw_data)
+                hi = min(end, s.pointer_to_raw_data + s.size_of_raw_data)
+                if lo < hi:
+                    for byte, n in Counter(chunk[lo - pos:hi - pos]).items():
+                        counts[i][byte] += n
+                    seen[i] += hi - lo
+            pos = end
 
-    has_upx0 = any(n.upper().startswith("UPX0") for n in names)
-    has_upx1 = any(n.upper().startswith("UPX1") for n in names)
-    upx_names = [n for n in names if n.upper().startswith("UPX")]
-    zero_raw_exec = [s for s in pe.sections
-                     if s.virtual_size > 0 and s.size_of_raw_data == 0 and s.is_executable]
-
-    signals = [
-        Signal("S1_upx_section_pair", W_UPX_PAIR, has_upx0 and has_upx1,
-               f"节表 FO 0x{pe.section_table_offset:X}：节名 {names}"),
-        Signal("S2_upx_section_any", W_UPX_ANY, bool(upx_names) and not (has_upx0 and has_upx1),
-               f"UPX 类节名：{upx_names or '无'}（成对时由 S1 计分，此条只补残缺/变种）"),
-        Signal("S3_zero_raw_exec_section", W_ZERO_RAW_EXEC, bool(zero_raw_exec),
-               "；".join(f"{s.name} 节头 FO 0x{s.header_offset:X}：VirtualSize=0x{s.virtual_size:X} "
-                        f"但 RawSize=0、含 MEM_EXECUTE（磁盘无内容，内存是解压区）"
-                        for s in zero_raw_exec) or "无此类节"),
-        Signal("S4_high_entropy_section", W_HIGH_ENTROPY, max_ent > HIGH_ENTROPY,
-               f"最高熵节 {top.name if top else '-'} = {max_ent}（阈值 >{HIGH_ENTROPY}，"
-               f"仅统计 RawSize≥{MIN_ENTROPY_SECTION} 的节）"),
-        Signal("S5_import_truncated", W_IMPORT_TRUNCATED,
-               dlls >= MIN_DLLS_FOR_RATIO and ratio < TRUNCATED_RATIO,
-               f"导入 DD#1 RVA=0x{pe.directories[1][0]:X}：{funcs} 函数 / {dlls} DLL"
-               f"（函数/DLL={ratio}，判据 DLL≥{MIN_DLLS_FOR_RATIO} 且比值<{TRUNCATED_RATIO}）"),
-        Signal("S6_import_empty", W_IMPORT_EMPTY, funcs == 0,
-               f"导入函数数={funcs}（此条仅作参考，不能单独定案：静态链接产物也可能为空）"),
-    ]
-
-    score = score_of(signals)
-    confidence = _confidence(score)
-
-    shell_guess = _shell_guess(score, signals, has_upx0, has_upx1, max_ent, dlls, ratio)
-    verdict = verdict_of(score, signals)
-
-    return TriageResult(
-        file=path,
-        size=len(pe.data),
-        sha256=pe.sha256,
-        format=pe.pe_format,
-        arch=pe.arch,
-        entry_rva=f"0x{pe.entry_rva:X}",
-        entry_section=pe.entry_section,
-        sections=len(pe.sections),
-        section_names=names,
-        imports=funcs,
-        dlls=dlls,
-        funcs_per_dll=ratio,
-        max_entropy=max_ent,
-        max_entropy_section=top.name if top else "-",
-        verdict=verdict,
-        shell_guess=shell_guess,
-        confidence=confidence,
-        score=score,
-        signals=signals,
-    )
+    out: list[tuple[Any, float]] = []
+    for s, hist, total in zip(big, counts, seen):
+        e = 0.0
+        if total:
+            for c in hist:
+                if c:
+                    p = c / total
+                    e -= p * math.log2(p)
+        out.append((s, e))
+    return hasher.hexdigest(), out
 
 
-def run(paths: list[str]) -> dict[str, Any]:
+def analyze_file(path: str, allow_large: bool = False) -> TriageResult:
+    # `with` 确保 mmap 在结果算完后立刻释放
+    with PE(path, allow_large=allow_large) as pe:
+        names = [s.name for s in pe.sections]
+        imports = pe.imports()
+        funcs = len(imports)
+        dlls = len({i.dll for i in imports})
+        ratio = round(funcs / dlls, 2) if dlls else 0.0
+
+        sha256, ents = _scan_file(path, pe.sections)
+        top_ent, _, top = max(((e, i, s) for i, (s, e) in enumerate(ents)),
+                              default=(0.0, -1, None))
+        max_ent = round(top_ent, 3)
+
+        has_upx0 = any(n.upper().startswith("UPX0") for n in names)
+        has_upx1 = any(n.upper().startswith("UPX1") for n in names)
+        upx_names = [n for n in names if n.upper().startswith("UPX")]
+        zero_raw_exec = [s for s in pe.sections
+                         if s.virtual_size > 0 and s.size_of_raw_data == 0 and s.is_executable]
+
+        signals = [
+            Signal("S1_upx_section_pair", W_UPX_PAIR, has_upx0 and has_upx1,
+                   f"节表 FO 0x{pe.section_table_offset:X}：节名 {names}"),
+            Signal("S2_upx_section_any", W_UPX_ANY, bool(upx_names) and not (has_upx0 and has_upx1),
+                   f"UPX 类节名：{upx_names or '无'}（成对时由 S1 计分，此条只补残缺/变种）"),
+            Signal("S3_zero_raw_exec_section", W_ZERO_RAW_EXEC, bool(zero_raw_exec),
+                   "；".join(f"{s.name} 节头 FO 0x{s.header_offset:X}：VirtualSize=0x{s.virtual_size:X} "
+                            f"但 RawSize=0、含 MEM_EXECUTE（磁盘无内容，内存是解压区）"
+                            for s in zero_raw_exec) or "无此类节"),
+            Signal("S4_high_entropy_section", W_HIGH_ENTROPY, max_ent > HIGH_ENTROPY,
+                   f"最高熵节 {top.name if top else '-'} = {max_ent}（阈值 >{HIGH_ENTROPY}，"
+                   f"仅统计 RawSize≥{MIN_ENTROPY_SECTION} 的节，按 1 MiB 分块统计）"),
+            Signal("S5_import_truncated", W_IMPORT_TRUNCATED,
+                   dlls >= MIN_DLLS_FOR_RATIO and ratio < TRUNCATED_RATIO,
+                   f"导入 DD#1 RVA=0x{pe.directories[1][0]:X}：{funcs} 函数 / {dlls} DLL"
+                   f"（函数/DLL={ratio}，判据 DLL≥{MIN_DLLS_FOR_RATIO} 且比值<{TRUNCATED_RATIO}）"),
+            Signal("S6_import_empty", W_IMPORT_EMPTY, funcs == 0,
+                   f"导入函数数={funcs}（此条仅作参考，不能单独定案：静态链接产物也可能为空）"),
+        ]
+
+        score = score_of(signals)
+        confidence = _confidence(score)
+
+        shell_guess = _shell_guess(score, signals, has_upx0, has_upx1, max_ent, dlls, ratio)
+        verdict = verdict_of(score, signals)
+
+        return TriageResult(
+            file=path,
+            size=len(pe.data),
+            sha256=sha256,
+            format=pe.pe_format,
+            arch=pe.arch,
+            entry_rva=f"0x{pe.entry_rva:X}",
+            entry_section=pe.entry_section,
+            sections=len(pe.sections),
+            section_names=names,
+            imports=funcs,
+            dlls=dlls,
+            funcs_per_dll=ratio,
+            max_entropy=max_ent,
+            max_entropy_section=top.name if top else "-",
+            verdict=verdict,
+            shell_guess=shell_guess,
+            confidence=confidence,
+            score=score,
+            signals=signals,
+        )
+
+
+def run(paths: list[str], allow_large: bool = False) -> dict[str, Any]:
     """对若干文件跑 triage，返回可直接落盘的结构（JSON 友好）。"""
     results: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
     files = expand_paths(paths)
     if not files:
         # 空目录 / 通配符无匹配 / 全是非 PE 扩展名：显式报错，不假装"成功处理 0 个文件"
-        return {"analyzer": NAME, "results": [], "errors": [{
-            "file": ", ".join(paths),
-            "error": "NoFilesFound: 没有匹配到可分析的文件（检查路径、扩展名或通配符）",
-        }]}
+        return {"analyzer": NAME, "results": [], "errors": [no_files_entry(paths)]}
     for path in files:
         try:
-            results.append(analyze_file(path).as_dict())
+            results.append(analyze_file(path, allow_large=allow_large).as_dict())
         except (PEError, OSError) as e:
-            errors.append({"file": path, "error": f"{type(e).__name__}: {e}"})
+            errors.append(error_entry(path, e))
     return {"analyzer": NAME, "results": results, "errors": errors}

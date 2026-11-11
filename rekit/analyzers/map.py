@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..contract import error_entry, no_files_entry
 from ..core.files import expand_paths
 from ..core.pe import PE, PEError
 
@@ -18,18 +19,16 @@ DESCRIPTION = "加载器映射：节 RVA↔FOA 对照、内存补零/文件松�
 VERSION = "0.2.0"
 
 
-def run(paths: list[str], probes: list[int] | None = None) -> dict[str, Any]:
+def run(paths: list[str], probes: list[int] | None = None,
+        allow_large: bool = False) -> dict[str, Any]:
     results: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
     files = expand_paths(paths)
     if not files:
-        return {"analyzer": NAME, "results": [], "errors": [{
-            "file": ", ".join(paths),
-            "error": "NoFilesFound: 没有匹配到可分析的文件（检查路径、扩展名或通配符）",
-        }]}
+        return {"analyzer": NAME, "results": [], "errors": [no_files_entry(paths)]}
     for path in files:
         try:
-            results.append(PE(path).format_map(probes))
+            results.append(PE(path, allow_large=allow_large).format_map(probes))
         except (PEError, OSError) as e:
-            errors.append({"file": path, "error": f"{type(e).__name__}: {e}"})
+            errors.append(error_entry(path, e))
     return {"analyzer": NAME, "results": results, "errors": errors}

@@ -1,0 +1,111 @@
+{
+  "_comment": "M2 达标门基线（2026-11-18 冻结）。数字是修前/修后同口径实测，不是阈值；阈值见 gate（长期目标.md M2 判定口径）。",
+  "generated": "2026-11-18",
+  "gate": {
+    "reachable_recall_min": 0.5,
+    "strict_fp_max": 0.02,
+    "note": "四族逐族同时满足；任一族不满足即 M2 未达标，不得用其它族抵消。"
+  },
+  "families": [
+    {
+      "id": "clang_x64_elf",
+      "family": "Clang x64 ELF strip+PIE",
+      "sample_in_repo": true,
+      "sample": "tests/fixtures/clang_o0",
+      "size": 408432,
+      "sha256": "80505a46325fe4b1e90cb327be197d50ade85d889dc919c99c8fdaaf4bb85e89",
+      "acquired": "本仓库 fixture，由 tests/fixtures/src/build_fixtures.ps1 用 zig cc （-target x86_64-linux-gnu -O0 -s）从 src/hello_c.c 重建",
+      "authority": ".eh_frame",
+      "starts": 714,
+      "a_layer": {
+        "recall": 1.0,
+        "fp": 0,
+        "fp_text": 0
+      },
+      "cold": {
+        "recall": 0.23809523809523808,
+        "reachable_total": 194,
+        "reachable_emitted": 166,
+        "reachable_recall": 0.8556701030927835,
+        "fp": 2,
+        "fp_text": 2,
+        "strict_fp": 0.0028011204481792717
+      }
+    },
+    {
+      "id": "go_linux_amd64",
+      "family": "Go linux/amd64 strip",
+      "sample_in_repo": true,
+      "sample": "tests/fixtures/go_linux_amd64",
+      "size": 1511584,
+      "sha256": "add9f03517538a828eb53d165e226d4b9dfe77069513076e2253b51f72bb90cd",
+      "acquired": "本仓库 fixture，由 tests/fixtures/src/build_fixtures.ps1 用 Go 1.27 （GOOS=linux GOARCH=amd64 -trimpath -ldflags=\"-s -w\"）从 src/hello_go.go 重建",
+      "authority": ".gopclntab",
+      "starts": 1799,
+      "a_layer": {
+        "recall": 1.0,
+        "fp": 1,
+        "fp_text": 1
+      },
+      "cold": {
+        "recall": 0.36464702612562533,
+        "reachable_total": 1091,
+        "reachable_emitted": 549,
+        "reachable_recall": 0.5032080659945004,
+        "fp": 5,
+        "fp_text": 5,
+        "strict_fp": 0.0027793218454697055
+      }
+    },
+    {
+      "id": "go_win_amd64",
+      "family": "Go windows/amd64 strip",
+      "sample_in_repo": false,
+      "sample": "实践/2026-11-17-families/samples/go_win.exe",
+      "size": 1652736,
+      "sha256": "d1572c3be350cfb716205bf4c44eac5378fdb1e0c42c38163023899a5e2f2511",
+      "acquired": "1.6 MB，不随仓库分发；用 Go 1.27（GOOS=windows GOARCH=amd64 -trimpath -ldflags=\"-s -w\"）从 src/hello_go.go 本地构建，SHA256 见本文件",
+      "authority": ".gopclntab",
+      "starts": 1890,
+      "a_layer": {
+        "recall": 1.0,
+        "fp": 1,
+        "fp_text": 1
+      },
+      "cold": {
+        "recall": 0.6206349206349207,
+        "reachable_total": 1469,
+        "reachable_emitted": 1109,
+        "reachable_recall": 0.7549353301565691,
+        "fp": 5,
+        "fp_text": 5,
+        "strict_fp": 0.0026455026455026454
+      }
+    },
+    {
+      "id": "rust_musl_elf",
+      "family": "Rust musl ELF strip",
+      "sample_in_repo": true,
+      "sample": "tests/fixtures/hello_elf",
+      "size": 1398136,
+      "sha256": "1f4ba3bf9cb5da291fbd01ef15783d9467d6e3907b0a5ebc4c4676f8f57106d1",
+      "acquired": "本仓库 fixture，构建命令见 tests/fixtures/README.md（rustc --target x86_64-unknown-linux-musl -O -C panic=abort -C force-unwind-tables=yes -C strip=symbols -C link-arg=--export-dynamic）",
+      "authority": ".eh_frame",
+      "starts": 2360,
+      "a_layer": {
+        "recall": 1.0,
+        "fp": 0,
+        "fp_text": 0
+      },
+      "cold": {
+        "recall": 0.4233050847457627,
+        "reachable_total": 1031,
+        "reachable_emitted": 938,
+        "reachable_recall": 0.9097963142580019,
+        "fp": 5,
+        "fp_text": 5,
+        "strict_fp": 0.00211864406779661
+      }
+    }
+  ]
+}

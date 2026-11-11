@@ -7,3 +7,9 @@ dist/
 out.json
 out.md
 .venv/
+
+# 采集产物与样本不入库（评测采集在仓库外的工作区）
+实践/
+样本/
+samples/
+access_log*

@@ -7,8 +7,8 @@
 from __future__ import annotations
 
 NAME = "symbols"
-DESCRIPTION = "函数边界与调用图（Ghidra headless）—— v0.3 未实现"
-PLANNED_VERSION = "0.3.0"
+DESCRIPTION = "函数边界与调用图（Ghidra headless）—— v0.3 未实现，计划 0.4"
+PLANNED_VERSION = "0.4.0"
 REQUIRES = "Ghidra headless (analyzeHeadless) + JDK"
 
 

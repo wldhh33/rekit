@@ -23,7 +23,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e ".[dev]"
+          python -m pip install -e ".[dev,funcs]"
 
       - name: Test
         run: python -m pytest -q
@@ -34,6 +34,9 @@ jobs:
           python -m rekit triage tests/fixtures/hello_rs.exe tests/fixtures/hello_rs.packed.exe -o out.json -m out.md
           grep -q '"verdict": "upx"' out.json
           grep -q 'UPX' out.md
+          python -m rekit funcs tests/fixtures/hello_elf --json out_funcs.json --csv out_funcs.csv
+          grep -q '".eh_frame"' out_funcs.json
+          grep -q '^file,' out_funcs.csv
 
       - name: Example
         run: python examples/triage_demo.py

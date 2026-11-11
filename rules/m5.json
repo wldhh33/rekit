@@ -1,0 +1,51 @@
+{
+  "engine": "rekit",
+  "engine_note": "自制规则引擎，不是 YARA 兼容实现；条件只做布尔求值，不参与工具链族判定。",
+  "schema_version": 1,
+  "rules": [
+    {
+      "id": "dotnet_assembly",
+      "description": "CLR 运行时目录非零，且元数据根签名为 BSJB",
+      "any": [
+        [
+          {"fact": "dotnet_clr_rva", "op": "gt", "value": 0},
+          {"fact": "dotnet_bsjb", "op": "eq", "value": true}
+        ]
+      ]
+    },
+    {
+      "id": "go_binary",
+      "description": "存在 .gopclntab 节，或含 Go buildinfo 魔数",
+      "any": [
+        [
+          {"fact": "go_pclntab_section", "op": "eq", "value": true}
+        ],
+        [
+          {"fact": "go_buildinfo", "op": "eq", "value": true}
+        ]
+      ]
+    },
+    {
+      "id": "upx_packed",
+      "description": "UPX0/UPX1 节名成对，或入口落在 UPX1 节内",
+      "any": [
+        [
+          {"fact": "upx_pair", "op": "eq", "value": true}
+        ],
+        [
+          {"fact": "entry_in_upx1", "op": "eq", "value": true}
+        ]
+      ]
+    },
+    {
+      "id": "high_entropy_section",
+      "description": "存在熵大于 7.8 且原始大小不少于 4096 字节的节",
+      "any": [
+        [
+          {"fact": "max_section_entropy", "op": "gt", "value": 7.8},
+          {"fact": "max_entropy_raw", "op": "ge", "value": 4096}
+        ]
+      ]
+    }
+  ]
+}

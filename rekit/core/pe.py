@@ -13,11 +13,21 @@ from __future__ import annotations
 
 import hashlib
 import math
+import mmap
+import os
 import struct
-from dataclasses import dataclass
+from collections import Counter
+from dataclasses import dataclass, field
 from typing import Any
 
 PE_EXTS = (".exe", ".dll", ".sys", ".cpl", ".ocx", ".scr", ".efi")
+
+# 内存策略（改造动机见 docs/benchmark.md「内存」一节）：
+# - 文件 >= 8 MiB 用 mmap，只把真正读到的页拉进工作集；小文件仍整读，避免每文件
+#   多一次 mmap/缺页开销（500 个 System32 的中位数在 200 KiB，是主流场景）。
+# - 单文件 > 512 MiB 默认拒绝，避免一次解析吃掉几百 MB；需要时显式 allow_large。
+DEFAULT_MMAP_THRESHOLD = 8 * 1024 * 1024
+DEFAULT_MAX_SIZE = 512 * 1024 * 1024
 
 MACHINES = {
     0x014C: "i386",
@@ -72,10 +82,18 @@ class PEError(Exception):
     """解析时的边界/格式错误。"""
 
 
-class Reader:
-    """带边界检查的字节读取器，偏移一律指文件偏移（FOA）。"""
+class PEFileTooLarge(PEError):
+    """文件超过默认解析上限，需要显式 allow_large 才继续。"""
 
-    def __init__(self, data: bytes):
+
+class Reader:
+    """带边界检查的字节读取器，偏移一律指文件偏移（FOA）。
+
+    `data` 可以是 bytes（小文件整读）或 mmap.mmap（大文件按页读），
+    两者的索引/切片/`find` 语义一致。
+    """
+
+    def __init__(self, data: Any):
         self.data = data
 
     def _unpack(self, fmt: str, off: int, size: int) -> int:
@@ -109,14 +127,20 @@ class Reader:
         return self.data[off:end].decode("ascii", errors="replace")
 
 
-def entropy(data: bytes) -> float:
-    """香农熵（比特/字节）。加壳/压缩数据的典型值 > 7.5。"""
-    if not data:
+def entropy(data: Any, chunk_size: int = 1 << 20) -> float:
+    """香农熵（比特/字节），按块统计直方图。加壳/压缩数据的典型值 > 7.5。
+
+    `data` 可以是 bytes / memoryview / mmap：只按 `chunk_size` 分块读，不复制整块数据，
+    也不要求整节常驻（mmap 的页由内核按需换入换出）。
+    """
+    total = len(data)
+    if not total:
         return 0.0
     counts = [0] * 256
-    for b in data:
-        counts[b] += 1
-    total = len(data)
+    view = memoryview(data)
+    for off in range(0, total, chunk_size):
+        for b, c in Counter(bytes(view[off:off + chunk_size])).items():
+            counts[b] += c
     e = 0.0
     for c in counts:
         if c:
@@ -135,7 +159,16 @@ class Section:
     pointer_to_raw_data: int
     characteristics: int
     header_offset: int
-    raw: bytes = b""
+    # 指向整个文件缓冲区（bytes 或 mmap）；raw 是它的零拷贝切片。
+    # 不在这里存 bytes 副本：230 MB 文件的节数据再复制一遍等于双倍内存。
+    _buf: Any = field(default=None, repr=False, compare=False)
+
+    @property
+    def raw(self) -> memoryview:
+        if self._buf is None or not self.size_of_raw_data:
+            return memoryview(b"")
+        start = self.pointer_to_raw_data
+        return memoryview(self._buf)[start:start + self.size_of_raw_data]
 
     @property
     def entropy(self) -> float:
@@ -178,17 +211,59 @@ class Export:
 
 
 class PE:
-    """一个 PE 文件的结构视图。构造即完整解析（失败抛 PEError）。"""
+    """一个 PE 文件的结构视图。构造即完整解析（失败抛 PEError）。
 
-    def __init__(self, path: str):
+    `mmap_threshold` 以上的文件用 mmap 按页读，以下是整读。整读小文件更快；
+    mmap 让大文件的常驻内存只跟"真正解析到多少页"有关，而不是文件大小。
+    """
+
+    def __init__(self, path: str, *, mmap_threshold: int = DEFAULT_MMAP_THRESHOLD,
+                 max_size: int = DEFAULT_MAX_SIZE, allow_large: bool = False):
         self.path = path
-        with open(path, "rb") as f:
-            self.data = f.read()
+        self._mmap: mmap.mmap | None = None
+        self._sha256: str | None = None
+        size = os.path.getsize(path)
+        if max_size and size > max_size and not allow_large:
+            raise PEFileTooLarge(
+                f"文件 {size / 2**20:.1f} MiB 超过默认解析上限 {max_size / 2**20:.0f} MiB；"
+                f"确认要解析请显式允许大文件（CLI: --allow-large，API: allow_large=True）")
+        if size >= mmap_threshold:
+            with open(path, "rb") as f:
+                self._mmap = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+            self.data: Any = self._mmap
+        else:
+            with open(path, "rb") as f:
+                self.data = f.read()
         self.r = Reader(self.data)
-        self.sha256 = hashlib.sha256(self.data).hexdigest()
         self.sections: list[Section] = []
         self.directories: list[tuple[int, int]] = []
         self._parse()
+
+    @property
+    def sha256(self) -> str:
+        """按需计算：结构解析不需要哈希，而大文件上它的代价等于整文件读一遍。"""
+        if self._sha256 is None:
+            self._sha256 = hashlib.sha256(self.data).hexdigest()
+        return self._sha256
+
+    def close(self) -> None:
+        if self._mmap is not None:
+            self._mmap.close()
+            self._mmap = None
+            self.data = b""
+            self.r.data = b""
+
+    def __enter__(self) -> "PE":
+        return self
+
+    def __exit__(self, *_exc: object) -> None:
+        self.close()
+
+    def __del__(self) -> None:
+        try:
+            self.close()
+        except Exception:
+            pass
 
     # ---------- 头 ----------
     def _parse(self) -> None:
@@ -239,7 +314,6 @@ class PE:
             name = self.r.bytes(base, 8).rstrip(b"\x00").decode("ascii", errors="replace")
             raw_size = self.r.u32(base + 16)
             raw_ptr = self.r.u32(base + 20)
-            raw = self.data[raw_ptr:raw_ptr + raw_size] if raw_size and raw_ptr < len(self.data) else b""
             self.sections.append(
                 Section(
                     index=i,
@@ -250,7 +324,7 @@ class PE:
                     pointer_to_raw_data=raw_ptr,
                     characteristics=self.r.u32(base + 36),
                     header_offset=base,
-                    raw=raw,
+                    _buf=self.data,
                 )
             )
 

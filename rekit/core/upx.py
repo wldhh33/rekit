@@ -25,6 +25,7 @@ import zlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from ..contract import error_entry, no_files_entry
 from .files import expand_paths
 from .pe import PE, PEError
 
@@ -1012,10 +1013,7 @@ def unpack_many(paths: list[str], out_dir: Path | None,
     """批量入口：展开路径，逐个脱壳，返回 ``{results, errors}``。"""
     files = expand_paths(paths)
     if not files:
-        return {"results": [], "errors": [{
-            "file": ", ".join(paths),
-            "error": "NoFilesFound: 没有匹配到可脱壳的文件（检查路径、扩展名或通配符）",
-        }]}
+        return {"results": [], "errors": [no_files_entry(paths, "可脱壳")]}
 
     results: list[dict] = []
     errors: list[dict[str, str]] = []
@@ -1030,5 +1028,5 @@ def unpack_many(paths: list[str], out_dir: Path | None,
         try:
             results.append(unpack(src, out_path, verify_only=verify_only))
         except (UnpackError, PEError, OSError) as exc:
-            errors.append({"file": path, "error": f"{type(exc).__name__}: {exc}"})
+            errors.append(error_entry(path, exc))
     return {"results": results, "errors": errors}

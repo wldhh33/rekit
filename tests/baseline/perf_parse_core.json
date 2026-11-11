@@ -1,0 +1,21 @@
+{
+  "schema": "rekit-perf-baseline-v1",
+  "date": "2026-11-11",
+  "version": "0.6.0",
+  "python": "3.14.0",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "sample": "tests/fixtures/hello_rs.exe",
+  "sample_bytes": 130560,
+  "sample_sha256": "3c65c12cab8f38f495f11c9792dc779a19bfb86e352453a679e903a16151063d",
+  "iterations": 31,
+  "calibration_rounds": 5,
+  "parse_median_s": 0.0001868,
+  "calibration_median_s": 0.0089385,
+  "ratio": 0.020898,
+  "peak_bytes": 263145,
+  "gates": {
+    "median_factor": 1.15,
+    "peak_factor": 1.2
+  },
+  "note": "绝对秒数仅供本机参考；门限比较 ratio（解析/校准），可跨机器。"
+}

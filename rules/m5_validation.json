@@ -1,0 +1,8 @@
+{
+  "status": "通过",
+  "detail": "yara-python 4.5.4 编译通过；对 13 个样本求值完成；.yar 只翻译 YARA 可表达条件，与 rekit 引擎语义不等价（差异见 detection_report.json）",
+  "yara_version": "4.5.4",
+  "compiled": true,
+  "equivalence": false,
+  "samples": 13
+}

@@ -11,6 +11,7 @@
 用法：
     python bench/benchmark.py --dir C:\\Windows\\System32 --limit 500 --out docs/benchmark.md
     python bench/benchmark.py --from-csv path/to/sys32_500.csv --out docs/benchmark.md
+    python bench/benchmark.py --from-csv path/to/huge.csv --per-file --out docs/memory.md
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ from __future__ import annotations
 import argparse
 import csv
 import gc
+import json
 import os
 import platform
 import statistics
@@ -110,14 +112,144 @@ def peak_memory(files: list[str], fn) -> int:
     return peak
 
 
+# ---------------------------------------------------------------------------
+# 逐文件峰值内存（子进程 + 进程峰值工作集）
+#
+# tracemalloc 只统计 Python 堆：mmap 读入的字节不计，用它比"谁更省内存"会失真。
+# 这里每个文件单独起一个子进程，读取 OS 记录的峰值工作集（Windows=
+# PeakWorkingSetSize，POSIX=ru_maxrss），再减去"只 import 不解析"的基线。
+# ---------------------------------------------------------------------------
+
+def peak_rss() -> int:
+    if os.name == "nt":
+        import ctypes
+        from ctypes import wintypes
+
+        class Pmc(ctypes.Structure):
+            _fields_ = [
+                ("cb", wintypes.DWORD), ("PageFaultCount", wintypes.DWORD),
+                ("PeakWorkingSetSize", ctypes.c_size_t), ("WorkingSetSize", ctypes.c_size_t),
+                ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+                ("PagefileUsage", ctypes.c_size_t), ("PeakPagefileUsage", ctypes.c_size_t),
+            ]
+
+        pmc = Pmc()
+        pmc.cb = ctypes.sizeof(Pmc)
+        k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        psapi = ctypes.WinDLL("psapi", use_last_error=True)
+        k32.GetCurrentProcess.restype = wintypes.HANDLE
+        psapi.GetProcessMemoryInfo.argtypes = [wintypes.HANDLE, ctypes.POINTER(Pmc),
+                                               wintypes.DWORD]
+        psapi.GetProcessMemoryInfo.restype = wintypes.BOOL
+        if not psapi.GetProcessMemoryInfo(k32.GetCurrentProcess(), ctypes.byref(pmc), pmc.cb):
+            raise OSError(ctypes.get_last_error(), "GetProcessMemoryInfo 失败")
+        return int(pmc.PeakWorkingSetSize)
+    import resource
+    return int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss) * (1024 if sys.platform == "darwin" else 1)
+
+
+def child_main(tool: str, path: str | None) -> int:
+    """子进程：import（+ 解析一个文件），报告耗时与进程峰值工作集。"""
+    t0 = time.perf_counter()
+    if tool == "rekit":
+        import rekit.core.pe as mod
+        if path:
+            pe = mod.PE(path)
+            pe.imports()
+            pe.exports()
+    elif tool == "rekit-triage":
+        from rekit.analyzers.triage import analyze_file
+        if path:
+            analyze_file(path)
+    elif tool == "pefile":
+        import pefile  # type: ignore
+        if path:
+            ref = pefile.PE(path, fast_load=True)
+            ref.parse_data_directories(directories=DIRS)
+            ref.close()
+    else:
+        raise SystemExit(f"未知 tool: {tool}")
+    ms = (time.perf_counter() - t0) * 1000
+    print(json.dumps({"peak": peak_rss(), "ms": round(ms, 3)}))
+    return 0
+
+
+def run_child(tool: str, path: str | None) -> dict:
+    """每个样本独立子进程，避免峰值在文件之间累积。"""
+    proc = subprocess.run(
+        [sys.executable, os.path.abspath(__file__), "--child", tool, path or ""],
+        capture_output=True, text=True, encoding="utf-8",
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr.strip() or f"子进程失败 rc={proc.returncode}")
+    return json.loads(proc.stdout.strip().splitlines()[-1])
+
+
+def _median_runs(tool: str, path: str | None, runs: int = 3) -> dict:
+    vals = [run_child(tool, path) for _ in range(runs)]
+    return {"peak": int(statistics.median(v["peak"] for v in vals)),
+            "ms": round(statistics.median(v["ms"] for v in vals), 3)}
+
+
+def per_file_report(files: list[str], out: str | None) -> str:
+    base = {"rekit": _median_runs("rekit", None), "pefile": _median_runs("pefile", None)}
+    rows = []
+    for p in files:
+        size = os.path.getsize(p)
+        r = _median_runs("rekit", p)
+        f = _median_runs("pefile", p)
+        rows.append({"file": p, "size": size, "rekit": r, "pefile": f})
+        print(f"  {size/2**20:8.1f} MiB  rekit {r['peak']/2**20:7.1f} MiB / "
+              f"{r['ms']:8.1f} ms   pefile {f['peak']/2**20:7.1f} MiB / {f['ms']:8.1f} ms  "
+              f"{os.path.basename(p)}")
+
+    lines = ["# 逐文件峰值内存（大文件）\n"]
+    lines.append(f"- 环境：{platform.platform()} / Python {platform.python_version()} / "
+                 f"pefile {pefile.__version__}")
+    lines.append("- 语料：M1 `huge` 5 个（23–230 MB），`--per-file` 每个文件一个子进程")
+    lines.append(f"- 基线（只 import 不解析）：rekit {base['rekit']['peak']/2**20:.1f} MiB / "
+                 f"pefile {base['pefile']['peak']/2**20:.1f} MiB")
+    lines.append("- 指标：进程峰值工作集（Windows PeakWorkingSetSize），已减 import 基线；"
+                 "每个文件 3 次取中位数；耗时是子进程内解析耗时，不含解释器启动\n")
+    lines.append("| 文件 | 大小 MiB | rekit 峰值 MiB | rekit 净 MiB | rekit 耗时 ms | "
+                 "pefile 峰值 MiB | pefile 净 MiB | pefile 耗时 ms |")
+    lines.append("|---|---:|---:|---:|---:|---:|---:|---:|")
+    for row in rows:
+        r_net = max(0.0, (row['rekit']['peak'] - base['rekit']['peak']) / 2**20)
+        f_net = (row['pefile']['peak'] - base['pefile']['peak']) / 2**20
+        lines.append(
+            f"| {os.path.basename(row['file'])} | {row['size']/2**20:.1f} | "
+            f"{row['rekit']['peak']/2**20:.1f} | {r_net:.1f} | {row['rekit']['ms']:.1f} | "
+            f"{row['pefile']['peak']/2**20:.1f} | {f_net:.1f} | {row['pefile']['ms']:.1f} |")
+    lines.append("")
+    lines.append("> 净内存 = 进程峰值 − 只 import 的基线（结果波动约 ±1 MiB，"
+                 "负值记 0 表示与基线在同一噪声内）。整文件 `read()` 的实现净内存约等于"
+                 "文件大小的 2 倍（原始字节 + 节切片副本）；mmap 实现只拉进真正解析到的页。")
+    text = "\n".join(lines) + "\n"
+    if out:
+        with open(out, "w", encoding="utf-8") as f:
+            f.write(text)
+        print(f"[写入] {out}")
+    return text
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="本解析器 vs pefile 性能基准")
+    ap.add_argument("--child", nargs=2, metavar=("TOOL", "FILE"), help=argparse.SUPPRESS)
     ap.add_argument("--dir")
     ap.add_argument("--from-csv", help="用 CSV 的 file 列锁定与 M1 完全相同的语料")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--rounds", type=int, default=3)
+    ap.add_argument("--per-file", action="store_true",
+                    help="逐文件子进程测量峰值工作集（大文件用，不跑吞吐）")
     ap.add_argument("--out", help="把 Markdown 结果写入文件")
     args = ap.parse_args(argv)
+
+    if args.child:
+        return child_main(args.child[0], args.child[1] or None)
 
     if args.from_csv:
         with open(args.from_csv, encoding="utf-8-sig") as f:
@@ -133,6 +265,11 @@ def main(argv: list[str] | None = None) -> int:
     if not files:
         print("[错误] 没有文件", file=sys.stderr)
         return 2
+
+    if args.per_file:
+        text = per_file_report(files, args.out)
+        print(text)
+        return 0
 
     sizes = {p: os.path.getsize(p) for p in files}
     tiers: dict[str, list[str]] = {name: [] for name, _ in TIERS}
@@ -157,7 +294,10 @@ def main(argv: list[str] | None = None) -> int:
     lines.append(f"- 语料：{len(files)} 个文件（{args.from_csv or args.dir}），"
                  f"预热 10 个，{args.rounds} 轮取中位数")
     lines.append("- 任务：打开 + 节表/数据目录 + imports + exports（两边同一子集；rekit 尚未解析重定位）")
-    lines.append("- 计时不含内存采样；内存峰值用 tracemalloc 单独跑一轮（仅 Python 分配）\n")
+    lines.append("- rekit 侧不计算 SHA256（改为按需属性）：上一版基准里它顺手算了哈希，pefile 没有，"
+                 "两边任务并不对等；这一版才是同任务。")
+    lines.append("- 计时不含内存采样；内存峰值用 tracemalloc 单独跑一轮（仅 Python 分配，"
+                 "mmap 的页不计入，大文件真实峰值见 docs/memory.md）\n")
 
     lines.append("## 分档单文件耗时（毫秒，中位数）\n")
     lines.append("| 档位 | 文件数 | 大小中位数 | rekit | pefile | 倍率 |")
@@ -197,26 +337,30 @@ def main(argv: list[str] | None = None) -> int:
 
     lines.append("## 为什么快 / 为什么内存高\n")
     lines.append("**快在少做事，不是做得巧。** 两者任务是同一子集，但实现路径不同：\n")
-    lines.append("- 单遍顺序解析：文件头 → 节表 → 数据目录，全部用 `struct.unpack_from` 在原始 bytes 上取值，"
+    lines.append("- 单遍顺序解析：文件头 → 节表 → 数据目录，全部用 `struct.unpack_from` 在原始缓冲区上取值，"
                  "不建对象树；pefile 为每个头/节/导入项创建 `Structure` 实例并回写格式化属性，"
                  "成本随结构数量线性增长。")
     lines.append("- 只解析要求的目录（导入、导出），不碰重定位、资源、调试、签名；"
                  "pefile 即使 `fast_load=True`，`parse_data_directories` 仍带一层通用分发。")
     lines.append("- 字符串按 `bytes` 切片取，不逐字符解码；序号导入保持 `#序号`，不做 ordlookup 名称映射。")
-    lines.append("- 无 mmap：省掉缺页与每页映射开销，小文件上尤其明显（small 档差距最大）。\n")
-    lines.append("**内存高在整文件驻留 + 切片副本。** rekit 每个文件一次性 `read()` 成 bytes，"
-                 "并在解析中产生若干切片（`read_string`、导入名区）；pefile 用 mmap，"
-                 "按需映射且大部分结构只是视图。峰值由单个最大文件决定，"
-                 "所以 15.6 MiB 不代表单文件平均值。若要降，方向是 mmap + `memoryview`，"
-                 "代价是每次访问多一层解引用。\n")
+    lines.append("- 节数据不复制：`Section.raw` 是整个文件缓冲区的 `memoryview` 切片，"
+                 "旧版每个节 `data[ptr:ptr+size]` 都复制一份。\n")
+    lines.append("**内存策略**：小文件整读、大文件（≥ 8 MiB）`mmap` 按页读，"
+                 "`Section.raw` 零拷贝；SHA256 改为按需。500 个 System32 的 tracemalloc 峰值 "
+                 "7.9 MiB vs pefile 4.8 MiB（旧版 15.6 MiB：整文件 + 节切片副本）。"
+                 "大文件按真实进程峰值另测，见 [docs/memory.md](memory.md)。\n")
     lines.append("**冷启动**：rekit 略慢于 pefile，因为 `rekit.core.pe` 走包 import（`rekit/__init__` "
                  "+ `core/__init__` 链），pefile 是单模块；差值在毫秒级，可忽略。\n")
     lines.append("## 局限\n")
+    lines.append("- **这个倍率来自只解析导入导出的实现**；补齐重定位、资源、调试目录后，"
+                 "rekit 会做更多事，倍率必然下降。它衡量的是当前子集，不是\"解析 PE 比 pefile 快 9 倍\"。")
     lines.append("- 两边都不解析重定位，因为 rekit 尚未实现 `relocations()`；"
                  "加上后 rekit 的相对优势会缩小。")
-    lines.append("- 语料是 System32 前 500 个（M1 B1 同一批），最大约 10 MiB；"
-                 "50 MB 以上的超大文件另有 M1 `huge` 语料，未纳入本基准。")
-    lines.append("- 单机单次测量，未做 CPU 频率锁定；数值用于量级判断，不用于微优化回归。\n")
+    lines.append("- 语料是 System32 前 500 个（M1 B1 同一批），最大约 10 MiB，"
+                 "不含 50 MB 以上的超大文件（后者见 [docs/memory.md](memory.md)）。")
+    lines.append("- 单机单次测量，未做 CPU 频率锁定；数值用于量级判断，不用于微优化回归。")
+    lines.append("- 基准日期 2026-11-11，可复跑：`python rekit/bench/benchmark.py "
+                 "--from-csv 实践/2026-11-11-m1/sys32_500.csv --out rekit/docs/benchmark.md`。\n")
 
     text = "\n".join(lines) + "\n"
     print(text)

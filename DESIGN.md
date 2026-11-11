@@ -28,9 +28,13 @@ rekit/
   cli.py            子命令解析、输出落盘（argparse，无第三方依赖）
   core/
     pe.py           PE/PE32+ 解析器（标准库手写），产出所有原始字段与文件偏移
+    elf.py          ELF32/64 解析器：节表、可执行节、`.dynsym` 导出、VA↔FOA
+    funcs.py        函数边界：权威表（.pdata/.eh_frame/.gopclntab）+ 递归下降
+                    + 指针表 + 穷举；每条入口带证据来源与口径（A / B 可达 / B 孤立）
   analyzers/
     triage.py       PE 概览 + 加壳/异常评分（v0.1）
-    unpack.py       静态脱壳（v0.2，占位）
+    unpack.py       静态脱壳（v0.2）
+    funcs.py        函数边界（v0.3，调用 core.funcs）
     symbols.py      Ghidra headless 函数边界（v0.3，占位）
   report/
     markdown.py     报告渲染（Markdown）
@@ -93,7 +97,7 @@ def run(paths: list[str]) -> dict:
 |---|---|---|
 | **v0.1.0** | `triage`：PE 概览、6 条信号组合评分、壳识别、Markdown+JSON、证据偏移 | `pytest` 全绿；CI 跑通；两份 fixture 判定正确 |
 | v0.2.0 | `unpack`：UPX 静态还原（`PackHeader` 解析 → NRV2B 解压 → filter 0x49 反向过滤 → 重建 IAT/重定位） | 产物可运行；导入表与原件多重集一致；`upx -d` 仅作对照 |
-| v0.3.0 | `symbols`：Ghidra headless 批处理，导出函数边界 JSON | 与 `analyzeHeadless` 直接输出一致 |
+| v0.3.0 | `funcs`：PE `.pdata` / ELF `.eh_frame` / Go `.gopclntab` 权威表 + 递归下降 + 指针表 + 穷举，证据来源与 A/B 口径；`symbols`：Ghidra headless 批处理 | 自带 PE/ELF fixture 端到端召回/误报断言；`funcs` CSV/JSON 契约见 `docs/funcs.md` |
 | v0.4.0 | `report` 独立成段 + 跨段汇总；统一 evidence 索引 | 一条命令产出全链报告 |
 | v0.5.0 | 规则外置（YAML/JSON）+ 规则版本号；旧结果可重放 | 改规则不改代码 |
 | v1.0.0 | 稳定 CLI 契约 + 语义化版本 + 插件第三方可加载 | 第三方插件示例进 `examples/` |
@@ -105,6 +109,8 @@ def run(paths: list[str]) -> dict:
 ## 6. 已知取舍
 
 - **不加 `pefile` 依赖**：自写解析器是学习资产本身，且能精确控制偏移；对照验证在 `tests/` 里用固定期望值做。
+- **capstone 是可选依赖**：只有 `funcs` 需要，放在 extra `.[funcs]`，主包保持零运行时依赖；
+  缺依赖时返回明确错误，不让 `triage` 等子命令被拖住。
 - **不加 Click/Typer**：`argparse` 足够，少一个依赖。
 - **Markdown 用字符串拼**：报告结构简单，模板引擎在这里是过度设计。
 - **不缓存**：v0.1 输入规模小；等 `triage` 跑全量系统 DLL 时再引入缓存。

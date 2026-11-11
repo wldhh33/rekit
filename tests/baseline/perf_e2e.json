@@ -1,0 +1,64 @@
+{
+  "schema": "rekit-e2e-perf-baseline-v1",
+  "meta": {
+    "date": "2026-11-11",
+    "version": "0.6.0",
+    "python": "3.14.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "cpu_count": 32,
+    "sample": "tests/fixtures/hello_rs.exe",
+    "sample_bytes": 130560,
+    "sample_sha256": "3c65c12cab8f38f495f11c9792dc779a19bfb86e352453a679e903a16151063d",
+    "rules": "rules/m5.json",
+    "warmup": 3,
+    "hot_rounds": 15,
+    "cold_warmup": 1,
+    "cold_rounds": 7,
+    "cold_definition": "每轮使用全新空的 PYTHONPYCACHEPREFIX，强制重新编译；未清空 OS 文件缓存，不等价于磁盘冷启动",
+    "commands": {
+      "triage": "python -m rekit triage tests/fixtures/hello_rs.exe -o triage.json -m triage.md",
+      "report": "python -m rekit report tests/fixtures/hello_rs.exe --rules rules/m5.json -o report.md -j report.json"
+    },
+    "note": "机器信息只写在 meta；rekit 生成的 JSON/Markdown 内容不含这些信息。"
+  },
+  "gates": {
+    "median_factor": 1.15,
+    "statistic": "median"
+  },
+  "commands": {
+    "triage": {
+      "hot": {
+        "n": 15,
+        "median_s": 0.189728,
+        "p90_s": 0.19615,
+        "min_s": 0.186842,
+        "max_s": 0.2238
+      },
+      "cold": {
+        "n": 7,
+        "median_s": 0.59066,
+        "p90_s": 0.607569,
+        "min_s": 0.587516,
+        "max_s": 0.607569
+      }
+    },
+    "report": {
+      "hot": {
+        "n": 15,
+        "median_s": 0.204766,
+        "p90_s": 0.209496,
+        "min_s": 0.202175,
+        "max_s": 0.210177
+      },
+      "cold": {
+        "n": 7,
+        "median_s": 0.606476,
+        "p90_s": 0.619869,
+        "min_s": 0.60548,
+        "max_s": 0.619869
+      }
+    }
+  }
+}
