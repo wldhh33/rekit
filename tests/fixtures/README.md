@@ -39,3 +39,24 @@ rustc --target x86_64-unknown-linux-musl -O -C panic=abort \
 
 `-C force-unwind-tables=yes` 保证 `.eh_frame` 存在；`--export-dynamic` 让
 `funcs` 的反事实口径有导出可播种（否则 PIE 静态样本只有入口，召回会失真）。
+
+## 0.7 族语义夹具（`round7/`，2026-11-11）
+
+这五个是 `identify` 0.7（`family` = 链接器提供方）的回归夹具，全部由本仓库 `src/` 源码构建，
+**提交进仓库**，保证 CI 真的执行 `tests/test_identify_fixture_families.py` 而不是 skip。
+
+| 文件 | 构建配方 | 期望 family / frontend / crt / `.rsrc` | SHA256 |
+|---|---|---|---|
+| `rust_msvc.exe` | `rustc -O -C panic=abort -C strip=symbols src/struct_probe.rs` | `msvc` / `rustc` / `ucrt` / 无 | `4e8574244f989e85a80b33c51d13da50de720bd37f386dc6a3d44348885864c5` |
+| `rust_gnu.exe` | `rustc --target x86_64-pc-windows-gnu -O -C panic=abort -C strip=symbols -C linker=gcc src/struct_probe.rs` | `gcc` / `rustc` / `msvcrt` / 有 | `6700b2138c782f550f6853337509ee01ebeaa89d0135442838735270604ea02b` |
+| `cgo_mingw.exe` | `CGO_ENABLED=1 CC=gcc go build -trimpath -ldflags="-s -w" src/hello_cgo.go` | `gcc` / `go` / `msvcrt` / 有 | `f713bcc106f52dad4c59d16dc2a400d5d72a7cab041f6015655174838a6edc6b` |
+| `go_win.exe` | `GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w" src/hello_go.go` | `go` / `go` / `none` / 无 | `5c4f07a503eb6f9b46d970dfd7e94896f349e42e8858ee399a60b9264a65e28b` |
+| `msvcrt_no_rsrc.exe` | `gcc -O2 -c src/hello_c.c` 后用同一 MinGW 的 `ld` 直接链接，**手工去掉 `default-manifest.o`** | `gcc` / `gcc` / `msvcrt` / 无 | `bba222f1fb50c65bf93f00a6e38b508c0fdebc7ccd90968c1e5bf43378cd9cb1` |
+
+构建工具：MinGW-w64 GCC 16.2.0（MSYS2），binutils 2.47；Rust 1.99.1（`x86_64-pc-windows-msvc` +
+`x86_64-pc-windows-gnu`）；Go 1.27.3。`msvcrt_no_rsrc.exe` 的链接命令行与 gcc `-v` 输出的
+collect2 行相同，只删掉 `.../lib/default-manifest.o`：gcc 驱动默认会链这个对象，从而产生
+`.rsrc`，该夹具专门用来证明 **absence 不是身份证据**。
+
+注意：`round7/go_win.exe` 与 §上文“不进仓库的 `go_win.exe`”不是同一个文件（前者用于族判定，
+后者用于 `funcs` 的 `.pdata` 量测），不要互相替换。

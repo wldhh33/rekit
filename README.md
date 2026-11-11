@@ -262,18 +262,30 @@ tests\fixtures\hello_elf  ELF64  工具链=gcc(0.97)/gcc_x64  权威表=.eh_fram
 python -m rekit identify a.exe b.exe -j identify.json
 ```
 
-输出 `family` / `bitness` / `scope` / `confidence` / `signals[]`（每条命中信号带偏移与
-`evidence_kind`）/ `conflicts[]`。三条硬规则：
+输出 `family` / `compiler_frontend` / `crt_provider` / `target_triple` / `bitness` / `scope` /
+`confidence` / `signals[]`（每条命中信号带偏移与 `evidence_kind`）/ `conflicts[]`。硬规则：
 
+- **`family` 指链接器提供方，不指编译器前端**：只取 `msvc` / `gcc` / `go` / `dotnet`，
+  完整定义见 [docs/family.md](docs/family.md)。`rustc` / `clang` / `go` 写在
+  `compiler_frontend`，不占 `family`；`crt_provider` 只描述链了哪套 CRT。
+- **`clang` 的归属写死**：`clang` + MinGW GNU `ld` → `family=gcc`；`clang-cl` /
+  `lld-link` → `family=msvc`。判据是最终链接步骤（target triple、`MajorLinkerVersion`、
+  导入表），不是 `clang version` 串。`family` 枚举里没有 `clang`。
 - **`unknown` 是合法结论，不硬猜**。`evidence_kind` 只有 `positive`（找到了什么：节、串、导入）
   和 `absence`（只证明没找到什么）两种；**absence 类信号只能削弱置信度，不能单独构成族判定**。
-  `.rsrc` 缺失只在 MinGW 默认链接配方下指向 clang，显式加 manifest 就翻成 gcc、换 clang-cl
-  就变成 msvc——所以只有“无 `.rsrc`”命中时输出 `unknown`。
-- **`clang_x64` 是条件族**：strip 后与 MinGW-gcc 不可区分（8 源 × 2 工具链实验，唯一取值范围
-  不相交的特征就是 `.rsrc`，而它是驱动产物不是编译器指纹）。只有未 strip 且带
-  `clang version` 正向串时才判；M4a 的族数按其余 4 族计算。
-- **位数是独立字段**：x86 允许给 `msvc_x86`，但标 `scope=out_of_m4a`，不冒充 `msvc_x64`、
-  也不进 M4a 的 4 族计分。
+  `.rsrc` 有无只作观测（`family=None`）：它反映 MinGW 驱动是否默认链 manifest，既不是编译器
+  身份，也不是链接器身份。
+- **冲突必须可见**：cgo + MinGW（gitea 类）同时有 Go 前端证据与 GNU `ld` 证据，输出
+  `conflicts=[{between:[go,gcc], ...}]`，`family=gcc`（族看最后写 PE 的链接器），
+  Go 证据只计入 `compiler_frontend`。不靠调整分支顺序把冲突吞掉。
+- **位数是独立字段**：x86 允许给族（如 `msvc`），但标 `scope=out_of_m4a`，不冒充 x64、
+  也不进 M4a 的 x64 计分。
+
+> **口径断点（0.6.x → 0.7）**：0.6.x 的 `family` 可能输出 `rust_x64` / `clang_x64`，那是编译器前端
+> 语义；0.7 起 `family` 只表示链接器提供方（见 [docs/family.md](docs/family.md)），前端迁到
+> `compiler_frontend`、`schema_version` 升到 3。两套口径的数字**不可并列**：M4a 的 4 族 80/80、
+> clang 10/20、A 轮 3 的 per-class 成绩都记在 0.6.x 口径下，不得与 0.7 的任何评估结果放在
+> 同一张表、求差或画趋势。
 
 ### 外部落差 / External gap
 

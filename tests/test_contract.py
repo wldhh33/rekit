@@ -28,7 +28,7 @@ def _run(argv: list[str], out: Path) -> tuple[int, dict | None]:
 def test_schema_version_table_covers_eight_commands() -> None:
     assert set(contract.SCHEMA_VERSION) == set(COMMANDS)
     assert all(isinstance(v, int) and v >= 1 for v in contract.SCHEMA_VERSION.values())
-    assert contract.SCHEMA_VERSION["identify"] == 2  # M4b 加壳字段之后的版本
+    assert contract.SCHEMA_VERSION["identify"] == 3  # 0.7：family 改为链接器提供方
 
 
 @pytest.mark.parametrize("command", COMMANDS)

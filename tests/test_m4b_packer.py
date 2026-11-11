@@ -36,7 +36,7 @@ def test_packer_signal_table_is_frozen() -> None:
 def test_upx_is_packed_with_evidence(path: str) -> None:
     _need(path)
     r = identify.analyze_file(path)
-    assert r["schema_version"] == 2
+    assert r["schema_version"] == 3
     assert r["kind"] == "packer"
     assert r["verdict"] == "packed"
     pk = r["packer"]
@@ -59,8 +59,8 @@ def test_clean_build_is_not_packed() -> None:
     pk = r["packer"]
     assert pk["family"] is None and pk["verdict"] == "clean"
     assert pk["score"] == 0 and pk["confidence"] == 0.90
-    # 工具链字段保持 M4a 语义不变（只追加 packer 块）
-    assert r["family"] == "msvc_x64"
+    # 工具链字段按 0.7 语义（族=链接器提供方）：MSVC 链接的干净样本是 msvc
+    assert r["family"] == "msvc"
 
 
 def test_only_upx_family_is_claimed() -> None:

@@ -1,5 +1,56 @@
 # 变更日志
 
+## 未发布（0.7.0）— 口径断点
+
+`identify.family` 的含义在本版改变：0.6.x 的 `rust_x64` / `clang_x64` 是**编译器前端**标签，
+0.7 起 `family` 只表示**链接器提供方**（`msvc` / `gcc` / `go` / `dotnet`），前端信息迁到
+`compiler_frontend`，`schema_version` 升到 3。断点在 0.7.0；断点之前的 M4a 4 族 80/80、
+clang 10/20、A 轮 3 的 per-class 数字都记在旧口径下，**不得与 0.7 的任何数字并列、求差或画趋势**。
+0.7 不声称族准确率上升或下降，只承诺语义明确。
+
+### 修复（F1–F5）
+
+- **F1 MinGW 证据有族归属**：`T8_mingw_gcc_comment` 的 `family` 从 `None` 改为 `gcc`；
+  新增 `T15_gnu_ld_linker_version`（`MajorLinkerVersion == 2` → gcc，5 分）与
+  `T16_msvc_linker_version`（6–14 → msvc，4 分）。判定阶梯改为
+  `dotnet` → `gcc` → `go` → `msvc` → 弱 msvc → `unknown`；**链接器证据优先于 go 前端证据**。
+  cgo + MinGW（gitea 类）现在同时输出 go 与 gcc 的硬证据，`conflicts=[{between:[go,gcc],…}]`
+  可见，`family=gcc`。不再靠调整分支顺序把冲突吞掉。
+- **F2 schema 3**：`identify` 输出新增 `compiler_frontend` / `crt_provider` / `target_triple`；
+  `family` 枚举改为 `msvc` / `gcc` / `go` / `dotnet`，删除 `*_x64` / `*_x86` 改名逻辑
+  （x86 仍标 `scope=out_of_m4a`）。`rust_x64` / `clang_x64` 不再出现。
+- **F3 只做验证，不调参**：用 A 池 30 个真实样本与 5 个自建夹具验证 T15/T16 的区分度；
+  `hard=0.97` / `weak=0.60` / 冲突 `-0.05` 一个字未改，没有为让样本通过而调权重。
+- **F4 指标边界**：`docs/family.md` 新增 §7，明确 GNU `ld` 的 2.x 不覆盖 lld/llvm-mingw、
+  strip 后 clang 前端可能显示 gcc、`.rsrc` 不参与判定、托管看 CLR 目录、置信度不是概率。
+- **F5 自建夹具**：新增 `tests/fixtures/round7/` 五个夹具（rust-msvc、rust-gnu、cgo-MinGW、
+  纯 go、msvcrt 缺 `.rsrc`），由本仓库源码构建并提交；`tests/test_identify_fixture_families.py`
+  在 CI 上真实执行，不再是以 skip 代替通过。
+
+### 测试
+
+- 本机 `python -m pytest`：**181 passed**（含 2 条性能门）；`REKIT_SKIP_PERF=1` 时
+  179 passed / 2 skipped。新增 7 个族语义夹具用例。
+- 快照基线重建为 `tests/baseline/snapshot_v0.7.0.json`（89 用例），SHA256
+  `ab38b497fa511084e7a5d6dbf50da7c2d46d204e7f7940debd4f04b3bc558711`。
+  重建原因：旧基线的 `family` 字面量语义已变，保留只会制造假红；0.6.x 基线见 git 历史。
+
+### 外部验证（B 池）：`insufficient`，未跑评估
+
+- 独立 B 池按预注册 v4 采集：原生 18/30、项目 17/27、`go` 4/10、`msvc` 7/10、`gcc` 7/10
+  （`msvcrt` 3/5、`ucrt` 4/5、rustc+GNU `ld` 1/2、cgo 0/2），托管 8/8、打包 0/1。
+- 按预注册 §2 记 `insufficient`：**不降下限、不从 A 池补、不写替代分数、不跑评估**。
+  0.7 的族语义只有自建夹具与仓库内测试验证，**不声称外部验证通过**。
+- 细节与失败证据见 `实践/B/acquisition_v4.md`；冻结的预注册文件未改动。
+
+### 文档
+
+- `docs/family.md`：§1.1 clang 归属（`clang-cl`/`lld-link` → msvc；`clang` + GNU `ld` → gcc）
+  与可核验元数据顺序；§5 旧口径处置；§7 指标边界。
+- `README.md`：`identify` 硬规则改为 0.7 语义，保留口径断点声明。
+- `docs/contract.md`：§1.1 schema 3 与断点声明、基线说明、测试数。
+- `计划/长期目标.md` §5.1：断点位置与不可比范围。
+
 ## 0.6.1 — 2026-11-11
 
 修 0.6.0 在 CI（pytest 9.2.0）上的收集期崩溃，并补一条真正在 CI 上执行的 M2 门。

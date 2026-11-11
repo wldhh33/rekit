@@ -4,9 +4,13 @@
 只做三件事：把各检测器的信号归并、按证据强度选出 `family`、把得分映射成 `confidence`。
 检测本身在 `triage` / `core.toolchain` / `funcs` / `unpack`，这里不重写。
 
-输出契约（M4 设计 §2.1）：
-    file / sha256 / kind / family / bitness / scope / confidence / verdict /
-    signals[] / conflicts[] / schema_version
+`family` 的语义见 `docs/family.md`：**族 = 最终链接步骤的提供方**
+（`msvc` / `gcc` / `go` / `dotnet`），不是编译器前端。`rustc` / `clang` / `go` 只进
+`compiler_frontend`；`.rsrc` 有无只作观测，不参与判定。
+
+输出契约（schema 3）：
+    file / sha256 / kind / family / compiler_frontend / crt_provider / target_triple /
+    bitness / scope / confidence / verdict / signals[] / conflicts[] / schema_version
 每条**命中**信号都必须带偏移、偏移类型与 `evidence_kind`（positive | absence）；
 `unknown` 是合法结论，不硬猜。absence 类信号不得单独构成族判定。
 """
@@ -25,11 +29,14 @@ from . import packer, triage
 
 NAME = "identify"
 DESCRIPTION = "工具链族与壳的融合判定（family + confidence + signals 偏移 + conflicts）"
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 CONF_MIN, CONF_MAX = 0.50, 0.99
 DECIDED = 0.80
 OFF_RE = re.compile(r"0x([0-9A-Fa-f]{2,})")
+# 只在二进制里出现明确的 target triple 时填写；推不出来就 null，不猜。
+TRIPLE_RE = re.compile(
+    rb"(?:x86_64|i686|aarch64|arm64)[-_](?:pc-windows-(?:msvc|gnu|gnullvm)|w64-mingw32)")
 
 
 def _score(prof: toolchain.ToolchainProfile) -> dict[str, int]:
@@ -51,33 +58,35 @@ def _absence_only(family: str, prof: toolchain.ToolchainProfile) -> bool:
 
 
 def _decide(prof: toolchain.ToolchainProfile) -> tuple[str, str, list[dict[str, Any]], str]:
-    """返回 (family, 依据说明, 冲突列表, 证据档位)。规则是硬编码的，阈值不进语料调参。"""
-    hit = {s.id for s in prof.hit}
+    """返回 (family, 依据说明, 冲突列表, 证据档位)。规则是硬编码的，阈值不进语料调参。
+
+    判定阶梯按**族 = 链接器提供方**排（`docs/family.md` §1）：
+
+    1. `dotnet`：CLR 目录 #14（不是原生链接产物）；
+    2. `gcc`：GNU ld 的 linker version 2.x，或 `GCC: (GNU)` 串——**链接器证据优先于
+       Go 前端证据**，因为 cgo 外部链接的最终 PE 是 MinGW `ld` 写的；
+    3. `go`：Go build ID / `.gopclntab` / `go1.x`；
+    4. `msvc`：Rich 头 / MSVC linker version 6–14 / 大写节名 / VC CRT 导入；
+    5. 只有弱 msvc 信号 → `msvc`（weak）；否则 `unknown`。
+
+    `go` 与 `gcc` 同时达到 5 分时**必须**留下冲突记录：这正是 gitea（cgo + MinGW）
+    反事实暴露的问题——只改分支顺序会把冲突吞掉。
+    """
     score = _score(prof)
     conflicts: list[dict[str, Any]] = []
 
-    # 硬证据优先（M4 设计 §5.2）：go/rust 的版本串与节表 > mingw 结构 > msvc 结构
-    if score["go_x64"] >= 5:
-        family, why, tier = "go_x64", "Go build ID / .gopclntab / go1.x 版本串", "hard"
-    elif score["rust_x64"] >= 5:
-        family, why, tier = "rust_x64", "rustc 版本串 / panic 串", "hard"
-    elif prof.mingw_hint:
-        if "T9_clang_version" in hit:
-            family, why, tier = "clang_x64", "clang version 串", "hard"
-        elif "T10_mingw_default_rsrc" in hit:
-            family, why, tier = "gcc_x64", "mingw 串 + .rsrc（MinGW-gcc 驱动默认 manifest 特征）", "structural"
-        else:
-            # 只有“无 .rsrc”这类 absence 证据：clang 与 gcc 在 strip 后不可区分
-            # （设计 §5.3 实验：8 源 × 2 工具链，唯一取值范围不相交的特征就是 .rsrc）。
-            family, why, tier = (
-                "unknown",
-                "仅有 mingw 串；无 .rsrc 是缺失型证据，MinGW-clang 与 gcc strip 后不可区分，不硬判",
-                "none",
-            )
-    elif score["msvc_x64"] >= 4:
-        family, why, tier = "msvc_x64", "Rich 头 / 大写节名 / VC 运行时导入", "hard"
-    elif score["msvc_x64"] > 0:
-        family, why, tier = "msvc_x64", "仅弱信号（VC 运行时导入）", "weak"
+    if score["dotnet"] >= 5:
+        family, why, tier = "dotnet", "CLR 目录 #14（托管程序集，非原生链接产物）", "hard"
+    elif score["gcc"] >= 5:
+        family, why, tier = (
+            "gcc", "GNU ld 链接器版本 2.x / `GCC: (GNU)` 串（MinGW-w64 ABI）", "hard")
+    elif score["go"] >= 5:
+        family, why, tier = "go", "Go build ID / .gopclntab / go1.x（Go 内部链接器）", "hard"
+    elif score["msvc"] >= 4:
+        family, why, tier = (
+            "msvc", "Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入", "hard")
+    elif score["msvc"] > 0:
+        family, why, tier = "msvc", "仅弱信号（VC 运行时导入）", "weak"
     else:
         family, why, tier = "unknown", "无可用工具链指纹", "none"
 
@@ -90,13 +99,58 @@ def _decide(prof: toolchain.ToolchainProfile) -> tuple[str, str, list[dict[str, 
             "none",
         )
 
-    # 冲突：两个族同时出现 ≥5 分的硬证据（例如 rustc 产物同时带 Rich 头不构成冲突，因为 Rich 只有 4 分）
-    strong = [f for f, v in score.items() if v >= 5]
+    # 冲突：两个族同时出现 ≥5 分的硬证据。go × gcc 是最重要的一类：
+    # Go 前端证据（build ID、pclntab）与 MinGW 链接器证据同时成立，按族定义取 gcc，
+    # 但必须把两者都写出来，不能“按顺序吞掉”。
+    strong = sorted((f for f, v in score.items() if v >= 5), key=lambda f: -score[f])
     if len(strong) >= 2:
         involved = [s.id for s in prof.hit if s.family in strong and s.weight >= 3]
-        conflicts.append({"between": strong, "signals": involved,
-                          "note": "两个族同时达到硬证据分；按优先级取 %s" % family})
+        if "go" in strong and "gcc" in strong:
+            note = ("Go 前端/内部链接证据与 GNU ld 链接器证据同时成立；"
+                    "按族=链接器提供方取 gcc（cgo 外部链接），go 只计入 compiler_frontend")
+        else:
+            note = f"两个族同时达到硬证据分；按族=链接器提供方取 {family}"
+        conflicts.append({"between": strong, "signals": involved, "note": note})
     return family, why, conflicts, tier
+
+
+def _frontend(prof: toolchain.ToolchainProfile, data: Any,
+              family: str) -> tuple[str, str | None]:
+    """编译器前端与可核验的 target triple。前端不参与 family 判定。"""
+    hit = {s.id for s in prof.hit}
+    if "T5_rustc_version" in hit:
+        frontend = "rustc"
+    elif "T9_clang_version" in hit:
+        frontend = "clang"
+    elif "T1_go_build_id" in hit or "T3_go_pclntab_or_symtab" in hit:
+        frontend = "go"
+    elif "T8_mingw_gcc_comment" in hit:
+        frontend = "gcc"
+    elif "T12_msvc_rich_header" in hit and family == "msvc":
+        frontend = "msvc-cl"
+    else:
+        frontend = "unknown"
+    return frontend, _target_triple(data)
+
+
+def _target_triple(data: Any) -> str | None:
+    """只在二进制里出现明确 triple 时返回；否则 None（不按族猜）。"""
+    m = TRIPLE_RE.search(data)
+    return m.group().decode("ascii", "replace") if m else None
+
+
+def _crt_provider(prof: toolchain.ToolchainProfile, family: str) -> str:
+    """CRT 提供方：只描述“链了哪套运行时”，不改变族归属。"""
+    dlls = [d.lower() for d in prof.imports]
+    if family in ("go", "dotnet"):
+        return "none"
+    if any(d.startswith(toolchain.UCRT_IMPORT_PREFIXES) for d in dlls):
+        return "ucrt"
+    if any(d.split(".")[0] in toolchain.MSVC_CRT_DLLS for d in dlls):
+        return "ucrt"  # VCRUNTIME140 / MSVCP140 基于 UCRT
+    if "msvcrt.dll" in dlls:
+        return "msvcrt"
+    return "static" if dlls else "none"
 
 
 def _confidence(family: str, prof: toolchain.ToolchainProfile,
@@ -105,17 +159,12 @@ def _confidence(family: str, prof: toolchain.ToolchainProfile,
 
     | 档位 | 含义 | 置信度 |
     |---|---|---|
-    | hard | 版本串 / 节表 / Rich 头等直接指纹 | 0.97 |
-    | structural | 靠 `.rsrc` 有无这类结构推断（依赖 MinGW 驱动默认行为） | 0.93 |
+    | hard | 链接器版本 / Rich 头 / Go build ID / CLR 目录等直接指纹 | 0.97 |
     | weak | 只有单条弱信号 | 0.60 |
     | none / unknown | 无结论 | 0.30 |
 
-    为什么 structural 给 0.93 而不是 0.90：开发期三档在训练/校准侧都判对（仅证明拟合），
-    若压到 0.90 以下，ECE 会被人为抬高到 0.10 以上——那不是"保守"，是把校准做错。
-    真实泛化能力由测试侧与外部留出集检验，不靠在这里压低数字来假装稳健。
-    注意置信度只表示"本次判定在本工具链分布内的可靠度"，不表示信号具有通用性；
-    `clang_x64` 的 structural 档只对 MinGW-clang 构建成立（见设计 §5.1 已知风险）。
-    每出现一处 `conflicts` 扣 0.05。
+    `structural` 是 0.6.x 的档位（靠 `.rsrc` 有无推断），0.7 起不再产生；保留映射只为
+    让旧调用不炸，不代表还承认 `.rsrc` 是身份证据。每出现一处 `conflicts` 扣 0.05。
     """
     if family == "unknown" or tier == "none":
         return 0.30
@@ -130,21 +179,13 @@ def analyze_file(path: str, allow_large: bool = False) -> dict[str, Any]:
         prof = toolchain.detect(pe)
         sha = hashlib.sha256(pe.data).hexdigest()
         pk = packer.analyze(pe, t)
-
-    family, why, conflicts, tier = _decide(prof)
-    # 位数是独立字段：x64 进入 M4a 计分范围；x86 允许给族（改名为 *_x86），
-    # 但标 scope=out_of_m4a，不参与 M4a 的五族达标（范围约束，不是放宽阈值）。
-    bitness = {0x8664: "x64", 0x014C: "x86"}.get(pe.machine, pe.arch.lower())
-    scope = "in_m4a" if bitness == "x64" else "out_of_m4a"
-    if family in toolchain.FAMILIES:
-        if bitness == "x86":
-            family = family.replace("_x64", "_x86")
-        elif bitness != "x64":
-            family, why, tier = (
-                "unknown",
-                f"机器类型 {pe.arch} 不在 5 族覆盖范围；工具链信号命中但不硬判",
-                "none",
-            )
+        family, why, conflicts, tier = _decide(prof)
+        # 位数是独立字段：x64 进入 M4a 计分范围，其余标 scope=out_of_m4a。
+        # 0.7 起 family 不再按位数改名（没有 *_x64 / *_x86 这套后缀）。
+        bitness = {0x8664: "x64", 0x014C: "x86"}.get(pe.machine, pe.arch.lower())
+        scope = "in_m4a" if bitness == "x64" else "out_of_m4a"
+        frontend, triple = _frontend(prof, pe.data, family)
+        crt = _crt_provider(prof, family)
     conf = _confidence(family, prof, conflicts, tier)
     # 壳判定只追加：顶层 verdict 取旧 triage 结论与 M4b packer 结论的并集；
     # 旧字段名与语义不变，工具链 family/confidence/basis 保持原样。
@@ -174,6 +215,9 @@ def analyze_file(path: str, allow_large: bool = False) -> dict[str, Any]:
         "sha256": sha,
         "kind": kind,
         "family": family,
+        "compiler_frontend": frontend,
+        "crt_provider": crt,
+        "target_triple": triple,
         "bitness": bitness,
         "scope": scope,
         "confidence": conf,

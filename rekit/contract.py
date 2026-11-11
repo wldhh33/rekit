@@ -15,7 +15,8 @@ from __future__ import annotations
 
 from typing import Iterable
 
-# 每个子命令自己的 payload schema 版本。identify 在 M4b 加壳字段时已经到 2。
+# 每个子命令自己的 payload schema 版本。identify 在 0.7.0 改 family 语义（链接器提供方）
+# 并新增 compiler_frontend / crt_provider / target_triple 时升到 3。
 SCHEMA_VERSION = {
     "triage": 1,
     "unpack": 1,
@@ -23,7 +24,7 @@ SCHEMA_VERSION = {
     "funcs": 1,
     "data": 1,
     "xref": 1,
-    "identify": 2,
+    "identify": 3,
     "report": 1,
 }
 

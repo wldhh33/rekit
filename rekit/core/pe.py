@@ -295,6 +295,12 @@ class PE:
         else:
             raise PEError(f"未知 OptionalHeader Magic=0x{self.magic:X}")
 
+        self.optional_header_offset = opt
+        # 链接器版本：link.exe / lld-link 写 6–14.x，GNU ld 写 2.x。只做观测字段，
+        # 归属规则见 docs/family.md §1.1；不是“谁编译的”，是“谁把 PE 写出来的”。
+        self.optional_major_linker = self.r.u8(opt + 2)
+        self.optional_minor_linker = self.r.u8(opt + 3)
+
         self.entry_rva = self.r.u32(opt + 16)
         self.section_alignment = self.r.u32(opt + 32)
         self.file_alignment = self.r.u32(opt + 36)

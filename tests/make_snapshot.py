@@ -6,8 +6,8 @@
     python tests/make_snapshot.py
 
 产物：
-- ``tests/baseline/snapshot_v0.6.0.json`` —— 20 个样本 × 8 个子命令的规范化输出
-- ``tests/baseline/snapshot_v0.6.0.json.sha256`` —— 基线文件自身的 SHA256（防篡改）
+- ``tests/baseline/snapshot_v0.7.0.json`` —— 20 个样本 × 8 个子命令的规范化输出
+- ``tests/baseline/snapshot_v0.7.0.json.sha256`` —— 基线文件自身的 SHA256（防篡改）
 """
 
 from __future__ import annotations

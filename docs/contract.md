@@ -1,8 +1,8 @@
 # 输出契约与回归校验（M6-B）
 
-本文件记录 0.6.0 的跨子命令输出契约、快照基线、性能门与 CI 覆盖状态。
-原则：**旧字段零删除，只增不改**；判定阈值、冻结 signals、M4b 封存测试侧都不在
-本轮改动范围内。
+本文件记录 0.7.0 的跨子命令输出契约、快照基线、性能门与 CI 覆盖状态。
+原则：**旧字段零删除，只增不改**；0.7.0 只改 `identify` 的 `family` 语义（见 §1.1），
+判定阈值、冻结 signals、M4b 封存测试侧都不在本次改动范围内。
 
 ## 1. 顶层 `schema_version`
 
@@ -16,8 +16,21 @@
 | `funcs` | 1 | |
 | `data` | 1 | |
 | `xref` | 1 | |
-| `identify` | 2 | M4b 加壳字段（`kind=packer`）时已升到 2 |
+| `identify` | 3 | 0.7.0：`family` 改为链接器提供方语义，新增 `compiler_frontend` / `crt_provider` / `target_triple` |
 | `report` | 1 | |
+
+### 1.1 `identify` schema 3（0.7.0 口径断点）
+
+- `family` 的取值从 `msvc_x64` / `gcc_x64` / `go_x64` / `rust_x64` / `clang_x64` 改为
+  `msvc` / `gcc` / `go` / `dotnet`；`rust` / `clang` 只出现在 `compiler_frontend`。
+- 新增 `compiler_frontend`（`gcc|clang|rustc|go|msvc-cl|unknown`）、
+  `crt_provider`（`msvcrt|ucrt|static|none|unknown`）、`target_triple`（可推断时为字符串，否则 `null`）。
+- 未删除任何旧字段：`confidence` / `basis` / `signals` / `conflicts` / `bitness` /
+  `scope` / `verdict` / `packer` / `triage` 原样保留。
+- **不可比声明**：0.6.x 的 4 族 80/80、clang 10/20、A 轮 3 的 per-class 数字都记在旧口径下，
+  不得与 schema 3 的任何数字并列、求差或画趋势。断点见 `CHANGELOG.md` 与 `docs/family.md`。
+- 快照基线随之重建为 `snapshot_v0.7.0.json`：旧基线记录的是旧 `family` 字面量，
+  语义已变，保留它只会制造假红；0.6.x 基线仍可在 git 历史里查到。
 
 实现位置：`rekit/contract.py` 的 `SCHEMA_VERSION`；CLI 通过 `_envelope()` 注入。
 `report` 是单样本命令，另外补了 `analyzer` / `version` / `errors` 三个字段，并在
@@ -54,8 +67,8 @@
 
 ## 3. 快照基线（先冻结，后改字段）
 
-- 冻结时间：**2026-11-11**，代码版本 **0.6.0**（B MVP 开工前，尚未加入顶层
-  `schema_version` 与错误码 `code`/`message`）。
+- 冻结时间：**2026-11-11**，代码版本 **0.7.0**（B MVP 开工前首次冻结，0.7.0 因
+  `identify` 语义变更按“确认更新契约”重建；0.6.x 基线见 git 历史）。
 - 生成环境：Python 3.14.0 / Windows 11 / capstone 5.0.7；这些只写在基线 `meta` 里，
   **不进报告内容**。
 - 规模：**20 个固定样本**、**89 个用例**、覆盖全部 8 个子命令。
@@ -63,9 +76,9 @@
   - 7 个确定性派生坏样本（截断、坏魔数、`e_lfanew` 越界、可选头清零、节数异常、
     PE 签名破坏），运行时按固定字节手术生成，不提交额外二进制、不下载任何东西。
 - 文件：
-  - `tests/baseline/snapshot_v0.6.0.json`
-  - `tests/baseline/snapshot_v0.6.0.json.sha256`
-- 基线自身 SHA256：`4b985d39f6c554d3d88e133558071fa224b442f377c3d3e84e20c4adbd067085`
+  - `tests/baseline/snapshot_v0.7.0.json`
+  - `tests/baseline/snapshot_v0.7.0.json.sha256`
+- 基线自身 SHA256：`ab38b497fa511084e7a5d6dbf50da7c2d46d204e7f7940debd4f04b3bc558711`
   （对规范化 JSON 计算；`tests/test_snapshot.py` 会重算并比对）。
 - 重新生成（**只有确认要更新契约时才做**）：`python tests/make_snapshot.py`。
 
@@ -150,13 +163,13 @@
 
 ## 5. CI 覆盖状态
 
-- 现状：GitHub Actions 只有 `ubuntu-latest` × Python 3.10 / 3.12。
-- **Windows 行为未覆盖**：GitHub Actions 的 `windows-latest` 没有实际跑过——本轮
-  发布仍搁置、未推送，也没有可用凭据在远端触发新的 workflow。因此不把 ubuntu 的
-  绿色结果当作跨平台验证，也不加入未验证的 Windows 矩阵项。
+- 现状：GitHub Actions 只有 `ubuntu-latest` × Python 3.10 / 3.12；0.7.0 已推送，
+  CI 结果在推送后回填到本节。
+- **Windows 行为未覆盖**：GitHub Actions 的 `windows-latest` 没有实际跑过。因此不把
+  ubuntu 的绿色结果当作跨平台验证，也不加入未验证的 Windows 矩阵项。
 - 本地证据（**不等于 CI 证据**）：本机 Windows 11 / Python 3.14 上
-  `python -m pytest` **168 passed**（含 2 条性能门；设 `REKIT_SKIP_PERF=1` 时为
-  166 passed / 2 skipped），其中包含 89 个快照用例。
+  `python -m pytest` **181 passed**（含 2 条性能门；设 `REKIT_SKIP_PERF=1` 时为
+  179 passed / 2 skipped），其中包含 89 个快照用例与 7 个 0.7 族语义夹具用例。
 - 若要补 Windows CI：推送后新增 `windows-latest` 矩阵项，先确认
   `pip install -e ".[dev,funcs]"` 能装上 capstone，再用同一套 pytest 跑通；
   在那之前保持“未覆盖”的表述。

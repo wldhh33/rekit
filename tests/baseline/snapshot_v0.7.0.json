@@ -73,8 +73,9 @@
             "verdict": "normal"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.exe"
     },
@@ -87,25 +88,14 @@
         "errors": [],
         "results": [
           {
-            "basis": "rustc 版本串 / panic 串",
+            "basis": "Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入",
             "bitness": "x64",
-            "confidence": 0.92,
-            "conflicts": [
-              {
-                "between": [
-                  "msvc_x64",
-                  "rust_x64"
-                ],
-                "note": "两个族同时达到硬证据分；按优先级取 rust_x64",
-                "signals": [
-                  "T5_rustc_version",
-                  "T6_rust_panic_strings",
-                  "T12_msvc_rich_header"
-                ]
-              }
-            ],
+            "compiler_frontend": "rustc",
+            "confidence": 0.97,
+            "conflicts": [],
+            "crt_provider": "ucrt",
             "decided": true,
-            "family": "rust_x64",
+            "family": "msvc",
             "file": "<SAMPLE:hello_rs.exe>",
             "kind": "toolchain",
             "packer": {
@@ -268,7 +258,7 @@
               "signals_version": "m4b-signals-v1",
               "verdict": "clean"
             },
-            "schema_version": 2,
+            "schema_version": 3,
             "scope": "in_m4a",
             "sha256": "3c65c12cab8f38f495f11c9792dc779a19bfb86e352453a679e903a16151063d",
             "signals": [
@@ -280,9 +270,10 @@
                   "value": "/rustc/"
                 },
                 "evidence_kind": "positive",
-                "family": "rust_x64",
+                "family": null,
                 "hit": true,
                 "id": "T5_rustc_version",
+                "target": "frontend",
                 "weight": 6
               },
               {
@@ -293,9 +284,10 @@
                   "value": "panicked at"
                 },
                 "evidence_kind": "positive",
-                "family": "rust_x64",
+                "family": null,
                 "hit": true,
                 "id": "T6_rust_panic_strings",
+                "target": "frontend",
                 "weight": 4
               },
               {
@@ -306,9 +298,10 @@
                   "value": "api-ms-win-core-synch-l1-2-0.dll"
                 },
                 "evidence_kind": "positive",
-                "family": "rust_x64",
+                "family": null,
                 "hit": true,
                 "id": "T7_rust_core_synch_import",
+                "target": "frontend",
                 "weight": 1
               },
               {
@@ -319,9 +312,10 @@
                   "value": "Rich 头存在"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T12_msvc_rich_header",
+                "target": "family",
                 "weight": 4
               },
               {
@@ -332,12 +326,28 @@
                   "value": "VCRUNTIME140.dll"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T14_msvc_crt_import",
+                "target": "family",
                 "weight": 1
+              },
+              {
+                "evidence": {
+                  "field": "opt_header.MajorLinkerVersion",
+                  "offset": "0x112",
+                  "offset_kind": "opt_header",
+                  "value": "14.29（link.exe / lld-link 的写法）"
+                },
+                "evidence_kind": "positive",
+                "family": "msvc",
+                "hit": true,
+                "id": "T16_msvc_linker_version",
+                "target": "family",
+                "weight": 4
               }
             ],
+            "target_triple": null,
             "triage": {
               "max_entropy": 6.436,
               "score": 0,
@@ -354,8 +364,9 @@
             "verdict": "clean"
           }
         ],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.exe"
     },
@@ -488,8 +499,9 @@
             "size_of_image": "0x23000"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.exe"
     },
@@ -1273,8 +1285,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.exe"
     },
@@ -1349,8 +1362,9 @@
             "verdict": "upx"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -1363,12 +1377,14 @@
         "errors": [],
         "results": [
           {
-            "basis": "Rich 头 / 大写节名 / VC 运行时导入",
+            "basis": "Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入",
             "bitness": "x64",
+            "compiler_frontend": "msvc-cl",
             "confidence": 0.97,
             "conflicts": [],
+            "crt_provider": "ucrt",
             "decided": true,
-            "family": "msvc_x64",
+            "family": "msvc",
             "file": "<SAMPLE:hello_rs.packed.exe>",
             "kind": "packer",
             "packer": {
@@ -1531,7 +1547,7 @@
               "signals_version": "m4b-signals-v1",
               "verdict": "packed"
             },
-            "schema_version": 2,
+            "schema_version": 3,
             "scope": "in_m4a",
             "sha256": "20719168eb2f766137631d2c7cde024d2c0f72e8bbf92fb753b0c9d18bd708f9",
             "signals": [
@@ -1543,9 +1559,10 @@
                   "value": "api-ms-win-core-synch-l1-2-0.dll"
                 },
                 "evidence_kind": "positive",
-                "family": "rust_x64",
+                "family": null,
                 "hit": true,
                 "id": "T7_rust_core_synch_import",
+                "target": "frontend",
                 "weight": 1
               },
               {
@@ -1556,9 +1573,10 @@
                   "value": "Rich 头存在"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T12_msvc_rich_header",
+                "target": "family",
                 "weight": 4
               },
               {
@@ -1569,10 +1587,25 @@
                   "value": "VCRUNTIME140.dll"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T14_msvc_crt_import",
+                "target": "family",
                 "weight": 1
+              },
+              {
+                "evidence": {
+                  "field": "opt_header.MajorLinkerVersion",
+                  "offset": "0x112",
+                  "offset_kind": "opt_header",
+                  "value": "14.29（link.exe / lld-link 的写法）"
+                },
+                "evidence_kind": "positive",
+                "family": "msvc",
+                "hit": true,
+                "id": "T16_msvc_linker_version",
+                "target": "family",
+                "weight": 4
               },
               {
                 "evidence": {
@@ -1687,6 +1720,7 @@
                 "weight": 3
               }
             ],
+            "target_triple": null,
             "triage": {
               "max_entropy": 7.888,
               "score": 12,
@@ -1701,8 +1735,9 @@
             "verdict": "packed"
           }
         ],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -1793,8 +1828,9 @@
             "size_of_image": "0x26000"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -2004,8 +2040,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -2082,8 +2119,9 @@
             "verdict": "normal"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x64.exe"
     },
@@ -2096,12 +2134,14 @@
         "errors": [],
         "results": [
           {
-            "basis": "Rich 头 / 大写节名 / VC 运行时导入",
+            "basis": "Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入",
             "bitness": "x64",
+            "compiler_frontend": "msvc-cl",
             "confidence": 0.97,
             "conflicts": [],
+            "crt_provider": "ucrt",
             "decided": true,
-            "family": "msvc_x64",
+            "family": "msvc",
             "file": "<SAMPLE:msvc_x64.exe>",
             "kind": "toolchain",
             "packer": {
@@ -2264,7 +2304,7 @@
               "signals_version": "m4b-signals-v1",
               "verdict": "clean"
             },
-            "schema_version": 2,
+            "schema_version": 3,
             "scope": "in_m4a",
             "sha256": "8756700e96d399abfa658fc2977cbd3e262c606e9677e66e22b34103a0e693d7",
             "signals": [
@@ -2276,9 +2316,10 @@
                   "value": "Rich 头存在"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T12_msvc_rich_header",
+                "target": "family",
                 "weight": 4
               },
               {
@@ -2289,12 +2330,28 @@
                   "value": "VCRUNTIME140.dll"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T14_msvc_crt_import",
+                "target": "family",
                 "weight": 1
+              },
+              {
+                "evidence": {
+                  "field": "opt_header.MajorLinkerVersion",
+                  "offset": "0x10A",
+                  "offset_kind": "opt_header",
+                  "value": "14.29（link.exe / lld-link 的写法）"
+                },
+                "evidence_kind": "positive",
+                "family": "msvc",
+                "hit": true,
+                "id": "T16_msvc_linker_version",
+                "target": "family",
+                "weight": 4
               }
             ],
+            "target_triple": null,
             "triage": {
               "max_entropy": 0.0,
               "score": 0,
@@ -2311,8 +2368,9 @@
             "verdict": "clean"
           }
         ],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x64.exe"
     },
@@ -2445,8 +2503,9 @@
             "size_of_image": "0x6000"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x64.exe"
     },
@@ -3069,8 +3128,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x64.exe"
     },
@@ -3146,8 +3206,9 @@
             "verdict": "normal"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x86.exe"
     },
@@ -3160,12 +3221,14 @@
         "errors": [],
         "results": [
           {
-            "basis": "Rich 头 / 大写节名 / VC 运行时导入",
+            "basis": "Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入",
             "bitness": "x86",
+            "compiler_frontend": "msvc-cl",
             "confidence": 0.97,
             "conflicts": [],
+            "crt_provider": "ucrt",
             "decided": true,
-            "family": "msvc_x86",
+            "family": "msvc",
             "file": "<SAMPLE:msvc_x86.exe>",
             "kind": "toolchain",
             "packer": {
@@ -3328,7 +3391,7 @@
               "signals_version": "m4b-signals-v1",
               "verdict": "clean"
             },
-            "schema_version": 2,
+            "schema_version": 3,
             "scope": "out_of_m4a",
             "sha256": "7a9f8c3d4a9f26a2aa1625879d55596102bbe5f784a237da1e533fbac6a4ab7d",
             "signals": [
@@ -3340,9 +3403,10 @@
                   "value": "Rich 头存在"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T12_msvc_rich_header",
+                "target": "family",
                 "weight": 4
               },
               {
@@ -3353,12 +3417,28 @@
                   "value": "VCRUNTIME140.dll"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T14_msvc_crt_import",
+                "target": "family",
                 "weight": 1
+              },
+              {
+                "evidence": {
+                  "field": "opt_header.MajorLinkerVersion",
+                  "offset": "0x112",
+                  "offset_kind": "opt_header",
+                  "value": "14.29（link.exe / lld-link 的写法）"
+                },
+                "evidence_kind": "positive",
+                "family": "msvc",
+                "hit": true,
+                "id": "T16_msvc_linker_version",
+                "target": "family",
+                "weight": 4
               }
             ],
+            "target_triple": null,
             "triage": {
               "max_entropy": 0.0,
               "score": 0,
@@ -3374,8 +3454,9 @@
             "verdict": "clean"
           }
         ],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x86.exe"
     },
@@ -3487,8 +3568,9 @@
             "size_of_image": "0x5000"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x86.exe"
     },
@@ -4153,8 +4235,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x86.exe"
     },
@@ -4237,8 +4320,9 @@
             "verdict": "normal"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o0.exe"
     },
@@ -4251,12 +4335,14 @@
         "errors": [],
         "results": [
           {
-            "basis": "无可用工具链指纹",
+            "basis": "GNU ld 链接器版本 2.x / `GCC: (GNU)` 串（MinGW-w64 ABI）",
             "bitness": "x64",
-            "confidence": 0.3,
+            "compiler_frontend": "unknown",
+            "confidence": 0.97,
             "conflicts": [],
-            "decided": false,
-            "family": "unknown",
+            "crt_provider": "ucrt",
+            "decided": true,
+            "family": "gcc",
             "file": "<SAMPLE:gcc_o0.exe>",
             "kind": "toolchain",
             "packer": {
@@ -4419,10 +4505,26 @@
               "signals_version": "m4b-signals-v1",
               "verdict": "clean"
             },
-            "schema_version": 2,
+            "schema_version": 3,
             "scope": "in_m4a",
             "sha256": "54da9447099bb986ee497689f9c0ee0057473f3c175297d34e1380c5dddb62bd",
-            "signals": [],
+            "signals": [
+              {
+                "evidence": {
+                  "field": "opt_header.MajorLinkerVersion",
+                  "offset": "0x9A",
+                  "offset_kind": "opt_header",
+                  "value": "2.47（GNU ld 的写法）"
+                },
+                "evidence_kind": "positive",
+                "family": "gcc",
+                "hit": true,
+                "id": "T15_gnu_ld_linker_version",
+                "target": "family",
+                "weight": 5
+              }
+            ],
+            "target_triple": null,
             "triage": {
               "max_entropy": 5.569,
               "score": 0,
@@ -4445,8 +4547,9 @@
             "verdict": "clean"
           }
         ],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o0.exe"
     },
@@ -4705,8 +4808,9 @@
             "size_of_image": "0xE000"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o0.exe"
     },
@@ -5343,8 +5447,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o0.exe"
     },
@@ -5427,8 +5532,9 @@
             "verdict": "normal"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o2.exe"
     },
@@ -5441,12 +5547,14 @@
         "errors": [],
         "results": [
           {
-            "basis": "无可用工具链指纹",
+            "basis": "GNU ld 链接器版本 2.x / `GCC: (GNU)` 串（MinGW-w64 ABI）",
             "bitness": "x64",
-            "confidence": 0.3,
+            "compiler_frontend": "unknown",
+            "confidence": 0.97,
             "conflicts": [],
-            "decided": false,
-            "family": "unknown",
+            "crt_provider": "ucrt",
+            "decided": true,
+            "family": "gcc",
             "file": "<SAMPLE:gcc_o2.exe>",
             "kind": "toolchain",
             "packer": {
@@ -5609,10 +5717,26 @@
               "signals_version": "m4b-signals-v1",
               "verdict": "clean"
             },
-            "schema_version": 2,
+            "schema_version": 3,
             "scope": "in_m4a",
             "sha256": "37fd0dbabfeb33652ac327757859292e0ab23237d25f7acf4ba3a4ee9c83e60c",
-            "signals": [],
+            "signals": [
+              {
+                "evidence": {
+                  "field": "opt_header.MajorLinkerVersion",
+                  "offset": "0x9A",
+                  "offset_kind": "opt_header",
+                  "value": "2.47（GNU ld 的写法）"
+                },
+                "evidence_kind": "positive",
+                "family": "gcc",
+                "hit": true,
+                "id": "T15_gnu_ld_linker_version",
+                "target": "family",
+                "weight": 5
+              }
+            ],
+            "target_triple": null,
             "triage": {
               "max_entropy": 5.548,
               "score": 0,
@@ -5635,8 +5759,9 @@
             "verdict": "clean"
           }
         ],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o2.exe"
     },
@@ -5895,8 +6020,9 @@
             "size_of_image": "0xE000"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o2.exe"
     },
@@ -6533,8 +6659,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o2.exe"
     },
@@ -6611,8 +6738,9 @@
             "verdict": "normal"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "struct_probe.exe"
     },
@@ -6625,25 +6753,14 @@
         "errors": [],
         "results": [
           {
-            "basis": "rustc 版本串 / panic 串",
+            "basis": "Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入",
             "bitness": "x64",
-            "confidence": 0.92,
-            "conflicts": [
-              {
-                "between": [
-                  "msvc_x64",
-                  "rust_x64"
-                ],
-                "note": "两个族同时达到硬证据分；按优先级取 rust_x64",
-                "signals": [
-                  "T5_rustc_version",
-                  "T6_rust_panic_strings",
-                  "T12_msvc_rich_header"
-                ]
-              }
-            ],
+            "compiler_frontend": "rustc",
+            "confidence": 0.97,
+            "conflicts": [],
+            "crt_provider": "ucrt",
             "decided": true,
-            "family": "rust_x64",
+            "family": "msvc",
             "file": "<SAMPLE:struct_probe.exe>",
             "kind": "toolchain",
             "packer": {
@@ -6806,7 +6923,7 @@
               "signals_version": "m4b-signals-v1",
               "verdict": "clean"
             },
-            "schema_version": 2,
+            "schema_version": 3,
             "scope": "in_m4a",
             "sha256": "690b016d3b9b93bf393cfac4f2c351c0c1e31250c4e9d7d11125ca0587cb8b8d",
             "signals": [
@@ -6818,9 +6935,10 @@
                   "value": "/rustc/"
                 },
                 "evidence_kind": "positive",
-                "family": "rust_x64",
+                "family": null,
                 "hit": true,
                 "id": "T5_rustc_version",
+                "target": "frontend",
                 "weight": 6
               },
               {
@@ -6831,9 +6949,10 @@
                   "value": "panicked at"
                 },
                 "evidence_kind": "positive",
-                "family": "rust_x64",
+                "family": null,
                 "hit": true,
                 "id": "T6_rust_panic_strings",
+                "target": "frontend",
                 "weight": 4
               },
               {
@@ -6844,9 +6963,10 @@
                   "value": "api-ms-win-core-synch-l1-2-0.dll"
                 },
                 "evidence_kind": "positive",
-                "family": "rust_x64",
+                "family": null,
                 "hit": true,
                 "id": "T7_rust_core_synch_import",
+                "target": "frontend",
                 "weight": 1
               },
               {
@@ -6857,9 +6977,10 @@
                   "value": "Rich 头存在"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T12_msvc_rich_header",
+                "target": "family",
                 "weight": 4
               },
               {
@@ -6870,12 +6991,28 @@
                   "value": "VCRUNTIME140.dll"
                 },
                 "evidence_kind": "positive",
-                "family": "msvc_x64",
+                "family": "msvc",
                 "hit": true,
                 "id": "T14_msvc_crt_import",
+                "target": "family",
                 "weight": 1
+              },
+              {
+                "evidence": {
+                  "field": "opt_header.MajorLinkerVersion",
+                  "offset": "0x11A",
+                  "offset_kind": "opt_header",
+                  "value": "14.29（link.exe / lld-link 的写法）"
+                },
+                "evidence_kind": "positive",
+                "family": "msvc",
+                "hit": true,
+                "id": "T16_msvc_linker_version",
+                "target": "family",
+                "weight": 4
               }
             ],
+            "target_triple": null,
             "triage": {
               "max_entropy": 6.453,
               "score": 0,
@@ -6892,8 +7029,9 @@
             "verdict": "clean"
           }
         ],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "struct_probe.exe"
     },
@@ -7026,8 +7164,9 @@
             "size_of_image": "0x23000"
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "struct_probe.exe"
     },
@@ -7811,8 +7950,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "struct_probe.exe"
     },
@@ -7824,13 +7964,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:hello_elf>"
+            "file": "<SAMPLE:hello_elf>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_elf"
     },
@@ -7842,13 +7985,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:hello_elf>"
+            "file": "<SAMPLE:hello_elf>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_elf"
     },
@@ -7860,13 +8006,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:hello_elf>"
+            "file": "<SAMPLE:hello_elf>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_elf"
     },
@@ -8769,8 +8918,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_elf"
     },
@@ -8782,13 +8932,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_o0>"
+            "file": "<SAMPLE:clang_o0>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_o0"
     },
@@ -8800,13 +8953,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_o0>"
+            "file": "<SAMPLE:clang_o0>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_o0"
     },
@@ -8818,13 +8974,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_o0>"
+            "file": "<SAMPLE:clang_o0>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_o0"
     },
@@ -9727,8 +9886,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_o0"
     },
@@ -9740,13 +9900,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_o2>"
+            "file": "<SAMPLE:clang_o2>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_o2"
     },
@@ -9758,13 +9921,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_o2>"
+            "file": "<SAMPLE:clang_o2>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_o2"
     },
@@ -9776,13 +9942,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_o2>"
+            "file": "<SAMPLE:clang_o2>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_o2"
     },
@@ -10146,8 +10315,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_o2"
     },
@@ -10159,13 +10329,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_arm64_o2>"
+            "file": "<SAMPLE:clang_arm64_o2>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_arm64_o2"
     },
@@ -10177,13 +10350,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_arm64_o2>"
+            "file": "<SAMPLE:clang_arm64_o2>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_arm64_o2"
     },
@@ -10195,13 +10371,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:clang_arm64_o2>"
+            "file": "<SAMPLE:clang_arm64_o2>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_arm64_o2"
     },
@@ -10551,8 +10730,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "clang_arm64_o2"
     },
@@ -10564,13 +10744,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:go_linux_amd64>"
+            "file": "<SAMPLE:go_linux_amd64>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "go_linux_amd64"
     },
@@ -10582,13 +10765,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:go_linux_amd64>"
+            "file": "<SAMPLE:go_linux_amd64>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "go_linux_amd64"
     },
@@ -10600,13 +10786,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:go_linux_amd64>"
+            "file": "<SAMPLE:go_linux_amd64>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "go_linux_amd64"
     },
@@ -22138,8 +22327,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "go_linux_amd64"
     },
@@ -22151,13 +22341,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:go_linux_arm64>"
+            "file": "<SAMPLE:go_linux_arm64>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "go_linux_arm64"
     },
@@ -22169,13 +22362,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:go_linux_arm64>"
+            "file": "<SAMPLE:go_linux_arm64>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "go_linux_arm64"
     },
@@ -22187,13 +22383,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:go_linux_arm64>"
+            "file": "<SAMPLE:go_linux_arm64>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "go_linux_arm64"
     },
@@ -22205,13 +22404,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0xF8 size=4 文件大小=0x40",
-            "file": "<SAMPLE:trunc_0x40>"
+            "file": "<SAMPLE:trunc_0x40>",
+            "message": "读取越界：FOA=0xF8 size=4 文件大小=0x40"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x40"
     },
@@ -22223,13 +22425,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0xF8 size=4 文件大小=0x40",
-            "file": "<SAMPLE:trunc_0x40>"
+            "file": "<SAMPLE:trunc_0x40>",
+            "message": "读取越界：FOA=0xF8 size=4 文件大小=0x40"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x40"
     },
@@ -22241,13 +22446,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0xF8 size=4 文件大小=0x40",
-            "file": "<SAMPLE:trunc_0x40>"
+            "file": "<SAMPLE:trunc_0x40>",
+            "message": "读取越界：FOA=0xF8 size=4 文件大小=0x40"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x40"
     },
@@ -22259,13 +22467,16 @@
         "analyzer": "data",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0xF8 size=4 文件大小=0x40",
-            "file": "<SAMPLE:trunc_0x40>"
+            "file": "<SAMPLE:trunc_0x40>",
+            "message": "读取越界：FOA=0xF8 size=4 文件大小=0x40"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x40"
     },
@@ -22277,13 +22488,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x200 size=8",
-            "file": "<SAMPLE:trunc_0x200>"
+            "file": "<SAMPLE:trunc_0x200>",
+            "message": "读取越界：FOA=0x200 size=8"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x200"
     },
@@ -22295,13 +22509,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x200 size=8",
-            "file": "<SAMPLE:trunc_0x200>"
+            "file": "<SAMPLE:trunc_0x200>",
+            "message": "读取越界：FOA=0x200 size=8"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x200"
     },
@@ -22313,13 +22530,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x200 size=8",
-            "file": "<SAMPLE:trunc_0x200>"
+            "file": "<SAMPLE:trunc_0x200>",
+            "message": "读取越界：FOA=0x200 size=8"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x200"
     },
@@ -22331,13 +22551,16 @@
         "analyzer": "data",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x200 size=8",
-            "file": "<SAMPLE:trunc_0x200>"
+            "file": "<SAMPLE:trunc_0x200>",
+            "message": "读取越界：FOA=0x200 size=8"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x200"
     },
@@ -22349,13 +22572,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:bad_magic>"
+            "file": "<SAMPLE:bad_magic>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "bad_magic"
     },
@@ -22367,13 +22593,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:bad_magic>"
+            "file": "<SAMPLE:bad_magic>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "bad_magic"
     },
@@ -22385,13 +22614,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 不是 MZ 文件",
-            "file": "<SAMPLE:bad_magic>"
+            "file": "<SAMPLE:bad_magic>",
+            "message": "不是 MZ 文件"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "bad_magic"
     },
@@ -22403,13 +22635,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x7FFFFFF0 size=4 文件大小=0x1FE00",
-            "file": "<SAMPLE:elfanew_oob>"
+            "file": "<SAMPLE:elfanew_oob>",
+            "message": "读取越界：FOA=0x7FFFFFF0 size=4 文件大小=0x1FE00"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "elfanew_oob"
     },
@@ -22421,13 +22656,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x7FFFFFF0 size=4 文件大小=0x1FE00",
-            "file": "<SAMPLE:elfanew_oob>"
+            "file": "<SAMPLE:elfanew_oob>",
+            "message": "读取越界：FOA=0x7FFFFFF0 size=4 文件大小=0x1FE00"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "elfanew_oob"
     },
@@ -22439,13 +22677,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x7FFFFFF0 size=4 文件大小=0x1FE00",
-            "file": "<SAMPLE:elfanew_oob>"
+            "file": "<SAMPLE:elfanew_oob>",
+            "message": "读取越界：FOA=0x7FFFFFF0 size=4 文件大小=0x1FE00"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "elfanew_oob"
     },
@@ -22457,13 +22698,16 @@
         "analyzer": "data",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x7FFFFFF0 size=4 文件大小=0x1FE00",
-            "file": "<SAMPLE:elfanew_oob>"
+            "file": "<SAMPLE:elfanew_oob>",
+            "message": "读取越界：FOA=0x7FFFFFF0 size=4 文件大小=0x1FE00"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "elfanew_oob"
     },
@@ -22475,13 +22719,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 未知 OptionalHeader Magic=0x0",
-            "file": "<SAMPLE:zero_opt_header>"
+            "file": "<SAMPLE:zero_opt_header>",
+            "message": "未知 OptionalHeader Magic=0x0"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "zero_opt_header"
     },
@@ -22493,13 +22740,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 未知 OptionalHeader Magic=0x0",
-            "file": "<SAMPLE:zero_opt_header>"
+            "file": "<SAMPLE:zero_opt_header>",
+            "message": "未知 OptionalHeader Magic=0x0"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "zero_opt_header"
     },
@@ -22511,13 +22761,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 未知 OptionalHeader Magic=0x0",
-            "file": "<SAMPLE:zero_opt_header>"
+            "file": "<SAMPLE:zero_opt_header>",
+            "message": "未知 OptionalHeader Magic=0x0"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "zero_opt_header"
     },
@@ -22529,13 +22782,16 @@
         "analyzer": "data",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 未知 OptionalHeader Magic=0x0",
-            "file": "<SAMPLE:zero_opt_header>"
+            "file": "<SAMPLE:zero_opt_header>",
+            "message": "未知 OptionalHeader Magic=0x0"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "zero_opt_header"
     },
@@ -22547,13 +22803,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x260C size=4 文件大小=0x2600",
-            "file": "<SAMPLE:nsections_huge>"
+            "file": "<SAMPLE:nsections_huge>",
+            "message": "读取越界：FOA=0x260C size=4 文件大小=0x2600"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "nsections_huge"
     },
@@ -22565,13 +22824,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x260C size=4 文件大小=0x2600",
-            "file": "<SAMPLE:nsections_huge>"
+            "file": "<SAMPLE:nsections_huge>",
+            "message": "读取越界：FOA=0x260C size=4 文件大小=0x2600"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "nsections_huge"
     },
@@ -22583,13 +22845,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x260C size=4 文件大小=0x2600",
-            "file": "<SAMPLE:nsections_huge>"
+            "file": "<SAMPLE:nsections_huge>",
+            "message": "读取越界：FOA=0x260C size=4 文件大小=0x2600"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "nsections_huge"
     },
@@ -22601,13 +22866,16 @@
         "analyzer": "data",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x260C size=4 文件大小=0x2600",
-            "file": "<SAMPLE:nsections_huge>"
+            "file": "<SAMPLE:nsections_huge>",
+            "message": "读取越界：FOA=0x260C size=4 文件大小=0x2600"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "nsections_huge"
     },
@@ -22619,13 +22887,16 @@
         "analyzer": "triage",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: e_lfanew=0xF8 处不是 'PE\\0\\0'",
-            "file": "<SAMPLE:no_pe_sig>"
+            "file": "<SAMPLE:no_pe_sig>",
+            "message": "e_lfanew=0xF8 处不是 'PE\\0\\0'"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "no_pe_sig"
     },
@@ -22637,13 +22908,16 @@
         "analyzer": "identify",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: e_lfanew=0xF8 处不是 'PE\\0\\0'",
-            "file": "<SAMPLE:no_pe_sig>"
+            "file": "<SAMPLE:no_pe_sig>",
+            "message": "e_lfanew=0xF8 处不是 'PE\\0\\0'"
           }
         ],
         "results": [],
+        "schema_version": 3,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "no_pe_sig"
     },
@@ -22655,13 +22929,16 @@
         "analyzer": "map",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: e_lfanew=0xF8 处不是 'PE\\0\\0'",
-            "file": "<SAMPLE:no_pe_sig>"
+            "file": "<SAMPLE:no_pe_sig>",
+            "message": "e_lfanew=0xF8 处不是 'PE\\0\\0'"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "no_pe_sig"
     },
@@ -22673,13 +22950,16 @@
         "analyzer": "data",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: e_lfanew=0xF8 处不是 'PE\\0\\0'",
-            "file": "<SAMPLE:no_pe_sig>"
+            "file": "<SAMPLE:no_pe_sig>",
+            "message": "e_lfanew=0xF8 处不是 'PE\\0\\0'"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "no_pe_sig"
     },
@@ -23650,8 +23930,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x64.exe"
     },
@@ -24253,8 +24534,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "msvc_x86.exe"
     },
@@ -25448,8 +25730,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o2.exe"
     },
@@ -30846,8 +31129,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.exe"
     },
@@ -65675,8 +65959,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_elf"
     },
@@ -65765,8 +66050,9 @@
             ]
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o2.exe"
     },
@@ -65867,8 +66153,9 @@
             ]
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "gcc_o2.exe"
     },
@@ -66003,8 +66290,9 @@
             }
           }
         ],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -66016,13 +66304,16 @@
         "analyzer": "unpack",
         "errors": [
           {
+            "code": "E_PARSE",
             "error": "PEError: 读取越界：FOA=0x200 size=8",
-            "file": "<SAMPLE:trunc_0x200>"
+            "file": "<SAMPLE:trunc_0x200>",
+            "message": "读取越界：FOA=0x200 size=8"
           }
         ],
         "results": [],
+        "schema_version": 1,
         "tool": "rekit",
-        "version": "0.6.1"
+        "version": "0.7.0"
       },
       "sample": "trunc_0x200"
     },
@@ -66031,6 +66322,8 @@
       "command": "report",
       "exit_code": 0,
       "json": {
+        "analyzer": "report",
+        "errors": [],
         "family_group": "native",
         "field_stats": {
           "auto": 22,
@@ -66171,7 +66464,7 @@
             "id": "toolchain",
             "label": "工具链族 + 置信度",
             "source": "auto",
-            "value": "msvc_x64（置信度 0.97）\n依据：Rich 头 / 大写节名 / VC 运行时导入"
+            "value": "msvc（置信度 0.97）\n依据：Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入"
           },
           {
             "evidence": [],
@@ -66236,6 +66529,11 @@
                 "value": "VCRUNTIME140.dll"
               },
               {
+                "id": "T16_msvc_linker_version",
+                "offset": "0x10A",
+                "value": "14.29（link.exe / lld-link 的写法）"
+              },
+              {
                 "note": "异常目录，28 项",
                 "offset": "0x4000",
                 "source": "pdata"
@@ -66245,7 +66543,7 @@
             "id": "signals",
             "label": "结论的信号 id + 偏移",
             "source": "auto",
-            "value": "T12_msvc_rich_header @ 0xD8  Rich 头存在\nT14_msvc_crt_import @ 0x1990  VCRUNTIME140.dll\npdata @ 0x4000  异常目录，28 项"
+            "value": "T12_msvc_rich_header @ 0xD8  Rich 头存在\nT14_msvc_crt_import @ 0x1990  VCRUNTIME140.dll\nT16_msvc_linker_version @ 0x10A  14.29（link.exe / lld-link 的写法）\npdata @ 0x4000  异常目录，28 项"
           },
           {
             "evidence": [],
@@ -66274,7 +66572,7 @@
         ],
         "identify": {
           "confidence": 0.97,
-          "family": "msvc_x64",
+          "family": "msvc",
           "packer": {
             "basis": "无壳结构证据",
             "confidence": 0.9,
@@ -66480,7 +66778,8 @@
           "sha256": "8756700e96d399abfa658fc2977cbd3e262c606e9677e66e22b34103a0e693d7"
         },
         "schema_version": 1,
-        "tool": "rekit"
+        "tool": "rekit",
+        "version": "0.7.0"
       },
       "sample": "msvc_x64.exe"
     },
@@ -66489,6 +66788,8 @@
       "command": "report",
       "exit_code": 0,
       "json": {
+        "analyzer": "report",
+        "errors": [],
         "family_group": "native",
         "field_stats": {
           "auto": 22,
@@ -66629,7 +66930,7 @@
             "id": "toolchain",
             "label": "工具链族 + 置信度",
             "source": "auto",
-            "value": "rust_x64（置信度 0.92）\n依据：rustc 版本串 / panic 串"
+            "value": "msvc（置信度 0.97）\n依据：Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入"
           },
           {
             "evidence": [],
@@ -66709,6 +67010,11 @@
                 "value": "VCRUNTIME140.dll"
               },
               {
+                "id": "T16_msvc_linker_version",
+                "offset": "0x112",
+                "value": "14.29（link.exe / lld-link 的写法）"
+              },
+              {
                 "note": "异常目录，333 项",
                 "offset": "0x21000",
                 "source": "pdata"
@@ -66718,7 +67024,7 @@
             "id": "signals",
             "label": "结论的信号 id + 偏移",
             "source": "auto",
-            "value": "T5_rustc_version @ 0x16828  /rustc/\nT6_rust_panic_strings @ 0x16D21  panicked at\nT7_rust_core_synch_import @ 0x1DC34  api-ms-win-core-synch-l1-2-0.dll\nT12_msvc_rich_header @ 0xD8  Rich 头存在\nT14_msvc_crt_import @ 0x1DC70  VCRUNTIME140.dll\npdata @ 0x21000  异常目录，333 项"
+            "value": "T5_rustc_version @ 0x16828  /rustc/\nT6_rust_panic_strings @ 0x16D21  panicked at\nT7_rust_core_synch_import @ 0x1DC34  api-ms-win-core-synch-l1-2-0.dll\nT12_msvc_rich_header @ 0xD8  Rich 头存在\nT14_msvc_crt_import @ 0x1DC70  VCRUNTIME140.dll\nT16_msvc_linker_version @ 0x112  14.29（link.exe / lld-link 的写法）\npdata @ 0x21000  异常目录，333 项"
           },
           {
             "evidence": [],
@@ -66746,8 +67052,8 @@
           }
         ],
         "identify": {
-          "confidence": 0.92,
-          "family": "rust_x64",
+          "confidence": 0.97,
+          "family": "msvc",
           "packer": {
             "basis": "无壳结构证据",
             "confidence": 0.9,
@@ -66953,7 +67259,8 @@
           "sha256": "3c65c12cab8f38f495f11c9792dc779a19bfb86e352453a679e903a16151063d"
         },
         "schema_version": 1,
-        "tool": "rekit"
+        "tool": "rekit",
+        "version": "0.7.0"
       },
       "sample": "hello_rs.exe"
     }
@@ -67054,7 +67361,7 @@
         "sha256": "52a37f93f43bb952492b808eeb473040a5b5697785755d6f8f3da17b848e2576"
       }
     },
-    "version": "0.6.1"
+    "version": "0.7.0"
   },
   "schema": "rekit-snapshot-baseline-v1"
 }
