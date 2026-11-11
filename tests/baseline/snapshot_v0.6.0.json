@@ -74,7 +74,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.exe"
     },
@@ -355,7 +355,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.exe"
     },
@@ -489,7 +489,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.exe"
     },
@@ -1274,7 +1274,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.exe"
     },
@@ -1350,7 +1350,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -1702,7 +1702,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -1794,7 +1794,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -2005,7 +2005,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -2083,7 +2083,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x64.exe"
     },
@@ -2312,7 +2312,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x64.exe"
     },
@@ -2446,7 +2446,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x64.exe"
     },
@@ -3070,7 +3070,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x64.exe"
     },
@@ -3147,7 +3147,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x86.exe"
     },
@@ -3375,7 +3375,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x86.exe"
     },
@@ -3488,7 +3488,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x86.exe"
     },
@@ -4154,7 +4154,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x86.exe"
     },
@@ -4238,7 +4238,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o0.exe"
     },
@@ -4446,7 +4446,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o0.exe"
     },
@@ -4706,7 +4706,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o0.exe"
     },
@@ -5344,7 +5344,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o0.exe"
     },
@@ -5428,7 +5428,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o2.exe"
     },
@@ -5636,7 +5636,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o2.exe"
     },
@@ -5896,7 +5896,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o2.exe"
     },
@@ -6534,7 +6534,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o2.exe"
     },
@@ -6612,7 +6612,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "struct_probe.exe"
     },
@@ -6893,7 +6893,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "struct_probe.exe"
     },
@@ -7027,7 +7027,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "struct_probe.exe"
     },
@@ -7812,7 +7812,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "struct_probe.exe"
     },
@@ -7830,7 +7830,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_elf"
     },
@@ -7848,7 +7848,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_elf"
     },
@@ -7866,7 +7866,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_elf"
     },
@@ -8770,7 +8770,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_elf"
     },
@@ -8788,7 +8788,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_o0"
     },
@@ -8806,7 +8806,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_o0"
     },
@@ -8824,7 +8824,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_o0"
     },
@@ -9728,7 +9728,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_o0"
     },
@@ -9746,7 +9746,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_o2"
     },
@@ -9764,7 +9764,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_o2"
     },
@@ -9782,7 +9782,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_o2"
     },
@@ -10147,7 +10147,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_o2"
     },
@@ -10165,7 +10165,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_arm64_o2"
     },
@@ -10183,7 +10183,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_arm64_o2"
     },
@@ -10201,7 +10201,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_arm64_o2"
     },
@@ -10552,7 +10552,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "clang_arm64_o2"
     },
@@ -10570,7 +10570,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "go_linux_amd64"
     },
@@ -10588,7 +10588,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "go_linux_amd64"
     },
@@ -10606,7 +10606,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "go_linux_amd64"
     },
@@ -22139,7 +22139,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "go_linux_amd64"
     },
@@ -22157,7 +22157,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "go_linux_arm64"
     },
@@ -22175,7 +22175,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "go_linux_arm64"
     },
@@ -22193,7 +22193,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "go_linux_arm64"
     },
@@ -22211,7 +22211,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x40"
     },
@@ -22229,7 +22229,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x40"
     },
@@ -22247,7 +22247,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x40"
     },
@@ -22265,7 +22265,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x40"
     },
@@ -22283,7 +22283,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x200"
     },
@@ -22301,7 +22301,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x200"
     },
@@ -22319,7 +22319,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x200"
     },
@@ -22337,7 +22337,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x200"
     },
@@ -22355,7 +22355,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "bad_magic"
     },
@@ -22373,7 +22373,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "bad_magic"
     },
@@ -22391,7 +22391,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "bad_magic"
     },
@@ -22409,7 +22409,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "elfanew_oob"
     },
@@ -22427,7 +22427,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "elfanew_oob"
     },
@@ -22445,7 +22445,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "elfanew_oob"
     },
@@ -22463,7 +22463,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "elfanew_oob"
     },
@@ -22481,7 +22481,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "zero_opt_header"
     },
@@ -22499,7 +22499,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "zero_opt_header"
     },
@@ -22517,7 +22517,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "zero_opt_header"
     },
@@ -22535,7 +22535,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "zero_opt_header"
     },
@@ -22553,7 +22553,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "nsections_huge"
     },
@@ -22571,7 +22571,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "nsections_huge"
     },
@@ -22589,7 +22589,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "nsections_huge"
     },
@@ -22607,7 +22607,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "nsections_huge"
     },
@@ -22625,7 +22625,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "no_pe_sig"
     },
@@ -22643,7 +22643,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "no_pe_sig"
     },
@@ -22661,7 +22661,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "no_pe_sig"
     },
@@ -22679,7 +22679,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "no_pe_sig"
     },
@@ -23651,7 +23651,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x64.exe"
     },
@@ -24254,7 +24254,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "msvc_x86.exe"
     },
@@ -25449,7 +25449,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o2.exe"
     },
@@ -30847,7 +30847,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.exe"
     },
@@ -65676,7 +65676,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_elf"
     },
@@ -65766,7 +65766,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o2.exe"
     },
@@ -65868,7 +65868,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "gcc_o2.exe"
     },
@@ -66004,7 +66004,7 @@
           }
         ],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "hello_rs.packed.exe"
     },
@@ -66022,7 +66022,7 @@
         ],
         "results": [],
         "tool": "rekit",
-        "version": "0.6.0"
+        "version": "0.6.1"
       },
       "sample": "trunc_0x200"
     },
@@ -67054,7 +67054,7 @@
         "sha256": "52a37f93f43bb952492b808eeb473040a5b5697785755d6f8f3da17b848e2576"
       }
     },
-    "version": "0.6.0"
+    "version": "0.6.1"
   },
   "schema": "rekit-snapshot-baseline-v1"
 }

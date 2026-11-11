@@ -44,7 +44,7 @@ def test_baseline_hash_matches_sidecar(baseline: dict) -> None:
 def test_baseline_meta_is_self_describing(baseline: dict) -> None:
     meta = baseline["meta"]
     assert meta["date"] == "2026-11-11"
-    assert meta["version"] == "0.6.0"
+    assert meta["version"] == "0.6.1"
     assert meta["sample_count"] == 20
     assert meta["case_count"] == len(baseline["cases"])
     assert meta["frozen_before"].startswith("B MVP 开工前")

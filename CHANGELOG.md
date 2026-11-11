@@ -1,5 +1,27 @@
 # 变更日志
 
+## 0.6.1 — 2026-11-11
+
+修 0.6.0 在 CI（pytest 9.2.0）上的收集期崩溃，并补一条真正在 CI 上执行的 M2 门。
+
+### 修复
+
+- `tests/test_m2_gate.py`：`_case()` 不再在收集期调 `pytest.skip`（pytest 9 判
+  `Using pytest.skip outside of a test...`，整个模块变成 collection error），改为参数级
+  `pytest.mark.skip`；缺 `go_win.exe` 时该族如实记 skipped，而不是报错。
+- 新增 `test_m2_gate_runs_on_in_repo_fixtures`：只用仓库内夹具（clang / go linux /
+  rust musl）跑同一条门槛与漂移断言，保证 CI 上 M2 门逻辑真的在执行。
+
+### 说明
+
+- **M2 门依赖仓库外样本，CI 上为 skipped，绿不等于门已执行。** CI 覆盖
+  clang / go linux / rust musl 三族，未覆盖 `go_win_amd64`。
+- 更正 0.6.0 条目里的测试数：`139 passed` 是旧数字，0.6.0 提交时为 **168 passed**；
+  0.6.1 起共 171 个用例（CI 上 go_win 相关的 2 个用例 skipped，其余全跑）。
+- 版本号 0.6.0 → 0.6.1；未改任何判定逻辑、阈值或分母。
+- 快照基线 `tests/baseline/snapshot_v0.6.0.json` 只把 `version` 字面量 0.6.0 → 0.6.1
+  （版本号本身是输出字段），sidecar 同步重算；20×8 用例的其余断言一字未动。
+
 ## 0.6.0 — 2026-11-22
 
 本版合并两批工作（0.6.0 从未对外发布，不切两个版本）：`identify` 补完两层判定——
@@ -65,7 +87,7 @@
   （真实托管程序集）。只写「命中 x/500 + 上界」，不写「无误报」。
 - **M5 复现**：同一命令两次运行与已提交产物逐字节一致（MD/JSON × 3 样本），
   报告内无时间戳与绝对路径。
-- `pytest -q` **139 passed**。
+- `pytest -q` **168 passed**（0.6.1 更正：原写 139 是旧数字）。
 - 系统 DLL 累计 **0/700** 误报（`N_sys32` 500 + `E_sys32` 200；M4b 另 200 留出也是 0）。
 
 ### 工程契约与回归校验（M6-B）

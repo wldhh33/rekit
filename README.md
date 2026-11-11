@@ -86,6 +86,11 @@ python -m pip install -e ".[dev,funcs]"
 
 > 若 `rekit` 命令不在 PATH（Windows 用户级安装的常见情况），用等价的 `python -m rekit`。
 
+> **CI 测试覆盖**：`tests/test_m2_gate.py` 的 `go_win_amd64` 依赖仓库外样本（1.6 MB，未随仓库分发），
+> CI 上该族为 skipped；`test_m2_gate_runs_on_in_repo_fixtures` 只用仓库内夹具跑同一条门槛与漂移断言，
+> 覆盖 clang / go linux / rust musl 三族。
+> **M2 门依赖仓库外样本，CI 上为 skipped，绿不等于门已执行。**
+
 ## 用法 / Usage
 
 ```bash
