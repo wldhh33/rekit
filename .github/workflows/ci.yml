@@ -26,6 +26,10 @@ jobs:
           python -m pip install -e ".[dev,funcs]"
 
       - name: Test
+        # 共享 runner 的时延噪声会随机击穿性能门（见 0.6.1 CHANGELOG），
+        # 性能门只在固定机器上跑；CI 只保证正确性测试。
+        env:
+          REKIT_SKIP_PERF: "1"
         run: python -m pytest -q
 
       # 冒烟：确保 CLI 入口与报告渲染没被改坏

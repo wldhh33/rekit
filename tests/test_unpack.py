@@ -49,11 +49,20 @@ def test_hello_rs_end_to_end(tmp_path):
     assert r["imports"]["dlls"] == 10
     assert r["imports"]["names"] + r["imports"]["ordinals"] + r["imports"]["raw"] == len(raw.imports()) == 85
 
-    # 按原布局写出，且产物能运行
+    # 按原布局写出（执行验证见 test_unpacked_binary_runs，仅 Windows）
     assert out.exists()
     out_pe = PE(str(out))
     assert out_pe.number_of_sections == 5
     assert out_pe.entry_rva == ENTRY_RVA
+
+
+@pytest.mark.skipif(sys.platform != "win32",
+                    reason="解包产物是 Windows PE，只能在 Windows 上执行验证")
+def test_unpacked_binary_runs(tmp_path):
+    """产物按原布局写出后能真正运行（非 Windows 上无法执行 PE，跳过）。"""
+    out = tmp_path / "hello_rs.unpacked.exe"
+    r = upx.unpack(PACKED, out, verify_only=False)
+    assert r["ok"], [c for c in r["checks"] if not c["ok"]]
     proc = subprocess.run([str(out)], capture_output=True, text=True, timeout=30)
     assert proc.returncode == 0
     assert proc.stdout.strip() == "hello from rustc, sum=385"

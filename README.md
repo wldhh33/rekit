@@ -90,6 +90,8 @@ python -m pip install -e ".[dev,funcs]"
 > CI 上该族为 skipped；`test_m2_gate_runs_on_in_repo_fixtures` 只用仓库内夹具跑同一条门槛与漂移断言，
 > 覆盖 clang / go linux / rust musl 三族。
 > **M2 门依赖仓库外样本，CI 上为 skipped，绿不等于门已执行。**
+> CI 另以 `REKIT_SKIP_PERF=1` 关闭性能门（共享 runner 噪声）；性能门请在固定机器上跑
+> `python -m pytest tests/test_perf_gate.py -q`。
 
 ## 用法 / Usage
 

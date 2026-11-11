@@ -11,13 +11,18 @@
   `pytest.mark.skip`；缺 `go_win.exe` 时该族如实记 skipped，而不是报错。
 - 新增 `test_m2_gate_runs_on_in_repo_fixtures`：只用仓库内夹具（clang / go linux /
   rust musl）跑同一条门槛与漂移断言，保证 CI 上 M2 门逻辑真的在执行。
+- CI 的 `Test` 步骤设 `REKIT_SKIP_PERF=1`：共享 runner 时延噪声会击穿性能门
+  （0.6.0 上 ratio 0.026294 对上限 0.024033），性能门只在固定机器上执行。
+- `test_unpack.py` 拆出 `test_unpacked_binary_runs`：解包产物的执行验证只在 Windows 跑，
+  静态断言（.text 逐字节、IAT、布局）仍全平台执行。
 
 ### 说明
 
 - **M2 门依赖仓库外样本，CI 上为 skipped，绿不等于门已执行。** CI 覆盖
   clang / go linux / rust musl 三族，未覆盖 `go_win_amd64`。
 - 更正 0.6.0 条目里的测试数：`139 passed` 是旧数字，0.6.0 提交时为 **168 passed**；
-  0.6.1 起共 171 个用例（CI 上 go_win 相关的 2 个用例 skipped，其余全跑）。
+  0.6.1 起本机共 172 个用例；CI（Linux）上 12 个 skipped（依赖仓库外样本 9、性能门 2、
+  PE 执行 1），其余 160 个真跑。
 - 版本号 0.6.0 → 0.6.1；未改任何判定逻辑、阈值或分母。
 - 快照基线 `tests/baseline/snapshot_v0.6.0.json` 只把 `version` 字面量 0.6.0 → 0.6.1
   （版本号本身是输出字段），sidecar 同步重算；20×8 用例的其余断言一字未动。
