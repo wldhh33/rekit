@@ -1307,8 +1307,11 @@ def _range_index(pairs: Iterable[tuple[int, int]]
     return [a for a, _ in ordered], ordered
 
 
-def _covering(spans: list[tuple[int, int]], va: int) -> tuple[int, int] | None:
-    starts = [s for s, _ in spans]
+def _covering(spans: list[tuple[int, int]], va: int,
+              starts: list[int] | None = None) -> tuple[int, int] | None:
+    """`va` 落在哪个已合并区间里。`starts` 可传入预建的起点表（同一 `spans` 反复查询时省一次 O(n)）。"""
+    if starts is None:
+        starts = [s for s, _ in spans]
     i = bisect.bisect_right(starts, va) - 1
     if i >= 0 and va < spans[i][1]:
         return spans[i]
@@ -2208,12 +2211,13 @@ def _pointer_values(img: Any, sections: Iterable[str]
 
 
 def _ptr_covered(va: int, covered: dict[int, int] | None,
-                 spans: list[tuple[int, int]], sparse: set[int] | None) -> int | None:
+                 spans: list[tuple[int, int]], sparse: set[int] | None,
+                 starts: list[int] | None = None) -> int | None:
     if covered is not None:
         cov = covered.get(va)
         if cov is not None:
             return cov
-    span = _covering(spans, va)
+    span = _covering(spans, va, starts)
     if span is None:
         return None
     if sparse and span[0] in sparse:
@@ -2238,12 +2242,13 @@ def _validate_candidate(space: CodeSpace, spans: list[tuple[int, int]], entry: i
     bp = "rbp" if bits == 64 else "ebp"
     saved = NONVOLATILE if bits == 64 else NONVOLATILE32
     insns: list[tuple[int, Any]] = []
+    starts = [s for s, _ in spans]   # 每次调用建一次，而不是每条指令建一次
     va, delta, bp_delta = entry, 0, None
     while len(insns) < max_insns:
         insn = space.decode(va)
         if insn is None:
             return None, "decode"
-        cov = _ptr_covered(va, covered, spans, sparse)
+        cov = _ptr_covered(va, covered, spans, sparse, starts)
         if cov is not None and cov != entry:
             return None, "overlap"
         insns.append((va, insn))

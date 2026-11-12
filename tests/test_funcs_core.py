@@ -469,3 +469,21 @@ def test_pclntab_scan_requires_min_functions():
     assert pclntab_from_data(img) is None
     assert pclntab_from_data(img, min_func=2) is not None
 
+
+def test_body_targets_memo_matches_plain():
+    """按 VA 的解码缓存不得改变 call 目标集合。
+
+    两个函数体区间共享尾部 —— 正是复用缓存会命中的形状。
+    """
+    from rekit.core.funcs import CodeSpace, Function, _body_targets
+
+    code = bytes.fromhex("E80B00000090C390") * 3   # call +0xb; nop; ret; nop
+    space = CodeSpace([(0x1000, code)], 64)
+    funcs = {0x1000: Function(0x1000, 0x1018),
+             0x1008: Function(0x1008, 0x1018)}
+    plain = _body_targets(space, funcs)
+    assert plain == {0x1010, 0x1018, 0x1020}
+    memo: dict = {}
+    assert _body_targets(space, funcs, memo) == plain
+    assert _body_targets(space, funcs, memo) == plain   # 全命缓存
+    assert memo                                      # 确实写进了缓存
