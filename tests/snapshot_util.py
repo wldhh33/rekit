@@ -24,8 +24,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures"
 BASELINE_DIR = ROOT / "tests" / "baseline"
-BASELINE = BASELINE_DIR / "snapshot_v0.7.0.json"
-SIDECAR = BASELINE_DIR / "snapshot_v0.7.0.json.sha256"
+BASELINE = BASELINE_DIR / "snapshot_v0.8.0.json"
+SIDECAR = BASELINE_DIR / "snapshot_v0.8.0.json.sha256"
 
 # ---------------------------------------------------------------------------
 # 20 个固定样本：13 个仓库内夹具 + 7 个确定性派生的坏样本

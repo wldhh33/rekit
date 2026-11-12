@@ -159,7 +159,9 @@ def analyze(pe: PE, t: triage.TriageResult) -> dict[str, Any]:
 
     if "S1_upx_section_pair" in hit_ids or "S2_upx_section_any" in hit_ids:
         family, verdict, conf = "upx", "packed", 0.97
-        basis = "UPX 节名证据（S1/S2）"
+        upx_hits = [s for s in hits if s.id in ("S1_upx_section_pair", "S2_upx_section_any")]
+        basis = "UPX 节名证据：" + "；".join(
+            f"{s.id}={s.evidence['value']}" for s in upx_hits)
     elif "S7_packer_section_name" in hit_ids:
         family, verdict, conf = "unknown", "packed", 0.85
         basis = "已知壳节名（S7；非 UPX 壳泛化未测）"

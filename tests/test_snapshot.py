@@ -43,8 +43,10 @@ def test_baseline_hash_matches_sidecar(baseline: dict) -> None:
 
 def test_baseline_meta_is_self_describing(baseline: dict) -> None:
     meta = baseline["meta"]
-    assert meta["date"] == "2026-11-11"
-    assert meta["version"] == "0.7.0"
+    # 2026-11-12 / 0.8.0 重建：输出里嵌了版本号，0.7.0 -> 0.8.0 属机械变化；
+    # 内容差异只有 version 字段与 meta 日期（见 CHANGELOG 0.8.0）。
+    assert meta["date"] == "2026-11-12"
+    assert meta["version"] == "0.8.0"
     assert meta["sample_count"] == 20
     assert meta["case_count"] == len(baseline["cases"])
     assert meta["frozen_before"].startswith("B MVP 开工前")

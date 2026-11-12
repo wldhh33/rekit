@@ -57,7 +57,64 @@ def _absence_only(family: str, prof: toolchain.ToolchainProfile) -> bool:
     return bool(kinds) and all(k == "absence" for k in kinds)
 
 
-def _decide(prof: toolchain.ToolchainProfile) -> tuple[str, str, list[dict[str, Any]], str]:
+GNU_SECTION_MARKERS = (".buildid", ".note")
+
+
+def _brief(signals: list[toolchain.ToolchainSignal]) -> str:
+    """依据只由**实际命中**的信号拼成：id + 偏移 + 实测值。未命中项不出现。"""
+    ordered = sorted(signals, key=lambda s: (-s.weight, s.id))
+    parts = []
+    for s in ordered:
+        where = f"@0x{s.offset:X} " if s.offset is not None else ""
+        parts.append(f"{s.id} {where}{s.value}")
+    return "；".join(parts)
+
+
+def _is_crt_dll(name: str) -> bool:
+    d = name.lower()
+    return (d.startswith(toolchain.UCRT_IMPORT_PREFIXES)
+            or d.split(".")[0] in toolchain.MSVC_CRT_DLLS
+            or d == "msvcrt.dll")
+
+
+def _mingw_lld_shape(prof: toolchain.ToolchainProfile, data: Any) -> bool:
+    """T16 的反向约束：linker 14.x 也可能是 MinGW/LLD 产物，不能单信号硬判 msvc。
+
+    形态证据必须同时成立（全部是 independent 的观测，不看文件名/哈希）：
+    - 无 Rich 头、无大写/下划线节名；
+    - 节名全小写且含 GNU 链接器标记（`.buildid` / `.note`）；
+    - CRT 导入只有 `api-ms-win-crt-*`（无 msvcrt / ucrtbase / VCRUNTIME）；
+    - 二进制内嵌 MinGW 目标三元组。
+    """
+    if data is None:
+        return False
+    hit = {s.id for s in prof.hit}
+    if "T12_msvc_rich_header" in hit or "T13_msvc_upper_section" in hit:
+        return False
+    names = [n for n in prof.section_names if n]
+    if not names or any(ch.isupper() for n in names for ch in n):
+        return False
+    if not any(n in GNU_SECTION_MARKERS for n in names):
+        return False
+    crt = [d for d in prof.imports if _is_crt_dll(d)]
+    if not crt or not all(d.lower().startswith("api-ms-win-crt") for d in crt):
+        return False
+    triple = _target_triple(data)
+    return bool(triple and "mingw" in triple)
+
+
+def _mingw_shape_basis(prof: toolchain.ToolchainProfile, data: Any) -> str:
+    t16 = next(s for s in prof.hit if s.id == "T16_msvc_linker_version")
+    secs = ", ".join(prof.section_names)
+    crt = ", ".join(d for d in prof.imports if _is_crt_dll(d))
+    triple = _target_triple(data) or "未命中"
+    return (f"{t16.id} {t16.value} 是唯一 msvc 命中；但呈 MinGW/LLD 形态："
+            f"无 Rich 头、全小写 GNU 节名（{secs}）、CRT 仅 {crt}、三元组 {triple}；"
+            f"单信号不足以硬判 msvc")
+
+
+def _decide(prof: toolchain.ToolchainProfile,
+            data: Any = None) -> tuple[str, str, list[dict[str, Any]], str]:
     """返回 (family, 依据说明, 冲突列表, 证据档位)。规则是硬编码的，阈值不进语料调参。
 
     判定阶梯按**族 = 链接器提供方**排（`docs/family.md` §1）：
@@ -69,24 +126,37 @@ def _decide(prof: toolchain.ToolchainProfile) -> tuple[str, str, list[dict[str, 
     4. `msvc`：Rich 头 / MSVC linker version 6–14 / 大写节名 / VC CRT 导入；
     5. 只有弱 msvc 信号 → `msvc`（weak）；否则 `unknown`。
 
+    `msvc` 档有反向约束：linker 14.x 若同时呈 MinGW/LLD 形态（无 Rich、全小写 GNU
+    节名、CRT 仅 UCRT API set、内嵌 mingw 三元组），T16 单信号不得硬判 msvc，转
+    `unknown`（`_mingw_lld_shape`）。
+
     `go` 与 `gcc` 同时达到 5 分时**必须**留下冲突记录：这正是 gitea（cgo + MinGW）
     反事实暴露的问题——只改分支顺序会把冲突吞掉。
+
+    `why` 一律由实际命中信号拼接（`_brief`），不写固定文案。
     """
     score = _score(prof)
     conflicts: list[dict[str, Any]] = []
 
     if score["dotnet"] >= 5:
-        family, why, tier = "dotnet", "CLR 目录 #14（托管程序集，非原生链接产物）", "hard"
+        family, why, tier = (
+            "dotnet", _brief([s for s in prof.hit if s.family == "dotnet"]), "hard")
     elif score["gcc"] >= 5:
         family, why, tier = (
-            "gcc", "GNU ld 链接器版本 2.x / `GCC: (GNU)` 串（MinGW-w64 ABI）", "hard")
+            "gcc", _brief([s for s in prof.hit if s.family == "gcc"]), "hard")
     elif score["go"] >= 5:
-        family, why, tier = "go", "Go build ID / .gopclntab / go1.x（Go 内部链接器）", "hard"
-    elif score["msvc"] >= 4:
         family, why, tier = (
-            "msvc", "Rich 头 / MSVC 链接器版本 6–14 / 大写节名 / VC CRT 导入", "hard")
+            "go", _brief([s for s in prof.hit if s.family == "go"]), "hard")
+    elif score["msvc"] >= 4:
+        msvc_hits = [s for s in prof.hit if s.family == "msvc"]
+        only_t16 = [s.id for s in msvc_hits] == ["T16_msvc_linker_version"]
+        if _mingw_lld_shape(prof, data) and only_t16:
+            family, why, tier = "unknown", _mingw_shape_basis(prof, data), "none"
+        else:
+            family, why, tier = "msvc", _brief(msvc_hits), "hard"
     elif score["msvc"] > 0:
-        family, why, tier = "msvc", "仅弱信号（VC 运行时导入）", "weak"
+        family, why, tier = (
+            "msvc", _brief([s for s in prof.hit if s.family == "msvc"]), "weak")
     else:
         family, why, tier = "unknown", "无可用工具链指纹", "none"
 
@@ -179,7 +249,7 @@ def analyze_file(path: str, allow_large: bool = False) -> dict[str, Any]:
         prof = toolchain.detect(pe)
         sha = hashlib.sha256(pe.data).hexdigest()
         pk = packer.analyze(pe, t)
-        family, why, conflicts, tier = _decide(prof)
+        family, why, conflicts, tier = _decide(prof, pe.data)
         # 位数是独立字段：x64 进入 M4a 计分范围，其余标 scope=out_of_m4a。
         # 0.7 起 family 不再按位数改名（没有 *_x64 / *_x86 这套后缀）。
         bitness = {0x8664: "x64", 0x014C: "x86"}.get(pe.machine, pe.arch.lower())

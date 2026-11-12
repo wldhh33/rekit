@@ -31,6 +31,8 @@
   不得与 schema 3 的任何数字并列、求差或画趋势。断点见 `CHANGELOG.md` 与 `docs/family.md`。
 - 快照基线随之重建为 `snapshot_v0.7.0.json`：旧基线记录的是旧 `family` 字面量，
   语义已变，保留它只会制造假红；0.6.x 基线仍可在 git 历史里查到。
+  2026-11-12 因 `basis` 改为由命中信号生成而再次重建（仅 `basis` 值与 meta 日期变化）。
+  0.8.0 因输出里嵌版本号而机械重建为 `snapshot_v0.8.0.json`（差异仅 `version` 与 meta 日期）。
 
 实现位置：`rekit/contract.py` 的 `SCHEMA_VERSION`；CLI 通过 `_envelope()` 注入。
 `report` 是单样本命令，另外补了 `analyzer` / `version` / `errors` 三个字段，并在
@@ -76,10 +78,10 @@
   - 7 个确定性派生坏样本（截断、坏魔数、`e_lfanew` 越界、可选头清零、节数异常、
     PE 签名破坏），运行时按固定字节手术生成，不提交额外二进制、不下载任何东西。
 - 文件：
-  - `tests/baseline/snapshot_v0.7.0.json`
-  - `tests/baseline/snapshot_v0.7.0.json.sha256`
-- 基线自身 SHA256：`ab38b497fa511084e7a5d6dbf50da7c2d46d204e7f7940debd4f04b3bc558711`
-  （对规范化 JSON 计算；`tests/test_snapshot.py` 会重算并比对）。
+  - `tests/baseline/snapshot_v0.8.0.json`
+  - `tests/baseline/snapshot_v0.8.0.json.sha256`
+- 基线自身 SHA256：见 `snapshot_v0.8.0.json.sha256`（对规范化 JSON 计算；
+  `tests/test_snapshot.py` 会重算并比对）。
 - 重新生成（**只有确认要更新契约时才做**）：`python tests/make_snapshot.py`。
 
 ### 3.1 归一化与比对口径
@@ -170,8 +172,9 @@
 - **Windows 行为未覆盖**：GitHub Actions 的 `windows-latest` 没有实际跑过。因此不把
   ubuntu 的绿色结果当作跨平台验证，也不加入未验证的 Windows 矩阵项。
 - 本地证据（**不等于 CI 证据**）：本机 Windows 11 / Python 3.14 上
-  `python -m pytest` **181 passed**（含 2 条性能门；设 `REKIT_SKIP_PERF=1` 时为
-  179 passed / 2 skipped），其中包含 89 个快照用例与 7 个 0.7 族语义夹具用例。
+  `python -m pytest` **185 passed / 2 skipped**（`REKIT_SKIP_PERF=1`；0.7.0 发布时为
+  181 passed），其中包含 89 个快照用例、7 个 0.7 族语义夹具用例与 5 条 2026-11-12
+  新增的 `basis`/T16 机制测试。
 - 若要补 Windows CI：推送后新增 `windows-latest` 矩阵项，先确认
   `pip install -e ".[dev,funcs]"` 能装上 capstone，再用同一套 pytest 跑通；
   在那之前保持“未覆盖”的表述。
