@@ -1611,7 +1611,8 @@ def _after_terminator(space: CodeSpace, va: int, bits: int) -> bool:
     return False
 
 
-def _body_targets(space: CodeSpace, funcs: dict[int, Function]) -> set[int]:
+def _body_targets(space: CodeSpace, funcs: dict[int, Function],
+                  memo: dict[int, int] | None = None) -> set[int]:
     """重新走一遍所有已确认函数体，收集 `call` 的直接目标（不动点用）。
 
     只收 `call`：`jmp` 在下降阶段已按"必须自身像函数起点"（`_strong_prologue`）处理过，
@@ -1619,18 +1620,39 @@ def _body_targets(space: CodeSpace, funcs: dict[int, Function]) -> set[int]:
     再按 `_after_terminator` 放宽一次只会把"ret/填充之后的分支标签"当成函数入口。
     实测（见 docs/funcs.md §6.1）：去掉 `jmp` 后 go_linux 的误报 233→5、Rust 631→310，
     召回只掉 94 / 7；Clang 114→98、召回掉 2。
+
+    `memo` 是**按 VA 的解码结果缓存**：`decode(va)` 只取决于节内容，同一 VA 反复线性扫到
+    时不必重解。编码 `(call目标 << 4) | 指令长度`，`0` 表示该 VA 解码失败；x86 指令最长
+    15 字节，4 位足够。函数体区间大量重叠（共享尾部）时，这一层把「扫 N 遍」降为「每 VA 解一次」，
+    不改变任何候选集合与判定。
     """
     out: set[int] = set()
     for fn in funcs.values():
         va = fn.entry
         while va < fn.end:
+            if memo is not None:
+                packed = memo.get(va)
+                if packed is not None:
+                    if not packed:
+                        break
+                    target = packed >> 4
+                    if target:
+                        out.add(target)
+                    va += packed & 0xF
+                    continue
             insn = space.decode(va)
             if insn is None:
+                if memo is not None:
+                    memo[va] = 0
                 break
+            target = 0
             if insn.mnemonic == "call":
-                target = _direct_target(insn.op_str)
-                if target is not None:
-                    out.add(target)
+                t = _direct_target(insn.op_str)
+                if t is not None:
+                    out.add(t)
+                    target = t
+            if memo is not None and insn.size < 16:
+                memo[va] = (target << 4) | insn.size
             va += insn.size
     return out
 
@@ -2023,12 +2045,22 @@ def discover(img: Any, max_functions: int = 50000, pointers: bool = False,
                 str_seeds += 1
             if str_seeds >= 512:
                 break
-        # call 边不动点：从所有已确认函数体（含指针表召回的）继续下降
+        # call 边不动点：从所有已确认函数体（含指针表召回的）继续下降。
+        # `_body_targets` 对同一函数体（entry/end 已冻结）的结果是确定的，因此已扫过的
+        # 函数体不必每轮重扫：每轮只扫「上一轮新增的函数」，其余沿用累计集合。
+        # 累计集合恒等于「对当前全部函数体重算一次」的结果，候选逐轮内容与顺序都不变。
+        body_targets: set[int] = set()
+        body_memo: dict[int, int] = {}   # VA -> (call 目标 << 4) | 指令长度，见 `_body_targets`
+        scanned: set[int] = set()
         rounds = 0
         while rounds < 4 and len(funcs) < max_functions:
             rounds += 1
             before = len(funcs)
-            for target in sorted(_body_targets(space, funcs) | indirect_targets):
+            fresh = {va: fn for va, fn in funcs.items() if va not in scanned}
+            if fresh:
+                scanned.update(fresh)
+                body_targets |= _body_targets(space, fresh, body_memo)
+            for target in sorted(body_targets | indirect_targets):
                 if target in funcs or not space.has(target):
                     continue
                 # 与首轮同一条门：假起点产生的假 call 边不能再往下扩散
