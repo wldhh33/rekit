@@ -140,3 +140,22 @@
    每处冲突 `-0.05`；它不表示跨样本泛化精度，也不是概率。
 6. **`target_triple` 只在二进制里真出现字符串时填写。** 推不出来就是 `null`，不按族反推。
 7. **旧口径数字不可比。** 见 §5；0.7 的评估必须用新预注册池，不从 0.6.x/A 轮补样本。
+8. **T15/T16 的 2.x 边界实测（2026-11-12 普查，LV-001）。** System32 顶层 4202 个 PE 中
+   `MajorLinkerVersion=2` 出现 **0 次**（14.x 主导；DirectX 遗留组件 d3dcompiler/xactengine2
+   写 `8.0`×68，属旧世代微软工具链，与 2.x 无交叠；`48.0`×12 全部 managed）；自建 M4 语料
+   340 文件仅三值 `14.29`/`2.47`/`3.0`，与 msvc/gcc/go 三族一一对应零重叠；UPX 5.0.0
+   `--best` 三对样本加壳前后字段逐值不变（壳不改写，回归测试
+   `tests/test_linker_version_invariance.py` 锁定）。该普查回答了「其他工具链是否也写 2.x、
+   UPX 是否改写该字段」两类假阳性风险，结论：未观察到。残余风险不变：llvm-mingw（lld）
+   与 §7.1 的 `curl` 14.0 边界依旧无解。
+   证据：`实践/2026-11-12-linkerver-survey/`（脚本 `工具库/pe/linker_ver_scan.py`）。
+9. **diec 4.0.0 独立交叉诊断（A 轮 3 退役样本，仅诊断，任何数字不入判定/发布）。**
+   以「链接器提供方」语义映射 diec 输出后 37/40 族一致；三个 miss：`busybox64`、
+   `jq-1.8.2`（strip 后无厂商串——diec 的字符串路线盲区，恰是 PE 头字段路线覆盖的场景）、
+   `upx.exe`（其 packer 签名在打包器本体上误报）。rekit HEAD 对 A 轮 3 五个错判样本
+   （aria2c / xxhsum / busybox64 / gitea / eza）诊断性复跑全部 `gcc`（conf 0.92–0.97），
+   F1–F5 修复已闭合当年可修复缺口。登记为后续信号候选（不动 signals-v1 冻结）：
+   .NET 库指纹（Newtonsoft/Serilog/xUnit 级，命中 7+2）、debug data（CodeView）Records、
+   Authenticode 签名工具字段。
+   证据：`实践/2026-11-12-die-crosscheck/`（diec 4.0.0 win64 portable，zip
+   SHA256 `522a649e795123ab89bb7963e3b7c0b492af5a1ece8052f1dee04f3d5cd58593`，Apache-2.0）。
