@@ -2014,12 +2014,26 @@ def discover(img: Any, max_functions: int = 50000, pointers: bool = False,
                      f"绝对跳转表排除 {pstats['abs_jt_excluded']}）")
 
     if cold:
+        # `_merged_spans` 只依赖已确认的函数体，而 `Function` 一旦写进 `funcs` 就不再变
+        # （`trace` 是写完 end/insn_count 才落库），所以 `len(funcs)` 就是区间表的版本号：
+        # 版本没变时反复校验候选不必重算合并，合并语义一字未改。
+        span_version = -1
+        span_table: list[tuple[int, int]] = []
+
+        def cold_spans() -> list[tuple[int, int]]:
+            nonlocal span_version, span_table
+            if span_version != len(funcs):
+                span_table = _merged_spans((f.entry, f.end)
+                                           for f in funcs.values() if f.insn_count)
+                span_version = len(funcs)
+            return span_table
+
         # 代码取址（`lea rdi,[rip+main]` 这一类）：目标本身就是函数起点
         addr_seeds = 0
         for target in _code_addr_refs(img, space):
             if target in covered or target in funcs:
                 continue
-            spans = _merged_spans((f.entry, f.end) for f in funcs.values() if f.insn_count)
+            spans = cold_spans()
             ok, _why = _validate_candidate(space, spans, target, image_bits(img),
                                            covered=covered)
             if ok is None:
@@ -2038,7 +2052,7 @@ def discover(img: Any, max_functions: int = 50000, pointers: bool = False,
             if cand is None or cand in funcs:
                 continue
             # 序言形状还不够：整个函数体要能解到 ret/jmp 且栈平衡，否则是"函数中段"
-            spans = _merged_spans((f.entry, f.end) for f in funcs.values() if f.insn_count)
+            spans = cold_spans()
             ok, _why = _validate_candidate(space, spans, cand, image_bits(img),
                                            covered=covered)
             if ok is None:
