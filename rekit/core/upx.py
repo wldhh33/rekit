@@ -1,8 +1,12 @@
-"""手工脱 UPX（PE32+ / NRV2B）：解压 + IAT 重建 + 重定位重建 + 按原布局写文件。
+"""手工脱 UPX（PE32+ / NRV2B / NRV2E / LZMA）：解压 + IAT 重建 + 重定位重建 + 按原布局写文件。
 
 不调用 ``upx -d``，只依据文件字节与 UPX 5.0.0 源码里的格式定义：
 
   src/packhead.cpp          PackHeader 布局与在 UPX1.rawdataptr-64 起的搜索
+  src/compress/compress_lzma.cpp:358-360,416-434
+                            method 14 的 LZMA framing：2 字节自有 properties
+                            （pb=b0&7, lp=b1>>4, lc=b1&15）+ 裸 LZMA1
+  src/stub/src/arch/*/lzma_d.S  stub 侧同样只跳 2 字节 props，无 EOS marker
   src/pefile.cpp:2949       压缩流起点 = UPX1.rawdataptr - 64 + buf_offset + 32
   src/pefile.cpp:2954-2973  解压尾部：原始 PE 头 + 原节表（skip = le32(blob[u_len-4])）
   src/pefile.cpp:2382-2407  extra_info 顺序：imports(8) → relocs(5) → resources(2)
@@ -20,6 +24,7 @@ IAT / 重定位 / TLS / DOS stub / 原布局 / 导入表对照）。
 
 from __future__ import annotations
 
+import lzma
 import struct
 import zlib
 from dataclasses import dataclass, field
@@ -273,6 +278,42 @@ def nrv2e_le32_decompress(src: bytes, limit: int) -> tuple[bytes, int, str]:
             m_len -= 1
         if len(dst) > limit:
             return bytes(dst), ip, "overrun"
+
+
+def parse_lzma_props(src: bytes) -> tuple[int, int, int]:
+    """UPX 自有 2 字节 LZMA properties → (lc, lp, pb)。
+
+    与 LZMA-alone 的 5 字节属性头**不是**一回事：首字节按标准 props 解释会得到
+    ``lc = 0x1a % 9 = 8``（非法），这是此前 LZMA 分支全部失败的直接原因。
+    字段定义来自 `compress_lzma.cpp:421-423`：``pb=b0&7, lp=b1>>4, lc=b1&15``。
+    """
+    if len(src) < 2:
+        raise UnpackError("LZMA 流不足 2 字节（缺 UPX properties）")
+    return src[1] & 15, src[1] >> 4, src[0] & 7
+
+
+def lzma_upx_decompress(src: bytes, limit: int) -> tuple[bytes, int, str]:
+    """UPX method 14：2 字节自有 properties + 裸 LZMA1（无 size、无 EOS marker）。
+
+    因此"消费字节数"不可验证，只能按 ``u_len`` + adler 判定；stub 侧
+    `lzma_d.S` 同样只跳 2 字节，直接进 LZMA1 解码器。
+    """
+    lc, lp, pb = parse_lzma_props(src)
+    if pb >= 5 or lp >= 5 or lc >= 9:
+        raise UnpackError(
+            f"LZMA properties 越界：lc={lc}, lp={lp}, pb={pb}（UPX 允许 lc<9, lp<5, pb<5）")
+    if lc + lp > 4:
+        raise UnpackError(
+            f"LZMA properties 非法：lc={lc}, lp={lp}（LZMA 要求 lc+lp<=4）；"
+            "按 LZMA-alone 5 字节头解释首字节会得到 lc=8 这类非法值")
+    filters = [{"id": lzma.FILTER_LZMA1, "lc": lc, "lp": lp, "pb": pb,
+                "dict_size": max(4096, limit)}]
+    try:
+        dec = lzma.LZMADecompressor(format=lzma.FORMAT_RAW, filters=filters)
+        out = dec.decompress(src[2:], max_length=limit)
+    except lzma.LZMAError as exc:
+        raise UnpackError(f"LZMA1 解码失败：{exc}") from exc
+    return out, len(src), ("u_len" if len(out) >= limit else "eof")
 
 
 def unfilter_ctok32_e8e9(image: bytearray, start: int, length: int, cto8: int) -> tuple[int, int]:
@@ -578,7 +619,41 @@ def rebuild_relocs(blob: bytes, image: bytearray, oh: bytes, rvamin: int,
     report.add("重定位", True,
                f"{len(positions)} 条 64 位 + {len(relocs) - len(positions)} 条 16 位，"
                f".reloc 重建 {len(blocks)} 字节，指针已加回 ImageBase+0x{rvamin:X}")
-    return {"dir64": len(positions), "other": len(relocs) - len(positions), "bytes": len(blocks)}
+    # table 从"实际写进镜像的 .reloc 字节"解析回来，含块对齐的 ABS 填充项：
+    # 与原表对照时必须按同一形态比较，否则会把填充项误算成缺失。
+    table = _parse_reloc_blocks(bytes(blocks))
+    return {"dir64": len(positions), "other": len(relocs) - len(positions),
+            "bytes": len(blocks), "table": table}
+
+
+def _parse_reloc_blocks(data: bytes) -> list[tuple[int, int]]:
+    """解析 `.reloc` 字节为 ``[(RVA, type)]``，块内顺序即原顺序。"""
+    table: list[tuple[int, int]] = []
+    pos = 0
+    while pos + 8 <= len(data):
+        page, bsize = struct.unpack_from("<II", data, pos)
+        if bsize < 8 or pos + bsize > len(data):
+            break
+        for i in range((bsize - 8) // 2):
+            entry = u16(data, pos + 8 + i * 2)
+            table.append((page | (entry & 0x0FFF), entry >> 12))
+        pos += bsize
+    return table
+
+
+def read_reloc_table(pe: PE) -> list[tuple[int, int]]:
+    """读 PE 的 `.reloc` 目录，按块内原顺序返回 ``[(RVA, type)]``。
+
+    用于把 ``rebuild_relocs`` 的产物与未加壳原件的原表逐项对照；只做解析，
+    不判断正确性（判定在 ``_compare_relocs``）。
+    """
+    rva, size = _dir(pe, BASERELOC)
+    if not rva or not size:
+        return []
+    off = pe.rva_to_foa(rva)
+    if off is None:
+        raise UnpackError(f".reloc 目录 RVA=0x{rva:X} 不在任何节内")
+    return _parse_reloc_blocks(pe.data[off:off + size])
 
 
 def _reloc_block(page: int, entries: list[int]) -> bytes:
@@ -815,21 +890,31 @@ def unpack(packed_path: Path, out_path: Path | None, verify_only: bool = False) 
     if upx1 is None:
         raise UnpackError("找不到 UPX1 节，不是标准 UPX 样本")
     ph = parse_pack_header(data, upx1.pointer_to_raw_data)
-    decoders = {2: nrv2b_le32_decompress, 8: nrv2e_le32_decompress}
+    decoders = {2: nrv2b_le32_decompress, 8: nrv2e_le32_decompress,
+                14: lzma_upx_decompress}
     if ph.method not in decoders:
-        raise UnpackError(f"暂只实现 NRV2B（method=2）/ NRV2E（method=8），本样本 method={ph.method}"
-                          f"（{METHODS.get(ph.method, '未知')}）")
+        raise UnpackError(f"暂不支持的压缩方法 method={ph.method}"
+                          f"（{METHODS.get(ph.method, '未知')}）；已实现 NRV2B / NRV2E / LZMA")
     report.add("PackHeader", ph.checksum_ok,
                f"method={ph.method}（{METHODS[ph.method]}），u_len=0x{ph.u_len:X}，c_len=0x{ph.c_len:X}")
 
     stream_off = upx1.pointer_to_raw_data - 64 + ph.buf_offset + PH_SIZE
-    blob, consumed, status = decoders[ph.method](data[stream_off:stream_off + ph.c_len],
-                                                 ph.u_len + 16)
-    ok_stream = consumed == ph.c_len and status == "eof"
+    stream = data[stream_off:stream_off + ph.c_len]
+    # LZMA 流没有 EOS marker，按声明的 u_len 截停；NRV 留 16 字节余量用于识别 overrun
+    limit = ph.u_len if ph.method == 14 else ph.u_len + 16
+    blob, consumed, status = decoders[ph.method](stream, limit)
     ok_len = len(blob) == ph.u_len
     ok_adler = (zlib.adler32(blob) & 0xFFFFFFFF) == ph.u_adler
+    if ph.method == 14:
+        lc, lp, pb = parse_lzma_props(stream)
+        ok_stream = status == "u_len"          # 解满 u_len 即停，消费字节数不可验证
+        stream_note = (f"裸 LZMA1（lc={lc}/lp={lp}/pb={pb}，2 字节自有 props，"
+                       "无 EOS marker，消费字节数不参与判定）")
+    else:
+        ok_stream = consumed == ph.c_len and status == "eof"
+        stream_note = f"消费 {consumed:,}/{ph.c_len:,}"
     report.add("解压", ok_stream and ok_len and ok_adler,
-               f"{len(blob):,} 字节，消费 {consumed:,}/{ph.c_len:,}，adler "
+               f"{len(blob):,} 字节，{stream_note}，adler "
                f"{'一致' if ok_adler else '不一致'}")
 
     oh_bytes, secs, sec_table = parse_original_header(blob, ph.u_len)
@@ -859,6 +944,7 @@ def unpack(packed_path: Path, out_path: Path | None, verify_only: bool = False) 
     ex = parse_extra_info(blob, extra_off, oh, secs, packed)
     iat = rebuild_imports(blob, image, oh, rvamin, ex, packed, report)
     reloc = rebuild_relocs(blob, image, oh, rvamin, ex, report)
+    reloc_table = reloc.pop("table")
     resrc = rebuild_resources(packed, image, oh, rvamin, ex, report)
     check_tls(oh, image, rvamin, report)
     check_exception(oh, image, rvamin, report)
@@ -913,6 +999,7 @@ def unpack(packed_path: Path, out_path: Path | None, verify_only: bool = False) 
         diff["reference"] = str(raw_path)
         diff.update(_diff_against(out_bytes, raw_pe))
         check_layout(len(secs), u32(oh, 24 + 16), u32(oh, 24 + 60), raw_pe, report)
+        _compare_relocs(reloc_table, raw_pe, report)
         if written:
             _compare_imports(PE(str(out_path)), raw_pe, report)
         else:
@@ -933,6 +1020,9 @@ def unpack(packed_path: Path, out_path: Path | None, verify_only: bool = False) 
             "version": ph.version, "format": ph.fmt, "method": ph.method,
             "method_name": METHODS[ph.method], "level": ph.level,
             "header_offset": f"0x{ph.file_offset:X}", "checksum_ok": ph.checksum_ok,
+            **({"lzma_props": dict(zip(("lc", "lp", "pb"), parse_lzma_props(stream))),
+                "framing": "2 字节自有 props + 裸 LZMA1（无 EOS marker）"}
+               if ph.method == 14 else {}),
         },
         "unpacked_bytes": ph.u_len,
         "compressed_bytes": ph.c_len,
@@ -960,7 +1050,7 @@ def _skip(blob: bytes, u_len: int) -> int:
 def _guess_raw(packed_path: Path) -> Path | None:
     name = packed_path.name
     raw_name = None
-    for suffix in (".packed.exe", ".packed"):
+    for suffix in (".lzma-packed.exe", ".best-packed.exe", ".packed.exe", ".packed"):
         if name.endswith(suffix):
             raw_name = name[:-len(suffix)] + ".exe"
             break
@@ -975,6 +1065,35 @@ def _guess_raw(packed_path: Path) -> Path | None:
 
 def _import_set(pe: PE) -> set[tuple[str, str]]:
     return {(imp.dll.lower(), (imp.name or f"#{imp.ordinal}").lower()) for imp in pe.imports()}
+
+
+def _compare_relocs(ours: list[tuple[int, int]], raw: PE, report: Report) -> None:
+    """重建的 `.reloc` 表与未加壳原件的原表逐项对照（页 + 偏移 + 类型 + 顺序）。
+
+    两侧都按"写进文件/镜像的字节"解析，ABS（type 0）块对齐填充项也在内。
+    短页块用零项补齐是 PE 格式要求，原件同样有；只比有效项会把填充误算成缺失。
+    """
+    theirs = read_reloc_table(raw)
+    ours_abs = sum(1 for _rva, rtype in ours if rtype == 0)
+    theirs_abs = sum(1 for _rva, rtype in theirs if rtype == 0)
+    if ours == theirs:
+        report.add("重定位表对照", True,
+                   f"{len(ours)}/{len(theirs)} 项逐项相等（页、偏移、类型、顺序，"
+                   f"含 {ours_abs} 条 ABS 填充）")
+        return
+    mine = [(rva, rtype) for rva, rtype in ours if rtype != 0]
+    ref = [(rva, rtype) for rva, rtype in theirs if rtype != 0]
+    if mine == ref:
+        report.add("重定位表对照", True,
+                   f"{len(mine)}/{len(ref)} 条有效项逐项相等；ABS 填充 {ours_abs}/{theirs_abs} 条、"
+                   "位置不同（填充不产生修正动作）")
+        return
+    diff = [i for i, (a, b) in enumerate(zip(mine, ref)) if a != b]
+    first = diff[0] if diff else min(len(mine), len(ref))
+    got = mine[first] if first < len(mine) else None
+    want = ref[first] if first < len(ref) else None
+    report.add("重定位表对照", False,
+               f"有效项 {len(mine)}/{len(ref)}，首个差异 #{first}：重建 {got} vs 原表 {want}")
 
 
 def _compare_imports(out: PE, raw: PE, report: Report) -> None:

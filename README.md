@@ -125,9 +125,16 @@ python -m rekit unpack tests/fixtures/hello_rs.packed.exe -d unpacked -j unpack.
 python -m rekit unpack tests/fixtures/hello_rs.packed.exe --verify-only
 ```
 
-支持 PE32+ / NRV2B / NRV2E / filter 0x49；不调用 `upx -d`，按 UPX 源码的格式定义重放：
+支持 PE32+ / NRV2B / NRV2E / LZMA / filter 0x49；不调用 `upx -d`，按 UPX 源码的格式定义重放：
 PackHeader → 解压（adler 校验）→ 反过滤（覆盖 `BaseOfCode + SizeOfCode`）→ IAT 重建 →
 重定位重建 → `.rsrc` 重建（资源数据搬回 + 目录树重建）→ TLS 检查 → DOS stub + 原节表按原布局写文件。
+
+LZMA（method=14）的流是 **2 字节 UPX 自有 properties + 裸 LZMA1**（`pb=b0&7, lp=b1>>4,
+lc=b1&15`），不是 LZMA-alone：没有 5 字节属性头、没有 EOS marker。按 LZMA-alone 解释首字节会得
+`lc=8`（非法）。裸流没有结束标记，因此只按 `u_len` + adler 判定，不校验"消费字节数"。
+
+有同源未加壳文件时，`unpack` 还会把重建的 `.reloc` 字节表与原表逐项对照（含块对齐 ABS 填充）：
+hello_rs 304/304、notepad 366/366 逐项相等（页、偏移、类型、顺序）。
 
 真实输出（2026-11-11，rekit 0.3.0）：
 
@@ -158,7 +165,7 @@ OK   tests\fixtures\hello_rs.packed.exe
 导入名区重排，以及资源**目录树**的布局规范化（资源数据本身 0 字节差）。`upx -d` 产物里
 这些字节同样对不上原件，说明不是本实现独有的缺口。
 
-已知边界：32 位 PE、LZMA/CL1B、UPX2 多节壳未覆盖；图标组计数（`icondir_count`）已实现，
+已知边界：32 位 PE、CL1B、UPX2 多节壳未覆盖；图标组计数（`icondir_count`）已实现，
 但遇到"资源被压缩进主镜像"的条目只搬运不重排，行为与 `upx -d` 一致。
 
 ### 节映射 / Map
@@ -545,7 +552,7 @@ M3 十题 **5/9**；系统 DLL **0/700** 误报，M4b 留出切片 n=200 的 Wil
 1 个真实样本，报告只描述「该样本」；规则引擎是自研的「rekit 规则引擎」，**不是 YARA
 兼容实现**，`.yar` 经真 YARA 4.5.4 编译校验通过但只翻译了可表达条件、**语义不等价**；
 规则不参与族/壳判定，`signals-*` 未改动。
-`unpack` 覆盖 PE32+ 的 UPX（NRV2B / NRV2E / filter 0x49）；32 位 PE、LZMA/CL1B 与多节 UPX2
+`unpack` 覆盖 PE32+ 的 UPX（NRV2B / NRV2E / LZMA / filter 0x49）；32 位 PE、CL1B 与多节 UPX2
 壳仍在路线图上。`symbols` 是占位（退出码 2 并提示计划版本），不假装成功。
 
 版本变更见 [CHANGELOG.md](CHANGELOG.md)。

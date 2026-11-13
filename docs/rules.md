@@ -82,6 +82,34 @@
 工具侧：`工具库/pe/cfg_guard_scan.py` 对加壳样本只出 `packed-unknown`；
 `--no-code` 用于“只看头与 Load Config”的场景，判定写 `no-code`，避免拿残留字段凑结论。
 
+### 0.6 UPX method=14 是“2 字节自有 props + 裸 LZMA1”；原重定位表必须先剔 ABS 再对照
+
+> **method=14 的压缩流不是 LZMA-alone：开头只有 2 字节 UPX 自有 properties
+> （`pb = b0 & 7`、`lp = b1 >> 4`、`lc = b1 & 15`），随后直接是 LZMA1 流，
+> 没有 5 字节属性头、没有 8 字节 size、没有 EOS marker。
+> 把首字节当 LZMA-alone 属性解释会得 `lc = 0x1a % 9 = 8`（非法），这是此格式解码全败的根因。**
+
+- 依据：`样本/tools/upx-src/upx-5.0.0/src/compress/compress_lzma.cpp:358-360,416-434`
+  与两套 stub 的 `lzma_d.S`（同样只跳 2 字节）。
+- 校验：`lc<9`、`lp<5`、`pb<5` 且 `lc+lp<=4`；越界必须报错，不得静默换解码器。
+- 判定：裸 LZMA1 没有结束标记，“消费字节数”不可验证；只按 PackHeader 的 `u_len`
+  与 adler 判定。实测 `--lzma` 产物：141,660 B，adler `0x959BC30F`，`.text` 与原件 0 字节差。
+
+重定位恢复：`rebuildRelocs` 从 `orig_crelocs` 重放原表，壳后最小表**不参与**恢复
+（它只描述壳后镜像，见 §0.5）。与原 `.reloc` 对照时，两侧都按**写出的字节**解析：
+
+| 样本 | 原表项数 | 其中 ABS(type 0) | 重建对照 |
+|---|---|---|---|
+| hello_rs | 304 | 5 | 304/304 逐项相等（含 5 条 ABS 填充） |
+| notepad | 366 | 2 | 366/366 逐项相等（含 2 条 ABS 填充） |
+
+ABS 条目是块对齐填充（每块 `8 + 2n` 字节需补到 4 字节对齐），原件有，重建侧
+`_reloc_block` 同样会补——**对照必须比“写出的字节表”**。只比逻辑位置列表会漏掉填充项，
+误报“少 5 条 / 少 2 条”。运行时 rebase 是否实际执行仍未确证，不得写成“运行时重定位已还原”。
+
+工具侧：`rekit unpack` 的检查项「解压」与「重定位表对照」（有同源原件时才出）；
+`tests/test_upx_chain.py` 钉住 props `(3,0,2)`、非法 props 报错、LZMA/NRV2B 产物逐字节相同。
+
 ---
 
 # triage 判据与阈值

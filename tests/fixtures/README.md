@@ -4,6 +4,7 @@
 |---|---|---|---|
 | `hello_rs.exe` | 本项目自编译（`rustc -O main.rs`，源码见学习项目的 `样本/raw/hello_rs/main.rs`） | MIT/Apache-2.0（自有代码） | 未加壳基线：PE32+ / 5 节 / 85 导入 / 10 DLL；`.pdata` 333 项 |
 | `hello_rs.packed.exe` | 用 UPX 5.0.0 `--best` 对上面文件加壳 | 同上（UPX 只是工具，产物无新增限制） | 加壳基线：`UPX0/UPX1/UPX2`、`UPX0.RawSize=0`、13 导入 / 10 DLL |
+| `hello_rs.lzma-packed.exe` | 用 UPX 5.0.0 `--lzma` 对 `hello_rs.exe` 加壳（实测 59,904 B、`u_len=141,660`、`c_len=54,262`） | 同上 | method=14 的 LZMA framing 夹具：2 字节自有 props `(lc=3, lp=0, pb=2)` + 裸 LZMA1；与 `hello_rs.packed.exe` 还原出的文件必须逐字节相同 |
 | `hello_elf` | 本项目自编译（`rustc --target x86_64-unknown-linux-musl -O -C panic=abort -C force-unwind-tables=yes -C strip=symbols -C link-arg=--export-dynamic`），源码 `src/hello_elf.rs` | MIT/Apache-2.0（自有代码） | ELF64 基线：`.eh_frame` + `.eh_frame_hdr`，2360 条 FDE，`.dynsym` 有函数导出 |
 | `gcc_o2.exe` / `gcc_o0.exe` | 本项目自编译（MinGW-w64 GCC 16.2，`src/build_fixtures.ps1`，源码 `src/hello_c.c`） | MIT/Apache-2.0（自有代码） | GCC x64 PE：`.pdata` 59 项，用于 GCC 工具链判别与 A 层召回 |
 | `clang_o0` / `clang_o2` | 本项目自编译（zig cc 的 LLVM/Clang 后端，`-target x86_64-linux-gnu`） | 同上 | Clang x64 ELF：`clang_o0` 714 条 FDE（有效样本）；`clang_o2` 仅 10 条，只作冒烟 |

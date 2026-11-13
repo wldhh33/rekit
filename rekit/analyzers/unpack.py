@@ -1,4 +1,4 @@
-"""unpack 分析器 —— 静态脱壳 UPX（PE32+ / NRV2B / NRV2E）。
+"""unpack 分析器 —— 静态脱壳 UPX（PE32+ / NRV2B / NRV2E / LZMA）。
 
 不调用 ``upx -d``：PackHeader → 解压 → 反过滤 → IAT/重定位重建 → 按原布局写文件，
 每一步都输出"通过/失败 + 证据"。实现与学习项目的 ``工具库/pe/unpack_upx.py``
@@ -13,8 +13,8 @@ from typing import Any
 from ..core.upx import unpack_many
 
 NAME = "unpack"
-DESCRIPTION = "静态脱壳（UPX / PE32+）：PackHeader → NRV2B/NRV2E → 反过滤 → IAT/重定位重建"
-VERSION = "0.2.0"
+DESCRIPTION = "静态脱壳（UPX / PE32+）：PackHeader → NRV2B/NRV2E/LZMA → 反过滤 → IAT/重定位重建"
+VERSION = "0.3.0"
 
 
 def run(paths: list[str], out_dir: str | None = None,
