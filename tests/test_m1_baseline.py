@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 """M1 B4 —— 跨类别 500 个文件的解析结果基线（零差异回归）。
 
-背景：M1 用 `工具库/pe/verify_with_pefile.py` 对 2,783 个系统文件跑了 72,358 次逐字段
-交叉校验，结果全是 0 差异。但那是"某天某次跑出来的数字"，不是能反复执行的断言。
-这里把那批结果按类别等距抽样 500 个，把 rekit 解析出的每个字段固化成 fixture：
+语料已从活的 `C:\\Windows\\System32` 改为**固定只读副本**（2026-11-14 决定）：
+Windows 更新会原地替换系统文件，2026-11-11 的基线在 3 天后已有 166/500 条漂移，
+无法区分「解析器回归」与「系统更新」。现在基线只解析
+``<workspace>/语料/m1-2026-11-11/files`` 下的副本，并用清单 SHA256 证明是同一批文件。
 
-    python tests/test_m1_baseline.py     # 重新生成 tests/baseline/m1_500.json（需本机有语料）
+    python tests/make_m1_corpus.py     # 首次或需要重建语料时（会复制 500 个文件）
+    python tests/test_m1_baseline.py   # 重新生成 tests/baseline/m1_500.json
     python -m pytest tests/test_m1_baseline.py -q
 
-语料是 Windows 系统文件，换一台机器可能没有；缺失的文件按 skip 计，全部缺失则整个用例
-skip（并提示怎么准备语料），不会假装通过。
+语料目录不提交；入库的只有 ``tests/baseline/m1_corpus_manifest.json``。换机器时
+把语料放到同位置，或用 ``REKIT_M1_CORPUS`` 指向副本。缺失时按 skip 计，不假装通过。
 """
 
 from __future__ import annotations
@@ -17,6 +19,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import stat
 import statistics
 import sys
 from pathlib import Path
@@ -25,25 +28,14 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import m1_corpus as mc  # noqa: E402
 from rekit.core.pe import PE, PEError  # noqa: E402
 
 FIXTURE = Path(__file__).resolve().parent / "baseline" / "m1_500.json"
-CORPUS_DIR = ROOT.parent / "实践" / "2026-11-11-m1"
 
-# 每个类别从哪个 CSV 抽、抽多少。总数 500，按 M1 语料的类别占比等距取。
-# 最后一项 True 表示只取 CSV 里该 class 的行；huge.csv 整份就是大文件语料，
-# 其中部分文件因为分类规则被标成 native，所以按来源整体抽。
-QUOTAS = [
-    ("sys32_1500.csv", "native", 200, True),
-    ("mui_500.csv", "resource_only", 100, True),
-    ("drivers.csv", "driver", 100, True),
-    ("dotnet.csv", "dotnet", 90, True),
-    ("huge.csv", "huge", 5, False),
-    ("corrupt.csv", "corrupt", 5, False),
-]
-
-# 每个文件固定检查这些字段（26 项；imports/exports 用摘要 + 计数，避免 fixture 膨胀）
+# 每个类别固定检查这些字段（26 项；imports/exports 用摘要 + 计数，避免 fixture 膨胀）
 FIELDS = (
     "format", "arch", "machine", "timestamp", "characteristics", "entry_rva",
     "image_base", "section_alignment", "file_alignment", "size_of_image",
@@ -94,55 +86,42 @@ def m1_fields(pe: PE) -> dict:
     }
 
 
-def _read_csv(name: str) -> list[dict]:
-    import csv
-
-    path = CORPUS_DIR / name
-    if not path.is_file():
-        return []
-    with open(path, encoding="utf-8-sig") as f:
-        return list(csv.DictReader(f))
-
-
-def _sample(rows: list[dict], k: int) -> list[dict]:
-    """按文件名排序后等距抽样，保留大小分布（不挑样本）。"""
-    rows = sorted(rows, key=lambda r: r["file"])
-    if len(rows) <= k:
-        return rows
-    step = (len(rows) - 1) / (k - 1)
-    return [rows[round(i * step)] for i in range(k)]
-
-
 def build() -> dict:
+    manifest = mc.load_manifest(in_repo=True)
+    if manifest is None:
+        raise SystemExit(
+            f"缺少语料清单 {mc.REPO_MANIFEST}；先运行 python tests/make_m1_corpus.py")
     files: list[dict] = []
-    for csv_name, cls, quota, filter_class in QUOTAS:
-        rows = _read_csv(csv_name)
-        if filter_class:
-            rows = [r for r in rows if r.get("class") == cls]
-        picked = _sample(rows, quota)
-        if len(picked) < quota:
-            raise SystemExit(f"{csv_name} 只抽到 {len(picked)}/{quota} 个 {cls}")
-        for row in picked:
-            path = row["file"]
-            if not os.path.isabs(path):  # corrupt 语料在 CSV 里是相对 workspace 的路径
-                path = str(ROOT.parent / path)
-            rec: dict = {"file": path, "class": cls, "size": int(row["size"])}
-            try:
-                with PE(path) as pe:
-                    rec["fields"] = m1_fields(pe)
-                    rec["file_sha256"] = pe.sha256
-            except (PEError, OSError) as e:
-                rec["error"] = f"{type(e).__name__}: {e}"
-            files.append(rec)
+    for item in manifest["entries"]:
+        path = mc.FILES_ROOT / item["rel"]
+        rec: dict = {
+            "rel": item["rel"],
+            "source": item["source"],
+            "source_sha256": item["sha256"],
+            "class": item["class"],
+            "size": item["size"],
+        }
+        try:
+            with PE(str(path)) as pe:
+                rec["fields"] = m1_fields(pe)
+                rec["file_sha256"] = pe.sha256
+        except (PEError, OSError) as e:
+            rec["error"] = f"{type(e).__name__}: {e}"
+        files.append(rec)
 
     sizes = [r["size"] for r in files]
+    src = manifest["meta"]
     meta = {
-        "note": "M1 跨类别 500 文件的 rekit 字段快照；生成时与 pefile 的 72,358 次校验为 0 差异",
-        "date": "2026-11-11",
-        "corpus": "实践/2026-11-11-m1/*.csv（System32 1500 / .mui 500 / drivers 471 / "
-                  ".NET 307 / huge 5 / corrupt 12）",
+        "note": "M1 跨类别 500 文件的 rekit 字段快照；解析对象为固定只读语料副本",
+        "date": src["created_at"][:10],
+        "corpus": "语料/m1-2026-11-11/files（固定只读副本；来源见 m1_corpus_manifest.json）",
+        "corpus_id": src["corpus_id"],
+        "corpus_created_at": src["created_at"],
+        "corpus_source": src["source_csv_dir"],
+        "corpus_platform": src.get("platform", ""),
+        "baseline_created_at": "",
         "sampling": "按文件名排序后每类等距抽样，未按大小或结果挑选",
-        "quotas": {cls: quota for _, cls, quota, _ in QUOTAS},
+        "quotas": src["quotas"],
         "files": len(files),
         "fields_per_file": len(FIELDS),
         "field_checks": len(files) * len(FIELDS),
@@ -167,47 +146,59 @@ def baseline() -> dict:
 def test_fixture_covers_all_classes(baseline: dict) -> None:
     meta = baseline["meta"]
     classes = [rec["class"] for rec in baseline["entries"]]
-    for _, cls, quota, _ in QUOTAS:
+    for cls, quota in meta["quotas"].items():
         assert classes.count(cls) == quota, cls
     assert meta["files"] == 500
     assert meta["field_checks"] == 500 * len(FIELDS)
+    assert len(meta["corpus_id"]) == 64
+
+
+def test_corpus_is_fixed_read_only_and_hash_matches(baseline: dict) -> None:
+    """语料必须是只读副本，且逐文件 SHA256 与清单一致——证明测的是同一批文件。"""
+    missing = [r["rel"] for r in baseline["entries"]
+               if not (mc.FILES_ROOT / r["rel"]).is_file()]
+    if missing:
+        pytest.skip(f"语料缺失 {len(missing)} 个（{mc.FILES_ROOT}），先运行 make_m1_corpus.py")
+    writable, bad_hash = [], []
+    for rec in baseline["entries"]:
+        path = mc.FILES_ROOT / rec["rel"]
+        if path.stat().st_mode & stat.S_IWRITE:
+            writable.append(rec["rel"])
+        if mc.sha256_file(path) != rec["source_sha256"]:
+            bad_hash.append(rec["rel"])
+    assert not writable, f"{len(writable)} 个语料副本可写：{writable[:5]}"
+    assert not bad_hash, f"{len(bad_hash)} 个语料副本哈希变化：{bad_hash[:5]}"
+    assert mc.corpus_id(baseline["entries"]) == baseline["meta"]["corpus_id"]
 
 
 def test_zero_diff_against_baseline(baseline: dict) -> None:
-    """重新解析 500 个文件，逐字段比对 fixture；缺失文件跳过并计数。
-
-    注意：**基线可能被系统更新污染**。`C:\\Windows\\System32` 下的文件会被 Windows
-    更新原地替换（例如 `MRT.exe` 升版后 timestamp/entry_rva/size_of_image 全变），
-    这属于环境漂移，不是解析器漂移。遇到单条不一致时，先看文件 `LastWriteTime`
-    与 `FileVersion` 是否变过；确认是更新后只刷新该条记录，不要重建整个基线
-    （其余记录全等才是"解析器没漂移"的证据）。
-    """
+    """重新解析 500 个固定副本，逐字段比对 fixture；缺失文件跳过并计数。"""
     missing: list[str] = []
     diffs: list[str] = []
     for rec in baseline["entries"]:
-        path = rec["file"]
-        if not os.path.isfile(path):
-            missing.append(path)
+        path = mc.FILES_ROOT / rec["rel"]
+        if not path.is_file():
+            missing.append(rec["rel"])
             continue
         if "error" in rec:
             with pytest.raises((PEError, OSError)):
-                with PE(path) as pe:
+                with PE(str(path)) as pe:
                     m1_fields(pe)
             continue
         try:
-            with PE(path) as pe:
+            with PE(str(path)) as pe:
                 got = m1_fields(pe)
         except (PEError, OSError) as e:  # 基线里是 OK 的文件现在报错
-            diffs.append(f"{path}: 现在报错 {type(e).__name__}: {e}")
+            diffs.append(f"{rec['rel']}: 现在报错 {type(e).__name__}: {e}")
             continue
         bad = [k for k in base_fields(baseline) if got[k] != rec["fields"][k]]
         if bad:
             detail = ", ".join(f"{k}: {rec['fields'][k]!r} -> {got[k]!r}" for k in bad[:3])
-            diffs.append(f"{path}: {detail}")
+            diffs.append(f"{rec['rel']}: {detail}")
 
     checked = len(baseline["entries"]) - len(missing)
     if checked == 0:
-        pytest.skip("本机没有这批 Windows 系统文件；在装齐语料的机器上运行才有意义")
+        pytest.skip("本机没有固定语料；先运行 python tests/make_m1_corpus.py")
     assert not diffs, f"{len(diffs)}/{checked} 个文件与基线不一致：\n" + "\n".join(diffs[:10])
     if missing:
         print(f"[skip] {len(missing)} 个文件本机不存在，已跳过")
@@ -218,4 +209,8 @@ def base_fields(baseline: dict) -> tuple[str, ...]:
 
 
 if __name__ == "__main__":
-    build()
+    import time
+    payload = build()
+    payload["meta"]["baseline_created_at"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+    FIXTURE.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"[时间] {payload['meta']['baseline_created_at']}")

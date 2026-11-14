@@ -1,0 +1,4021 @@
+{
+ "meta": {
+  "corpus_id": "77b074cb704ada8520612f9f3525f7f760263f205aeff9fd3c817184694afadd",
+  "created_at": "2026-11-14T14:54:17+0800",
+  "files": 500,
+  "total_bytes": 592040128,
+  "source_csv_dir": "D:\\逆向学习\\实践\\2026-11-11-m1",
+  "quotas": {
+   "native": 200,
+   "resource_only": 100,
+   "driver": 100,
+   "dotnet": 90,
+   "huge": 5,
+   "corrupt": 5
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "note": "M1 500 文件固定只读语料；基线只解析本目录副本，不再读取活的 System32"
+ },
+ "entries": [
+  {
+   "rel": "native/000_ACPBackgroundManagerPolicy.dll",
+   "source": "C:\\Windows\\System32\\ACPBackgroundManagerPolicy.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 262144,
+   "sha256": "2baf30c040db604f2129762d048ec6adfb5bc5e1703ab92d1746be5fcdae2e1d"
+  },
+  {
+   "rel": "native/001_AUDIOKSE.dll",
+   "source": "C:\\Windows\\System32\\AUDIOKSE.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 495152,
+   "sha256": "a288556681eeac9b162ccd1d0ff45034846b13b3345a66a74aa43997f6806648"
+  },
+  {
+   "rel": "native/002_AcXtrnal.dll",
+   "source": "C:\\Windows\\System32\\AcXtrnal.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 40960,
+   "sha256": "18a667df6ad0e53f846e51cdb484186557fdacbec87d63be48bfe4f39b97d570"
+  },
+  {
+   "rel": "native/003_ActivationManager.dll",
+   "source": "C:\\Windows\\System32\\ActivationManager.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 933888,
+   "sha256": "418fc02f4e29dcdf4f3908b3c84908c1749babec595b4b2723a44acf860e6ff7"
+  },
+  {
+   "rel": "native/004_AggregatorHost.exe",
+   "source": "C:\\Windows\\System32\\AggregatorHost.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 319488,
+   "sha256": "09bf0f11c033604689880874c2b5040a7850e887df277efb32c30b17c7a969f7"
+  },
+  {
+   "rel": "native/005_AppListBackupLauncher.dll",
+   "source": "C:\\Windows\\System32\\AppListBackupLauncher.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 118784,
+   "sha256": "dcb1bd937764d4cdab0b2022fa8c021ec1081e25c8993d14527548fa4e70f6fc"
+  },
+  {
+   "rel": "native/006_AppXDeploymentExtensions.onecore.dll",
+   "source": "C:\\Windows\\System32\\AppXDeploymentExtensions.onecore.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 3637248,
+   "sha256": "8993b6a03e6ea3cc243e46f63bc0beddb1306e237f7a3cf4e9d3cb50aa8f438d"
+  },
+  {
+   "rel": "native/007_ApplyTrustOffline.exe",
+   "source": "C:\\Windows\\System32\\ApplyTrustOffline.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1353856,
+   "sha256": "8e98b9167398c73e3c4e7aca8da25e934084cd1a7efdc2275725a49e7d56df08"
+  },
+  {
+   "rel": "native/008_AppxSip.dll",
+   "source": "C:\\Windows\\System32\\AppxSip.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 413696,
+   "sha256": "0b307ae05e924a3b094ff1da771da7f6655d64e4a2a5437fe99b7f63ffe0d8d0"
+  },
+  {
+   "rel": "native/009_AudioEng.dll",
+   "source": "C:\\Windows\\System32\\AudioEng.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 2053984,
+   "sha256": "0d0d3f8a235f777cc8c4cd544c03db9cbeb3086ea93b6874971275f511597500"
+  },
+  {
+   "rel": "native/010_AuthFWGP.dll",
+   "source": "C:\\Windows\\System32\\AuthFWGP.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 53248,
+   "sha256": "b6d16f75bc80d981d974958beaf74705c2ccb1632efa0e9bc61cdf4cf24db260"
+  },
+  {
+   "rel": "native/011_AzSqlExt.dll",
+   "source": "C:\\Windows\\System32\\AzSqlExt.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 57344,
+   "sha256": "745659432afc3e162929e13ddd9590c13aa1f60afdee930130ab9a9a05a08c46"
+  },
+  {
+   "rel": "native/012_BackgroundTransferHost.exe",
+   "source": "C:\\Windows\\System32\\BackgroundTransferHost.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 61440,
+   "sha256": "506d794258e6c28dbff40ede73895e24348c6d01137dc1490e08065555e14ffc"
+  },
+  {
+   "rel": "native/013_BdeUISrv.exe",
+   "source": "C:\\Windows\\System32\\BdeUISrv.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 86016,
+   "sha256": "953f1be7789ebaa49568b9abb1b267267e0c077b4704f0b995a5d0439add177a"
+  },
+  {
+   "rel": "native/014_BitLockerCsp.dll",
+   "source": "C:\\Windows\\System32\\BitLockerCsp.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 372736,
+   "sha256": "b1374f01b4907f3577aee8d7b3492e0c74dced8f56b91ab490258935a4022dd5"
+  },
+  {
+   "rel": "native/015_BootCriticalUpdatePlugin.dll",
+   "source": "C:\\Windows\\System32\\BootCriticalUpdatePlugin.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 474464,
+   "sha256": "f5ce9e2c09b3f701994a8e5af79ea7f3927efd23584903f51003b278569e54d3"
+  },
+  {
+   "rel": "native/016_BthRadioMedia.dll",
+   "source": "C:\\Windows\\System32\\BthRadioMedia.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 139264,
+   "sha256": "838bc44cdfac5a171cecd377da89b2d1fe766febd10fb41d815aada15035dbbc"
+  },
+  {
+   "rel": "native/017_CIDiag.exe",
+   "source": "C:\\Windows\\System32\\CIDiag.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 65536,
+   "sha256": "5714420f3290337edc7aa81f26cf309f7cc325e1d37ba6631b4c3e4b3acbdf54"
+  },
+  {
+   "rel": "native/018_C_IS2022.DLL",
+   "source": "C:\\Windows\\System32\\C_IS2022.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 45056,
+   "sha256": "4ec0c5fd3a0ff7cd9d43015e299e5e14aa9e2cef4ef60b1768674cc8973fb45b"
+  },
+  {
+   "rel": "native/019_CapabilityAccessManager.Desktop.Identity.dll",
+   "source": "C:\\Windows\\System32\\CapabilityAccessManager.Desktop.Identity.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 122880,
+   "sha256": "44adf40129e9846cd60ddc63d68cd68cee480e2260f6aab9ed0e16336d38e0b0"
+  },
+  {
+   "rel": "native/020_CastingShellExt.dll",
+   "source": "C:\\Windows\\System32\\CastingShellExt.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 122880,
+   "sha256": "ae5b00d99e64cb7216b1ff8da310feec8c126214d12a5ce150ee27b022d106e1"
+  },
+  {
+   "rel": "native/021_CfgSPPolicy.dll",
+   "source": "C:\\Windows\\System32\\CfgSPPolicy.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 155648,
+   "sha256": "e0ec624bbd935531377822c4bf535eb70f56fd5a52ccf6c56a7c9ddad23ecec5"
+  },
+  {
+   "rel": "native/022_ChtCangjieDS.dll",
+   "source": "C:\\Windows\\System32\\ChtCangjieDS.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 483328,
+   "sha256": "22e6a5c3a3ce7c0da77311d7d00081705dc7acfb00b89835431c7dd7be2e7403"
+  },
+  {
+   "rel": "native/023_CleanPCCSP.dll",
+   "source": "C:\\Windows\\System32\\CleanPCCSP.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 90112,
+   "sha256": "b057ea2dde6615807603492a6eccf1cfb1692325e92aa58843baaf49249f157c"
+  },
+  {
+   "rel": "native/024_CloudDomainJoinAUG.dll",
+   "source": "C:\\Windows\\System32\\CloudDomainJoinAUG.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 155648,
+   "sha256": "be6009f6ace86b4cdf6a79207b736cabf59449591131392610de3ec7f0b5908d"
+  },
+  {
+   "rel": "native/025_CloudExperienceHostUser.dll",
+   "source": "C:\\Windows\\System32\\CloudExperienceHostUser.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 310600,
+   "sha256": "104acbec118ab8d5938424c4fd4c1978195f1f848254334ac1e00408e783f1eb"
+  },
+  {
+   "rel": "native/026_CompPkgSup.dll",
+   "source": "C:\\Windows\\System32\\CompPkgSup.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 236744,
+   "sha256": "eeff4a64e0f40f13e7f5ad7bb57921aaf63b4de1dac2d9ac71a4173a801aead3"
+  },
+  {
+   "rel": "native/027_ConnectedAccountState.dll",
+   "source": "C:\\Windows\\System32\\ConnectedAccountState.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 86016,
+   "sha256": "bb1c0bc47818c110f92f04bdee35f2104379fb76c41417cdf2d69747349cf8d2"
+  },
+  {
+   "rel": "native/028_ContactActivation.dll",
+   "source": "C:\\Windows\\System32\\ContactActivation.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 98304,
+   "sha256": "b39f36454f6159cb33f168f38cabfd09e7b48a2dd6df359fafb5b64db5c07ab3"
+  },
+  {
+   "rel": "native/029_CorePrivacySettingsStore.dll",
+   "source": "C:\\Windows\\System32\\CorePrivacySettingsStore.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 215928,
+   "sha256": "1755698dab1161867fc41494e8a411917318008b86fb25871609cde1f5e39ca3"
+  },
+  {
+   "rel": "native/030_CredProv2faHelper.dll",
+   "source": "C:\\Windows\\System32\\CredProv2faHelper.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 155648,
+   "sha256": "eab9a4639f7cb3c08e80705a8661ec6baf07c359853b67e60fc9d32c8d1805c8"
+  },
+  {
+   "rel": "native/031_CrossDeviceVirtualCameraSource.dll",
+   "source": "C:\\Windows\\System32\\CrossDeviceVirtualCameraSource.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 185856,
+   "sha256": "317d8ec54c4b61728edc68699072785738b4c49c070a8018e6a48c310eea3ab1"
+  },
+  {
+   "rel": "native/032_D3D12Core.dll",
+   "source": "C:\\Windows\\System32\\D3D12Core.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 3521104,
+   "sha256": "e799a277cb9fa96981a647fa6a26dc252df7f12e750b199272bf9e3398e06aed"
+  },
+  {
+   "rel": "native/033_D3DCompiler_40.dll",
+   "source": "C:\\Windows\\System32\\D3DCompiler_40.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 2605920,
+   "sha256": "bd81cf5c9b127519dbeb284e699e9d7545ee1130e655fd6a4e66b959e9d9aaac"
+  },
+  {
+   "rel": "native/034_D3DX9_38.dll",
+   "source": "C:\\Windows\\System32\\D3DX9_38.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 4991496,
+   "sha256": "b54e832bd8d7e94772c680f49c31b86f9c5db456f8e5cac66720d533896f1cfe"
+  },
+  {
+   "rel": "native/035_DAFIPP.dll",
+   "source": "C:\\Windows\\System32\\DAFIPP.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 417792,
+   "sha256": "12f90c87f90c5c730525f8834ae62b9505f7145a990ee62d6cff4b79f57c6525"
+  },
+  {
+   "rel": "native/036_DDORes.dll",
+   "source": "C:\\Windows\\System32\\DDORes.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 71600,
+   "sha256": "7ed8a8ea6385eded5a053a23e0571e15512f5bc08899066111e0ab0210a4a1f5"
+  },
+  {
+   "rel": "native/037_DWrite.dll",
+   "source": "C:\\Windows\\System32\\DWrite.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 2506752,
+   "sha256": "d627bf3a7d7f4525a05cd551cba305e8b2771a0b1beb046b1f2d3cff614ea355"
+  },
+  {
+   "rel": "native/038_DXToolsMonitor.dll",
+   "source": "C:\\Windows\\System32\\DXToolsMonitor.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 217088,
+   "sha256": "e062c0c084082e94b55b4d66bb7d440c0ff309c398bb77fdfc34b1b38f58abc5"
+  },
+  {
+   "rel": "native/039_DataExchangeHost.exe",
+   "source": "C:\\Windows\\System32\\DataExchangeHost.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 294296,
+   "sha256": "9a001c23771111b075da34aa72e4ecd6d5360930d614a0f882f3c4091da0d0f2"
+  },
+  {
+   "rel": "native/040_DefaultPrinterProvider.dll",
+   "source": "C:\\Windows\\System32\\DefaultPrinterProvider.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 53248,
+   "sha256": "c1bcfa84be37213497158fcdffe5d0053bf2d0f5ec5ff86191c7a0bbf4408f60"
+  },
+  {
+   "rel": "native/041_DevQueryBroker.dll",
+   "source": "C:\\Windows\\System32\\DevQueryBroker.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 94208,
+   "sha256": "4bc9ccffdd1d40404c833976bfff44b4384cf99f0bec806812f0cdfc6b5465ad"
+  },
+  {
+   "rel": "native/042_DeviceDirectoryClient.dll",
+   "source": "C:\\Windows\\System32\\DeviceDirectoryClient.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 327680,
+   "sha256": "dd040188611f3d667808233bf5f6665592375325b5a96f0a613856a135781698"
+  },
+  {
+   "rel": "native/043_DevicePairing.dll",
+   "source": "C:\\Windows\\System32\\DevicePairing.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 356352,
+   "sha256": "b2d8fcdc971622e46bf6eabd48128ab616060b0c2813a0f7423b8a4b22d228a1"
+  },
+  {
+   "rel": "native/044_DeviceSetupManager.dll",
+   "source": "C:\\Windows\\System32\\DeviceSetupManager.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 458752,
+   "sha256": "e07271fdce39e3551b9c51fb033e6cb48deff4fbd4f4fd8e971f8b98bb2d45c5"
+  },
+  {
+   "rel": "native/045_DfsShlEx.dll",
+   "source": "C:\\Windows\\System32\\DfsShlEx.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 102400,
+   "sha256": "c3abe255453d8df99679eca614897c6b826ed0836e5b54c2b424fc40d3c4a177"
+  },
+  {
+   "rel": "native/046_DirectML.Debug.dll",
+   "source": "C:\\Windows\\System32\\DirectML.Debug.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 834048,
+   "sha256": "2e02ba6a172d6045196d36ef77ae68ea95a8cc0effaa3b89a3c495c123d45323"
+  },
+  {
+   "rel": "native/047_DisplayManager.dll",
+   "source": "C:\\Windows\\System32\\DisplayManager.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 167936,
+   "sha256": "2bf9126bf7a0d5149a0caf0bfcc3c9cdf091a977ff3d8b76deac3207b9b0cb1e"
+  },
+  {
+   "rel": "native/048_DockInterface.ProxyStub.dll",
+   "source": "C:\\Windows\\System32\\DockInterface.ProxyStub.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 36864,
+   "sha256": "78eabaf066fb1b3ac3e7f06ff9f52c36aea568b876a3749cea74c19e37b7c030"
+  },
+  {
+   "rel": "native/049_DscTimer.dll",
+   "source": "C:\\Windows\\System32\\DscTimer.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 49152,
+   "sha256": "9998eb2ed6a306480ad40ba18700a20dc5d899325ffe944a8e80995e192a9f2b"
+  },
+  {
+   "rel": "native/050_EASPolicyManagerBrokerHost.exe",
+   "source": "C:\\Windows\\System32\\EASPolicyManagerBrokerHost.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 94208,
+   "sha256": "fddcc6a930aa564f854b83b01c65fbe97d70821a1db1ccae79a02f632f2cb2b4"
+  },
+  {
+   "rel": "native/051_EasPolicyManagerBrokerPS.dll",
+   "source": "C:\\Windows\\System32\\EasPolicyManagerBrokerPS.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 36864,
+   "sha256": "0fc478d42c4900946036a2edcba57c30274ac41c43a33730e7e19733f50ef098"
+  },
+  {
+   "rel": "native/052_EditionUpgradeHelper.dll",
+   "source": "C:\\Windows\\System32\\EditionUpgradeHelper.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 257632,
+   "sha256": "ecfc4bd0133a0cd19b45c359abaea36b720fb625b073ff481b64ef9bea0aad9a"
+  },
+  {
+   "rel": "native/053_EmojiDS.dll",
+   "source": "C:\\Windows\\System32\\EmojiDS.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 102400,
+   "sha256": "9b0198277fc4d4edcdee0c867c400757d3453dc2498f5b11202a3acbbd7f7744"
+  },
+  {
+   "rel": "native/054_ErrorDetails.dll",
+   "source": "C:\\Windows\\System32\\ErrorDetails.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 200704,
+   "sha256": "da72ede04398981eaf94b9371ff2f0b38e5d3f743265d3bc97ecebcfa90d45c1"
+  },
+  {
+   "rel": "native/055_EtwRundown.dll",
+   "source": "C:\\Windows\\System32\\EtwRundown.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 77824,
+   "sha256": "b2f15021e060a01a03ad117d850883488533021543fe53dac659326ebb2be5e6"
+  },
+  {
+   "rel": "native/056_Facilitator.dll",
+   "source": "C:\\Windows\\System32\\Facilitator.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1133920,
+   "sha256": "6623004800a879861a41b1376d631983bc3fc8955b89f57af5e04e61c8559c1f"
+  },
+  {
+   "rel": "native/057_FaxPrinterInstaller.dll",
+   "source": "C:\\Windows\\System32\\FaxPrinterInstaller.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 94208,
+   "sha256": "3593d19fe6cba158937c525375e7c017a741940a26f2155edec63d3fece22930"
+  },
+  {
+   "rel": "native/058_FirewallControlPanel.dll",
+   "source": "C:\\Windows\\System32\\FirewallControlPanel.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 344064,
+   "sha256": "e0748bf255322c8fee4a636faa3813ee8e9e8dcc1363a32bc718cf717b912a99"
+  },
+  {
+   "rel": "native/059_FontGlyphAnimator.dll",
+   "source": "C:\\Windows\\System32\\FontGlyphAnimator.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 81920,
+   "sha256": "bceb6522ce8bb3c7aa23240973c156a470faf2fd15973e63b5215961605bae4e"
+  },
+  {
+   "rel": "native/060_FsNVSDeviceSource.dll",
+   "source": "C:\\Windows\\System32\\FsNVSDeviceSource.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 778240,
+   "sha256": "d721777b22f56e566531237fc986f37be4ce2c590f30378ff680d974141ee19e"
+  },
+  {
+   "rel": "native/061_GameChatTranscription.dll",
+   "source": "C:\\Windows\\System32\\GameChatTranscription.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 155648,
+   "sha256": "feb952b68a301379ce4030876c5d182eb52314bd3d0327c941841a7b52f6d0d8"
+  },
+  {
+   "rel": "native/062_Geocommon.dll",
+   "source": "C:\\Windows\\System32\\Geocommon.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 98304,
+   "sha256": "7a4abf13a48222c77285146993e7a4203733215d668d6bff11dc5d5931d1d6c6"
+  },
+  {
+   "rel": "native/063_HalExtPL080.dll",
+   "source": "C:\\Windows\\System32\\HalExtPL080.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 63072,
+   "sha256": "9c9d808b067643f431db1932ca34fa79140f3e2488320658ebd17e32e3fff9a9"
+  },
+  {
+   "rel": "native/064_HrtfApo.dll",
+   "source": "C:\\Windows\\System32\\HrtfApo.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 159744,
+   "sha256": "d90b7ba19d24650c7ae54e42648a15dd7f337f6e4ca6dd619fc666e13ff55494"
+  },
+  {
+   "rel": "native/065_IEProxyDesktop.dll",
+   "source": "C:\\Windows\\System32\\IEProxyDesktop.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 77824,
+   "sha256": "02a4aae4395b1d2ed44971cf57bd37cb6303bd85f0f7b26e28ad41af24167016"
+  },
+  {
+   "rel": "native/066_IasMigPlugin.dll",
+   "source": "C:\\Windows\\System32\\IasMigPlugin.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 533888,
+   "sha256": "37e05f66a15b6f056cfa2c08448a80f1e0d61ffd01db0d5565961050c16cfc04"
+  },
+  {
+   "rel": "native/067_InkObjCore.dll",
+   "source": "C:\\Windows\\System32\\InkObjCore.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 925696,
+   "sha256": "8b8aea47039c4d6ae4b54a642b397c5724191b21879d109a73d805f67343a96d"
+  },
+  {
+   "rel": "native/068_InputSwitch.dll",
+   "source": "C:\\Windows\\System32\\InputSwitch.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 872448,
+   "sha256": "3eb2e8f76474d915d0ddf4d9f09a445371593a37b71ad879b2dca2c48be23360"
+  },
+  {
+   "rel": "native/069_IpNatHlpClient.dll",
+   "source": "C:\\Windows\\System32\\IpNatHlpClient.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 67488,
+   "sha256": "3da7bda2dfc887c3879cda44c841b7e4ae5faebfa8ff78d7287c757f4c14223e"
+  },
+  {
+   "rel": "native/070_IsoSessionServer.dll",
+   "source": "C:\\Windows\\System32\\IsoSessionServer.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1359872,
+   "sha256": "70e2a4c87aca959055ab243a7baaf25ee5b50dfd7302aaa536af1af552ed8db9"
+  },
+  {
+   "rel": "native/071_KBDA2.DLL",
+   "source": "C:\\Windows\\System32\\KBDA2.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "258c684ee62871a5e3d6f25b96ea6655b5be9aa831244bdf7343cdd867bfa3e7"
+  },
+  {
+   "rel": "native/072_KBDAZE.DLL",
+   "source": "C:\\Windows\\System32\\KBDAZE.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "c749c3023436d38bedda0332e50aceb6e3c45db1b60879edb177e809444444c3"
+  },
+  {
+   "rel": "native/073_KBDBHC.DLL",
+   "source": "C:\\Windows\\System32\\KBDBHC.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "61bf4129226a388864f410a4210674e606b4982724a47fa5f0290943548f94a8"
+  },
+  {
+   "rel": "native/074_KBDCAN.DLL",
+   "source": "C:\\Windows\\System32\\KBDCAN.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "eaeb2ce869a5e8b70b7ebe11f2488ac9cbe5033e1c0770f2742bebe6729dfebc"
+  },
+  {
+   "rel": "native/075_KBDCZ2.DLL",
+   "source": "C:\\Windows\\System32\\KBDCZ2.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "da23c76038c4e789b2f782fc0896b7b1da8b3dd6d9ce8b9db56eed359c1862aa"
+  },
+  {
+   "rel": "native/076_KBDFA.DLL",
+   "source": "C:\\Windows\\System32\\KBDFA.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 20480,
+   "sha256": "18e79d7a0c66256c06d16feba97a840d6bd460cb7df0d4f157dae57cc1a1378a"
+  },
+  {
+   "rel": "native/077_KBDFRNB.DLL",
+   "source": "C:\\Windows\\System32\\KBDFRNB.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 28672,
+   "sha256": "3b42cb7893b89db837c26978b828632b707669714a5df2c74f175a1e269a011f"
+  },
+  {
+   "rel": "native/078_KBDGR1.DLL",
+   "source": "C:\\Windows\\System32\\KBDGR1.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "3ed0ff18673026c3e53681a26cc95d7d3d0a9fdf10e2d6e45d6228bda27eeaf6"
+  },
+  {
+   "rel": "native/079_KBDHE.DLL",
+   "source": "C:\\Windows\\System32\\KBDHE.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "785a286babe596b78dc52db59e5b819bbe9e462eb243d803447db1ff8a957878"
+  },
+  {
+   "rel": "native/080_KBDHU1.DLL",
+   "source": "C:\\Windows\\System32\\KBDHU1.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 20480,
+   "sha256": "f03f1bce618675fa7b212826ff182e03db10a252182cb55fe858fac396dde8df"
+  },
+  {
+   "rel": "native/081_KBDINDEV.DLL",
+   "source": "C:\\Windows\\System32\\KBDINDEV.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "bbfc32afe3823f25887dd74802085e96319814e3a1458e3270ddb33d08daa94b"
+  },
+  {
+   "rel": "native/082_KBDINORI.DLL",
+   "source": "C:\\Windows\\System32\\KBDINORI.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "49769ebaaac1f2a2f766bd79d78b66cfb0bf0c0e055f57eb378856b28d1c0e6c"
+  },
+  {
+   "rel": "native/083_KBDIT142.DLL",
+   "source": "C:\\Windows\\System32\\KBDIT142.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 20480,
+   "sha256": "409998f1ecf4f0e11847111cb8565a07d9686529788012201c6c2f2b6e96871c"
+  },
+  {
+   "rel": "native/084_KBDKOR.DLL",
+   "source": "C:\\Windows\\System32\\KBDKOR.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 32768,
+   "sha256": "4f8e04942f6067a8f6def16a53e20eb0253c31a011fb677cf99e4a510e1d65c3"
+  },
+  {
+   "rel": "native/085_KBDLT2.DLL",
+   "source": "C:\\Windows\\System32\\KBDLT2.DLL",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "4c814372ebdd8b795dba3838dd7ace95cd96b65c6b397dfef061aab211d077aa"
+  },
+  {
+   "rel": "native/086_accessibilitycpl.dll",
+   "source": "C:\\Windows\\System32\\accessibilitycpl.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 319488,
+   "sha256": "7555ad74dcab21307f25f4d36a90690fc964034a44831534c9c214165bff8fd5"
+  },
+  {
+   "rel": "native/087_actxprxy.dll",
+   "source": "C:\\Windows\\System32\\actxprxy.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 532480,
+   "sha256": "415c82979d6ba18cfc2b253c76ebdfee118d53ec92f06974a902201741aacd97"
+  },
+  {
+   "rel": "native/088_adsmsext.dll",
+   "source": "C:\\Windows\\System32\\adsmsext.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 131072,
+   "sha256": "8c8e0cf2b88edcf1e3dc7ea14dada217a73b9174ed4a59b374a204ed9455a83c"
+  },
+  {
+   "rel": "native/089_agentactivationruntime.dll",
+   "source": "C:\\Windows\\System32\\agentactivationruntime.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1007616,
+   "sha256": "839535bb2d2495df60cd9021eee8a5f5ba6b85917d30adb35947068c5f1f4236"
+  },
+  {
+   "rel": "native/090_amstream.dll",
+   "source": "C:\\Windows\\System32\\amstream.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 122880,
+   "sha256": "5b73013cd4100e79f2916ec0cfbeb660e91a3d8023ac6743b4c617bd9c070c0d"
+  },
+  {
+   "rel": "native/091_appidpolicyconverter.exe",
+   "source": "C:\\Windows\\System32\\appidpolicyconverter.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 155648,
+   "sha256": "9bb061360f5fe625201299a63e698a55e22ab9d2bc6c12a48bcb189bedbf9839"
+  },
+  {
+   "rel": "native/092_appsruprov.dll",
+   "source": "C:\\Windows\\System32\\appsruprov.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 221184,
+   "sha256": "e471e23d1827e384d33841b563057c8dc9b3197e1030c11f3fffce95223ab691"
+  },
+  {
+   "rel": "native/093_atl.dll",
+   "source": "C:\\Windows\\System32\\atl.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 122880,
+   "sha256": "6cfc2475c5b23062f193d7ce26cfa647765763a4f62a3f5bbfa9153686e71d98"
+  },
+  {
+   "rel": "native/094_audiosrv.dll",
+   "source": "C:\\Windows\\System32\\audiosrv.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 2093056,
+   "sha256": "1bf8df4102e63b4f0b0e0a387131eadd65a9741df12a0c462957c8ba421176af"
+  },
+  {
+   "rel": "native/095_autochk.exe",
+   "source": "C:\\Windows\\System32\\autochk.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1048576,
+   "sha256": "d2d0bd100378e7d4052ae1f6be9f1704897d98cb842667c004e26a43247f5416"
+  },
+  {
+   "rel": "native/096_avifil32.dll",
+   "source": "C:\\Windows\\System32\\avifil32.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 143360,
+   "sha256": "4944d79009a8fbe4e737655fee92ae61e3564b1ee3ca40037d76be6a335bcedf"
+  },
+  {
+   "rel": "native/097_bcastdvr.proxy.dll",
+   "source": "C:\\Windows\\System32\\bcastdvr.proxy.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 217088,
+   "sha256": "172baedd1207fd2bde2160a64843e7e51fce36a027eebcd580d0ed3c7cf81f35"
+  },
+  {
+   "rel": "native/098_bcrypt.dll",
+   "source": "C:\\Windows\\System32\\bcrypt.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 195128,
+   "sha256": "fb658b74aea2fc655d86e6f567c69e251a527c413a750d3952a7830fc715b446"
+  },
+  {
+   "rel": "native/099_bi.dll",
+   "source": "C:\\Windows\\System32\\bi.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 53248,
+   "sha256": "dee1656addd79759e036908c24bfeb063caaa857a0ba1239fca353179792b616"
+  },
+  {
+   "rel": "native/100_blb_ps.dll",
+   "source": "C:\\Windows\\System32\\blb_ps.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 90112,
+   "sha256": "17f63b68eccf22f55501f628375a8514ef5343de94a931753d24fef0df586b90"
+  },
+  {
+   "rel": "native/101_browcli.dll",
+   "source": "C:\\Windows\\System32\\browcli.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 90112,
+   "sha256": "d7eb6ae6602eade888bc0c74b8d7ee415c5ec9c86b07085bbfe6382ef224fe5d"
+  },
+  {
+   "rel": "native/102_bthprops.cpl",
+   "source": "C:\\Windows\\System32\\bthprops.cpl",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 274432,
+   "sha256": "0479cac8e070c63bfccffa74422dac0faa725fe22a16086f4d755e2a1732e2e9"
+  },
+  {
+   "rel": "native/103_cacls.exe",
+   "source": "C:\\Windows\\System32\\cacls.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 61440,
+   "sha256": "800237878d37339b3520f3a80a3c6bea3194dab080cfe22aec2b4af3c67e8e79"
+  },
+  {
+   "rel": "native/104_catsrvps.dll",
+   "source": "C:\\Windows\\System32\\catsrvps.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 69632,
+   "sha256": "1f8f3c53a4fce741a254f1117ca5271925f059e9743cd931c011321e3811b865"
+  },
+  {
+   "rel": "native/105_cdpsvc.dll",
+   "source": "C:\\Windows\\System32\\cdpsvc.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 876544,
+   "sha256": "a784a8cbcab8fb354c37285ee1c5af1e40fdbee9db52ebba6bfb94f9601409af"
+  },
+  {
+   "rel": "native/106_certenc.dll",
+   "source": "C:\\Windows\\System32\\certenc.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 98304,
+   "sha256": "75402e2064d10ce10132dbd62c68b0f24f77936c971ad89b6e7355fd9ec324ff"
+  },
+  {
+   "rel": "native/107_cflapi.dll",
+   "source": "C:\\Windows\\System32\\cflapi.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 290816,
+   "sha256": "4724112067350c37d6c7f450fdc2a3cda3f34572acb74e38ea765a4d63b563e3"
+  },
+  {
+   "rel": "native/108_chkntfs.exe",
+   "source": "C:\\Windows\\System32\\chkntfs.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 45056,
+   "sha256": "c571f4867a2aaee70b8548b9bb220360b6f347d6413d55212d120ebf5bb2b4fd"
+  },
+  {
+   "rel": "native/109_cipher.exe",
+   "source": "C:\\Windows\\System32\\cipher.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 77824,
+   "sha256": "07c1f3b3ddc138d037acad8ee6eaa54488b4918861bdaff3fc4ae9796ae79d1c"
+  },
+  {
+   "rel": "native/110_clipwinrt.dll",
+   "source": "C:\\Windows\\System32\\clipwinrt.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1285488,
+   "sha256": "2dfe5f5b68b1d6e9137864ee6e8b35e4909ece7527026758f8f22f1c9d1dcee1"
+  },
+  {
+   "rel": "native/111_cmdial32.dll",
+   "source": "C:\\Windows\\System32\\cmdial32.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 569344,
+   "sha256": "06740a74c1db771b287f34bd8ac7f2abee097273dadadabc3a7709be2755bcac"
+  },
+  {
+   "rel": "native/112_cmmon32.exe",
+   "source": "C:\\Windows\\System32\\cmmon32.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 69632,
+   "sha256": "46407d982cf87e908e0b58421c408a31e1a5d59c44fd4e7b4cb0f5209732bdcf"
+  },
+  {
+   "rel": "native/113_cofire.exe",
+   "source": "C:\\Windows\\System32\\cofire.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 45056,
+   "sha256": "b831f35cec93a7f6b4d62f5ef1b5951e9d191a07e32c3e517956f6c2887e6d9f"
+  },
+  {
+   "rel": "native/114_comctl32.dll",
+   "source": "C:\\Windows\\System32\\comctl32.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 742904,
+   "sha256": "67e04b3a6650430ba7b57ce01180d7a8f2e06fb04570f4c26b511e6cb05b1761"
+  },
+  {
+   "rel": "native/115_computenetwork.dll",
+   "source": "C:\\Windows\\System32\\computenetwork.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 131072,
+   "sha256": "5939eb1a34c6b3042db185c775e55651158f6cf283f4290722d73d972b828c2c"
+  },
+  {
+   "rel": "native/116_concrt140d.dll",
+   "source": "C:\\Windows\\System32\\concrt140d.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 730144,
+   "sha256": "49195bb2be4208d688ee593bf49cca4d597850ad1488673b8ccb73e158eccc43"
+  },
+  {
+   "rel": "native/117_control.exe",
+   "source": "C:\\Windows\\System32\\control.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 122880,
+   "sha256": "6acb71ca7d4319de851f86aebca13f7f2cd29a2d883e707ba8995eb87618b94f"
+  },
+  {
+   "rel": "native/118_correngine.dll",
+   "source": "C:\\Windows\\System32\\correngine.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 110592,
+   "sha256": "9bf58bc2756bdf73924658c9387cc337631bcab828c32d0c34d23bcca4bd22dd"
+  },
+  {
+   "rel": "native/119_crypt32.dll",
+   "source": "C:\\Windows\\System32\\crypt32.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1583032,
+   "sha256": "bca7a7a91c758b78c7fb9b6fcc6b72dcb2c660aae809b402a2ade9999ac5df6b"
+  },
+  {
+   "rel": "native/120_cryptoss.dll",
+   "source": "C:\\Windows\\System32\\cryptoss.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 2654152,
+   "sha256": "19e94358483f8759b2cc63931d24b435d54d664bea655b358dfccca79e180494"
+  },
+  {
+   "rel": "native/121_cscapi.dll",
+   "source": "C:\\Windows\\System32\\cscapi.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 77824,
+   "sha256": "362cf5c4b9774f47f08954cf529bea06b66f13fcfc18f7d6b489bef2531082e7"
+  },
+  {
+   "rel": "native/122_cttune.exe",
+   "source": "C:\\Windows\\System32\\cttune.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 151552,
+   "sha256": "2ef6c9d5209a0d3641c30ddd0e04a638d0be5eb59a987c62a8df5a7a1cab7f0f"
+  },
+  {
+   "rel": "native/123_d3d10.dll",
+   "source": "C:\\Windows\\System32\\d3d10.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1253376,
+   "sha256": "61a1020e5bac18c2ded229329cbe4314cb8fde3d773e219d4c7f8991c16ee57c"
+  },
+  {
+   "rel": "native/124_d3d11.dll",
+   "source": "C:\\Windows\\System32\\d3d11.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 2537512,
+   "sha256": "9253355cd78fbc6aacb72e91be264d04b145ef06d64cbf496c8de3e5f0e44edb"
+  },
+  {
+   "rel": "native/125_d3dconfig.exe",
+   "source": "C:\\Windows\\System32\\d3dconfig.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 516096,
+   "sha256": "34e6aa143b2aa2d4faa739690460df923b28b229cd3c659b02127e68d90fa8f0"
+  },
+  {
+   "rel": "native/126_d3dx10_35.dll",
+   "source": "C:\\Windows\\System32\\d3dx10_35.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 508264,
+   "sha256": "2030b7d57c88b653a0eb55ea85ad90c6c8630a00f5a56ea5f9b6985acdda5289"
+  },
+  {
+   "rel": "native/127_d3dx10_43.dll",
+   "source": "C:\\Windows\\System32\\d3dx10_43.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 511328,
+   "sha256": "9bffa1ea073d79e9954cb398fc91b93ed9dc79ed2205995d4b949f1cc2ad3bd1"
+  },
+  {
+   "rel": "native/128_d3dx9_28.dll",
+   "source": "C:\\Windows\\System32\\d3dx9_28.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 3815120,
+   "sha256": "a2870f86e2f1b11646ff3f404bdbde10520c481c1400b20d25fdf56e66fb0a17"
+  },
+  {
+   "rel": "native/129_d3dx9_35.dll",
+   "source": "C:\\Windows\\System32\\d3dx9_35.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 5073256,
+   "sha256": "ca195b7ee7aee29e6417acf0e6c1736d9aac76890a622eb62ed137394fc6f2b9"
+  },
+  {
+   "rel": "native/130_dafWfdProvider.dll",
+   "source": "C:\\Windows\\System32\\dafWfdProvider.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 385024,
+   "sha256": "94abce419230b3bb3878f7435790cd245ddbdcd3a287093adac3d8e55c450465"
+  },
+  {
+   "rel": "native/131_davhlpr.dll",
+   "source": "C:\\Windows\\System32\\davhlpr.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 61440,
+   "sha256": "57795e6ab7db484be58c533af7af55aa67932a1b6c69f1b2f7cae7eb47a29a3d"
+  },
+  {
+   "rel": "native/132_dccw.exe",
+   "source": "C:\\Windows\\System32\\dccw.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 172032,
+   "sha256": "6a1e5aeeccccf3bdc623803457216eb305c05433137a7ce67569c74963391177"
+  },
+  {
+   "rel": "native/133_ddodiag.exe",
+   "source": "C:\\Windows\\System32\\ddodiag.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 69632,
+   "sha256": "9fbd305bfd99b65f36ac86cb26d10f3d07b99a720ffedb69d3adc7b41e1db4dc"
+  },
+  {
+   "rel": "native/134_deploymentcsps.dll",
+   "source": "C:\\Windows\\System32\\deploymentcsps.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 98304,
+   "sha256": "b209ea68b01746ab6f820c997b2f0a70aee665531c04a26b4c560e2a6b5de255"
+  },
+  {
+   "rel": "native/135_deviceassociation.dll",
+   "source": "C:\\Windows\\System32\\deviceassociation.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 145048,
+   "sha256": "7838be527ec1e4d32faba36569b3c1e98f3f26859ea014848d505efd895b2988"
+  },
+  {
+   "rel": "native/136_dfdts.dll",
+   "source": "C:\\Windows\\System32\\dfdts.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 77824,
+   "sha256": "389d2736a967d51fe50ec033f23d7f14ff62b73d8a7c1b4fffd8f7db2f488a29"
+  },
+  {
+   "rel": "native/137_dhcpcsvc6.dll",
+   "source": "C:\\Windows\\System32\\dhcpcsvc6.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 142688,
+   "sha256": "41bdde7ba41e598405b1259228ded33e582c970c2fec183d47f827bd5b368978"
+  },
+  {
+   "rel": "native/138_dialserver.dll",
+   "source": "C:\\Windows\\System32\\dialserver.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 233472,
+   "sha256": "3163615035ecd41a7801523373b5220a3615547122c550aa5af359a8db3e5948"
+  },
+  {
+   "rel": "native/139_directml.dll",
+   "source": "C:\\Windows\\System32\\directml.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 10239288,
+   "sha256": "19fe59703b10eab58595ea82d3653957493b71238b0124ebaa0c217f8d5313e9"
+  },
+  {
+   "rel": "native/140_diskusage.exe",
+   "source": "C:\\Windows\\System32\\diskusage.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 73728,
+   "sha256": "5a0cf16b5d9284142a2afc75918e4e1c9c04198a0cd65bed368b4f1e17415b9f"
+  },
+  {
+   "rel": "native/141_dlnashext.dll",
+   "source": "C:\\Windows\\System32\\dlnashext.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 360448,
+   "sha256": "814d147d1b8dce36e09f2d60102dbd4e050ad21db92a7bd8641f94ccbc99b717"
+  },
+  {
+   "rel": "native/142_dmcsps.dll",
+   "source": "C:\\Windows\\System32\\dmcsps.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 225280,
+   "sha256": "604b1de375bc3ea95ceda45b62a08c2c25a86a1436e8ffa6fd0d14123a18eeb2"
+  },
+  {
+   "rel": "native/143_dmloader.dll",
+   "source": "C:\\Windows\\System32\\dmloader.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 106496,
+   "sha256": "2ce8807253abf9038a45bc87df6d6eba089dd4ca7b39961908510c5ae814904d"
+  },
+  {
+   "rel": "native/144_dmvdsitf.dll",
+   "source": "C:\\Windows\\System32\\dmvdsitf.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 184320,
+   "sha256": "2b11e44a7979e68947a2ee606f29657086a7139ec78e1c1a784f7aabd674cf5f"
+  },
+  {
+   "rel": "native/145_dnsext.dll",
+   "source": "C:\\Windows\\System32\\dnsext.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 32768,
+   "sha256": "85f4f44203150e5093f75ddee8e020cd1d1231a080f05c5293a2df2145a4f2cc"
+  },
+  {
+   "rel": "native/146_doskey.exe",
+   "source": "C:\\Windows\\System32\\doskey.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 45056,
+   "sha256": "7e593969455a03083089f4e917a899e785dd7c527068861a877073cc67b2a0e8"
+  },
+  {
+   "rel": "native/147_dot3ui.dll",
+   "source": "C:\\Windows\\System32\\dot3ui.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 352256,
+   "sha256": "a4870e78f8b983cea3b29b7fb3e8b8657e8bfc2d67d7c4449b2d742787964dc4"
+  },
+  {
+   "rel": "native/148_dpnathlp.dll",
+   "source": "C:\\Windows\\System32\\dpnathlp.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 36864,
+   "sha256": "7bacf93d7efd1870cc8def5876998ab4d58e58091be80185fcd1497e85ff7b63"
+  },
+  {
+   "rel": "native/149_dpx.dll",
+   "source": "C:\\Windows\\System32\\dpx.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1113440,
+   "sha256": "b3eb116986abf5d872899e9d6782b9d241523a19192ac5c7e2d11dd0480eed44"
+  },
+  {
+   "rel": "native/150_dsclient.dll",
+   "source": "C:\\Windows\\System32\\dsclient.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 75936,
+   "sha256": "983c72a5e6d40f93e6964f9fd4e5727395273abc56647ac231c2dfaaf8a89c95"
+  },
+  {
+   "rel": "native/151_dsquery.dll",
+   "source": "C:\\Windows\\System32\\dsquery.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 212992,
+   "sha256": "450b77b21f55316230d302feb2e335c1ca2c62a4cc67f6b46477c16da86c8ac9"
+  },
+  {
+   "rel": "native/152_dssvc.dll",
+   "source": "C:\\Windows\\System32\\dssvc.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 204800,
+   "sha256": "ecbf7d01c0aa15caca9277056e4c13230f33c466f4b5945b8e2a05e7ea8360aa"
+  },
+  {
+   "rel": "native/153_duser.dll",
+   "source": "C:\\Windows\\System32\\duser.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 663552,
+   "sha256": "5ca1261ecfd6c1d2ee8ba8a340e869aedc1b252a8b4432c1e8f146d05f57caaf"
+  },
+  {
+   "rel": "native/154_dwmghost.dll",
+   "source": "C:\\Windows\\System32\\dwmghost.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 98304,
+   "sha256": "6464dd50a669093574bb17266cb441c036188878e7f8ade6c9ff19c2df2e2f17"
+  },
+  {
+   "rel": "native/155_dxgiadaptercache.exe",
+   "source": "C:\\Windows\\System32\\dxgiadaptercache.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 131072,
+   "sha256": "80b4b1e8927102cdbe827cbc91c40db11dd5c323d540347f446ceb9ddce526bf"
+  },
+  {
+   "rel": "native/156_dxva2.dll",
+   "source": "C:\\Windows\\System32\\dxva2.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 211736,
+   "sha256": "fdbecdc756a9d297f2a8faae5b1225e7087c6fd01909b98c5a6eaa8e8132b203"
+  },
+  {
+   "rel": "native/157_eapphost.dll",
+   "source": "C:\\Windows\\System32\\eapphost.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 360448,
+   "sha256": "c3d8e409a7d7d14956c89f13a9e957a541ee03e06f491cbde6999325314a03ae"
+  },
+  {
+   "rel": "native/158_easinvoker.exe",
+   "source": "C:\\Windows\\System32\\easinvoker.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 100728,
+   "sha256": "44f950813f0dfd94698f47afa24d8734a65a81350f4f12226da1d75324fdccb4"
+  },
+  {
+   "rel": "native/159_edpauditapi.dll",
+   "source": "C:\\Windows\\System32\\edpauditapi.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 163840,
+   "sha256": "28a0fd93d9786a5ceb1cca9aac9a9ff0f86ac80e1a2e1c0b24b9b6a256ad7b99"
+  },
+  {
+   "rel": "native/160_efsadu.dll",
+   "source": "C:\\Windows\\System32\\efsadu.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 180224,
+   "sha256": "e57273486c52a78c02533a765e44d78f79244d539c6bc69c32c575252d040525"
+  },
+  {
+   "rel": "native/161_els.dll",
+   "source": "C:\\Windows\\System32\\els.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 241664,
+   "sha256": "e54e4cea5d3a348c6143c0f8d9c617c17217798849bd232554059905084da25d"
+  },
+  {
+   "rel": "native/162_energy.dll",
+   "source": "C:\\Windows\\System32\\energy.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 913408,
+   "sha256": "524f3c5a09960032430c841650e89e8179214c2ca856c77629622d2b20baaa04"
+  },
+  {
+   "rel": "native/163_es.dll",
+   "source": "C:\\Windows\\System32\\es.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 479232,
+   "sha256": "a9c4dc33ff3b98d9655635cd4a13304f55efe1d52ce8a952f2786f2d308edc7f"
+  },
+  {
+   "rel": "native/164_eventcreate.exe",
+   "source": "C:\\Windows\\System32\\eventcreate.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 69632,
+   "sha256": "d64cf3d8c86118900ebbba675668290d7b78a4501e0db5242959503c1947f9ba"
+  },
+  {
+   "rel": "native/165_facecredentialprovider.dll",
+   "source": "C:\\Windows\\System32\\facecredentialprovider.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 757064,
+   "sha256": "fd105f63001acb1a94b378a7269d49ca9add563754736e8b8d0c5dd2233521c9"
+  },
+  {
+   "rel": "native/166_fdProxy.dll",
+   "source": "C:\\Windows\\System32\\fdProxy.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 81920,
+   "sha256": "bc9631f360dac558a6da32819b766550fb2a40271a77413139e119357ebfa636"
+  },
+  {
+   "rel": "native/167_featurestaging-ext-101.dll",
+   "source": "C:\\Windows\\System32\\featurestaging-ext-101.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 122880,
+   "sha256": "af8c349766114fe6dc01e421a5bf202a08b26bb0b9a2760808451bd28e4cc534"
+  },
+  {
+   "rel": "native/168_fhcleanup.dll",
+   "source": "C:\\Windows\\System32\\fhcleanup.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 110592,
+   "sha256": "9bee7fcd6ed50f3380132cc2c07d1c228463420a3d2b82f2c0203cf2bf847f87"
+  },
+  {
+   "rel": "native/169_fhsrchapi.dll",
+   "source": "C:\\Windows\\System32\\fhsrchapi.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 131072,
+   "sha256": "1186ff7b6fd7d34fddbe86e9c0b7e6ebafd07028b7b9b8f91f35c9484e0167d4"
+  },
+  {
+   "rel": "native/170_find.exe",
+   "source": "C:\\Windows\\System32\\find.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 40960,
+   "sha256": "cf9cc5a552de280750b36743e80c33381e59d5ec8aa65a2dcfdd6a34198799bc"
+  },
+  {
+   "rel": "native/171_fmapi.dll",
+   "source": "C:\\Windows\\System32\\fmapi.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 110592,
+   "sha256": "02cf6bb117203601b771488c1bd554008d06d31891cf5f159542e6bec45ac6f0"
+  },
+  {
+   "rel": "native/172_fontsub.dll",
+   "source": "C:\\Windows\\System32\\fontsub.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 155648,
+   "sha256": "f5d359b0e879d066e6b6ab123bc0f8fbf12dab745389e582865c3ae2bef77075"
+  },
+  {
+   "rel": "native/173_fsavailux.exe",
+   "source": "C:\\Windows\\System32\\fsavailux.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 40960,
+   "sha256": "ae4b9a544071b9814a79915fc65464eae42e2d96f27709b284dcd39057f44481"
+  },
+  {
+   "rel": "native/174_fveapi.dll",
+   "source": "C:\\Windows\\System32\\fveapi.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 1527808,
+   "sha256": "dd00d5f5a77ad19b2c1ff1373c1fb10077c7ed9e2f76165d7d0ed9a94fcf2da1"
+  },
+  {
+   "rel": "native/175_fvewiz.dll",
+   "source": "C:\\Windows\\System32\\fvewiz.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 892928,
+   "sha256": "dd94488d898823bb9e3c2b9613bbf797da6c866f4e6c06c62fafa2ac6e4ae46c"
+  },
+  {
+   "rel": "native/176_gameux.dll",
+   "source": "C:\\Windows\\System32\\gameux.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 49152,
+   "sha256": "bddb8fc292161b890802dbd12514db33f85723042551b01131b0e46a9724d248"
+  },
+  {
+   "rel": "native/177_getmac.exe",
+   "source": "C:\\Windows\\System32\\getmac.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 151552,
+   "sha256": "4c44955c2805f85caa7f73ad526f1861a88adb660d310f75783d4904b173512d"
+  },
+  {
+   "rel": "native/178_gpprnext.dll",
+   "source": "C:\\Windows\\System32\\gpprnext.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 102400,
+   "sha256": "4c6e5e4266d77a12775be60d61aa63b184ea46d896cdbcfd78fc774add0b2fe1"
+  },
+  {
+   "rel": "native/179_hbaapi.dll",
+   "source": "C:\\Windows\\System32\\hbaapi.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 110592,
+   "sha256": "68e1941163e9f6e455921d84fd92091876d5ac90dd5ee8c5180acbb7472a1ba2"
+  },
+  {
+   "rel": "native/180_hhsetup.dll",
+   "source": "C:\\Windows\\System32\\hhsetup.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 81920,
+   "sha256": "460cd5521647f0dfc7dc5ef7af5cdd5cb4f5de5acc9407a1188d338708279121"
+  },
+  {
+   "rel": "native/181_hotplug.dll",
+   "source": "C:\\Windows\\System32\\hotplug.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 131072,
+   "sha256": "3ed4a2b8ff3ea7efb9a15814b63a44c94f745361144ee0545d76869986211d7a"
+  },
+  {
+   "rel": "native/182_htui.dll",
+   "source": "C:\\Windows\\System32\\htui.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 65536,
+   "sha256": "b0d685b38a87c4ddda543cf98b3f29bf5672187e1f956c61f1e1d3587db3d4e4"
+  },
+  {
+   "rel": "native/183_iasacct.dll",
+   "source": "C:\\Windows\\System32\\iasacct.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 114688,
+   "sha256": "eaf128fc66a4f9d5abed1caebcbf33134c0c4be65af4540b79d1bfc0d58ac389"
+  },
+  {
+   "rel": "native/184_iassam.dll",
+   "source": "C:\\Windows\\System32\\iassam.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 303104,
+   "sha256": "932e578e10de89e8603acf0900db115e56e57b13b5705b3e4e5aa7dc26db234d"
+  },
+  {
+   "rel": "native/185_icsigd.dll",
+   "source": "C:\\Windows\\System32\\icsigd.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 94208,
+   "sha256": "025331892107ca4125a90c3ae9e6b137aadb0d17bf69266d0fb6dff7cb26810a"
+  },
+  {
+   "rel": "native/186_ie4ushowIE.exe",
+   "source": "C:\\Windows\\System32\\ie4ushowIE.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 126976,
+   "sha256": "b9d2e8003f7b1b124d35bf749e366022ff6a2b813832d2820462616cb615851f"
+  },
+  {
+   "rel": "native/187_ieproxy.dll",
+   "source": "C:\\Windows\\System32\\ieproxy.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 790528,
+   "sha256": "0b2312811aabf9d0d22089ee7f4fd8d20211cdb1d703b94b90a90e2b3070daed"
+  },
+  {
+   "rel": "native/188_ifsutil.dll",
+   "source": "C:\\Windows\\System32\\ifsutil.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 306560,
+   "sha256": "7b4e599f8fda3d951b01131c50d0811be7aad620dd21411fbcdfe58be7a649d6"
+  },
+  {
+   "rel": "native/189_imgutil.dll",
+   "source": "C:\\Windows\\System32\\imgutil.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 81920,
+   "sha256": "472740b49951657348869b6dde78ef70576f96e7249d08c7cd63e02e6b86068f"
+  },
+  {
+   "rel": "native/190_inetppui.dll",
+   "source": "C:\\Windows\\System32\\inetppui.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 81920,
+   "sha256": "49a7964c57eb38f2363bd58dedd4fee2096758d630271876fc3798d7056fe329"
+  },
+  {
+   "rel": "native/191_ipconfig.exe",
+   "source": "C:\\Windows\\System32\\ipconfig.exe",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 61440,
+   "sha256": "97e67e94e477df42cc18c6c1e489df120693364b62961f05e8be049d6917d387"
+  },
+  {
+   "rel": "native/192_ipxlatcfg.dll",
+   "source": "C:\\Windows\\System32\\ipxlatcfg.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 192512,
+   "sha256": "a76f3f375a5086dcbce3ffa46a6ec5de4459561ea1ea6dbe08169bc894e17a88"
+  },
+  {
+   "rel": "native/193_iscsied.dll",
+   "source": "C:\\Windows\\System32\\iscsied.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 40960,
+   "sha256": "245a907ff0ee55eb66cb73673517706e0043cca18472dfbc62158fa25b212ce6"
+  },
+  {
+   "rel": "native/194_iuilp.dll",
+   "source": "C:\\Windows\\System32\\iuilp.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 120032,
+   "sha256": "5cedbe4de69f22360bbfe793aba8caf5a7c7881ad3a081c84be99cff07e69e07"
+  },
+  {
+   "rel": "native/195_joy.cpl",
+   "source": "C:\\Windows\\System32\\joy.cpl",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 118784,
+   "sha256": "6930f0becc3c04505a900e694403cf8183a5ef04c0f6c9e14b12bdd32e399c84"
+  },
+  {
+   "rel": "native/196_jscript9diag.dll",
+   "source": "C:\\Windows\\System32\\jscript9diag.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 638976,
+   "sha256": "59407c1d618adf073ef04fcd61c53a37d727ca62ff91710e1ad273fd625f8ece"
+  },
+  {
+   "rel": "native/197_kbd106.dll",
+   "source": "C:\\Windows\\System32\\kbd106.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "5cbb4c291e2ac0f5f4622c31e56a5a6db61f573dc07d55ea3d9da901a87dc983"
+  },
+  {
+   "rel": "native/198_kbdgeooa.dll",
+   "source": "C:\\Windows\\System32\\kbdgeooa.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "9dea3ec9ace3d2a4ab4603c2920830e8d734110824a727c1edd5478166383524"
+  },
+  {
+   "rel": "native/199_kbdlk41a.dll",
+   "source": "C:\\Windows\\System32\\kbdlk41a.dll",
+   "class": "native",
+   "csv": "sys32_1500.csv",
+   "size": 24576,
+   "sha256": "4c3174889f107fadd341ea0283945ce118e2e98f4958e1abfffa2ee806856121"
+  },
+  {
+   "rel": "resource_only/200_APHostRes.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\APHostRes.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 14848,
+   "sha256": "a9f7bea4f491b3fead92d42f8a3cfa06753acc2d2bad5dad2f90cc79a3204aef"
+  },
+  {
+   "rel": "resource_only/201_AccountHealth.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\AccountHealth.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 4096,
+   "sha256": "7d95cde4695de03148f752f4fdb0a4fd00f13359e78a8f6c856e09e6fa4e5173"
+  },
+  {
+   "rel": "resource_only/202_ActiveSyncProvider.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\ActiveSyncProvider.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 35840,
+   "sha256": "eda532a225b79fd5c2067740b5c9d16beb0f9994ea5be4283f4470e3d919c143"
+  },
+  {
+   "rel": "resource_only/203_AppReadiness.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\AppReadiness.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 12800,
+   "sha256": "36b1a2086062be6920712db3118240c54cd9086dbf0356c6f43583897207350c"
+  },
+  {
+   "rel": "resource_only/204_ApplicationFrame.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\ApplicationFrame.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "392724358806897266c6a93cd55be8e8baf0ff148a014643595be8a96e74601b"
+  },
+  {
+   "rel": "resource_only/205_AudioEndpointBuilder.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\AudioEndpointBuilder.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "0276b5aead60f8600a67f28544be8e3ba93c34c4a0f5a42f17d28766413de6c5"
+  },
+  {
+   "rel": "resource_only/206_AuthBrokerUI.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\AuthBrokerUI.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "47f9e773b95728c07820c8da60c15c0b4ce9ae9fbcd0d8c9f7aa830f73db2061"
+  },
+  {
+   "rel": "resource_only/207_BTAGService.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\BTAGService.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "a50f787a07facb05aa658eaed26ae3d6e909ca47b201789dbf8e4516012066a1"
+  },
+  {
+   "rel": "resource_only/208_BitLockerWizard.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\BitLockerWizard.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "19f54806ec67bb6a23e3b57f069702d675ff4d8de70a6d4c97ec671040ebcd85"
+  },
+  {
+   "rel": "resource_only/209_BthAvrcp.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\BthAvrcp.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "e9a1432394398213f46ab9734cdc475d5db25c4b6f8e524b42cffc3d3147c82c"
+  },
+  {
+   "rel": "resource_only/210_CBDHSvc.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\CBDHSvc.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "5967ad854c9a5b25ea19b902012bbee32b2eb2f61ea2346a94f971a6856882f6"
+  },
+  {
+   "rel": "resource_only/211_CertEnroll.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\CertEnroll.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 50176,
+   "sha256": "4ed1a45612d7da80fb0d374b114ab96bda1236f04f0780ecea0b9d2c7b7faefc"
+  },
+  {
+   "rel": "resource_only/212_CheckNetIsolation.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\CheckNetIsolation.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 9728,
+   "sha256": "cf0fcfa4662ba51cd15b1739c98478d10809dc519277cb9e616a3b9b3a199ea9"
+  },
+  {
+   "rel": "resource_only/213_CloudNotifications.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\CloudNotifications.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "d7538442f01c52454b8d4ce4452e92ff50f1e0feaf903afbeba99ae94f37fdba"
+  },
+  {
+   "rel": "resource_only/214_Conhost.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Conhost.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 4096,
+   "sha256": "7ec2f93f1d27d6c1e25da7227f591f036e7531572863c931d1c674fa5cd8e02e"
+  },
+  {
+   "rel": "resource_only/215_CredDialogBroker.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\CredDialogBroker.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "6f4ca0d2024d5e7558d09287f184f88b2a0c66b062e47dd0a35a17632db67634"
+  },
+  {
+   "rel": "resource_only/216_D3DSCache.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\D3DSCache.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 4608,
+   "sha256": "1855be34e210bb041b95b33e65b0bb2032f9dab7d37b1d4051612ebd8fed1d8e"
+  },
+  {
+   "rel": "resource_only/217_DWWIN.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DWWIN.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 6144,
+   "sha256": "c356cbd4c5c120152e8592dd43c4c005f411794da3ddec236999ec166a2125d9"
+  },
+  {
+   "rel": "resource_only/218_DataExchangeHost.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DataExchangeHost.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "aab9b25a04a339e5c290b166886187eaa40ef3dd5653c73ec24b718809b1e6cc"
+  },
+  {
+   "rel": "resource_only/219_DeviceCenter.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DeviceCenter.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 7680,
+   "sha256": "4a65eac1c2ac1baa418a3814aee5fb568a20dbcdb9c63abf69146cd4768df7c4"
+  },
+  {
+   "rel": "resource_only/220_DevicePairing.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DevicePairing.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 9728,
+   "sha256": "2c1299f445c79335aeaf33c5a77740fbe25e963fcd1d0c2f055d5807e5bc2dfe"
+  },
+  {
+   "rel": "resource_only/221_DeviceSetupManager.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DeviceSetupManager.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 17920,
+   "sha256": "dddb821c764cbda83a16924288a8efc2b3f27f5c0b5e99c963a5085fe6897099"
+  },
+  {
+   "rel": "resource_only/222_DfrgUI.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DfrgUI.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 12288,
+   "sha256": "faf0f2077647f0d0bae632abcaba54b6e8d6de9945788daf5023cb4a2e7d42a0"
+  },
+  {
+   "rel": "resource_only/223_DismApi.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DismApi.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 5120,
+   "sha256": "e271b597d0b31e36efcb90b18fc3566606caf43c259faf89d63d65daa787dbe7"
+  },
+  {
+   "rel": "resource_only/224_DocumentPerformanceEvents.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DocumentPerformanceEvents.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "8296cdb208e8fb6676c6b2fc9a8d37fb3d4fdb52ecd99358ddeb4c8f6715dcbc"
+  },
+  {
+   "rel": "resource_only/225_DscTimer.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\DscTimer.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "d18233a2b707578a1213c22835b41f061fd45f2c0bdc68c70ef3990b52d901fa"
+  },
+  {
+   "rel": "resource_only/226_ETWCoreUIComponentsResources.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\ETWCoreUIComponentsResources.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 109568,
+   "sha256": "fd5e465da5f2e6b11ed5bf6da7242ea18ed1ada5ddbfa97829fcd8f2f8449ff3"
+  },
+  {
+   "rel": "resource_only/227_EcoScoreTask.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\EcoScoreTask.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "9d1c7379333723370959d1d95a1cbdb9b7c13fe13c50413170d2a506134803a8"
+  },
+  {
+   "rel": "resource_only/228_EhStorPwdMgr.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\EhStorPwdMgr.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 7680,
+   "sha256": "a9a16f5ad7b9dd72589cadd6e9ccf005066e48d84cec892150d59e990884ed3e"
+  },
+  {
+   "rel": "resource_only/229_ExecModelClient.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\ExecModelClient.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "af1ad0c67f82511c9242ce349620ef3ef40e51b1c2fa6be27932189fab6366df"
+  },
+  {
+   "rel": "resource_only/230_FirewallUX.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\FirewallUX.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 7168,
+   "sha256": "019853965063d0924edf9e89f819bb968f1d3a0239211b675aa030eedd57ea19"
+  },
+  {
+   "rel": "resource_only/231_FrameServerMonitor.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\FrameServerMonitor.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "f0aa91e411c16d5b401eb9dbcc05797ea4a0dcb71c8ba5373bdaf6712e098b65"
+  },
+  {
+   "rel": "resource_only/232_ICacls.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\ICacls.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 24064,
+   "sha256": "63219bf2998d27d3c33464260238b4a08d9921cc750e2266f860d7c67f64c310"
+  },
+  {
+   "rel": "resource_only/233_InkObjCore.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\InkObjCore.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 4608,
+   "sha256": "5a1c1b7221d23b4081ae8e1ed3345655b7e1920719201acc04441e8752589395"
+  },
+  {
+   "rel": "resource_only/234_InternetMailCsp.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\InternetMailCsp.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "f5a8a886d2c88bdb6eb39e9d6c64e2c2fcb3b2cfad9f3f81749099f59c1a7c90"
+  },
+  {
+   "rel": "resource_only/235_LanguageComponentsInstaller.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\LanguageComponentsInstaller.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "a46e6bde4bc2b758390fde56bd6e6fb45b315dc6a0b42c78746603d3941d45ab"
+  },
+  {
+   "rel": "resource_only/236_LicensingUI.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\LicensingUI.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 5120,
+   "sha256": "94ae5106b7c4c132b4b665b584d076b3cb5781feabff45df078efbf5f88fdfda"
+  },
+  {
+   "rel": "resource_only/237_MBMediaManager.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\MBMediaManager.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "7591fad556dab1fa66826923b643723ee3e165cadf58eaa5d386e1b8555c7ab0"
+  },
+  {
+   "rel": "resource_only/238_MFCore.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\MFCore.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 33792,
+   "sha256": "60f360ade174a18ff922ce6f7a8083d1c54f7da2a09dceab880c19c206a9bb20"
+  },
+  {
+   "rel": "resource_only/239_Magnification.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Magnification.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "6efce58cb67464122832ddb9616db567462b1fc6db390b11afbf814fdfd76dd8"
+  },
+  {
+   "rel": "resource_only/240_MbaeApi.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\MbaeApi.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 5632,
+   "sha256": "09420daee0c7cbbdc88c6b590fb3affd31405216fef3a5ae735c2b69540a3aa8"
+  },
+  {
+   "rel": "resource_only/241_MessagingDataModel2.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\MessagingDataModel2.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "c5e62364bdca353e1a6c243903bcf712ecc93652879d9e4ad4205bf480748b55"
+  },
+  {
+   "rel": "resource_only/242_Microsoft.Bluetooth.UserService.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Microsoft.Bluetooth.UserService.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 7680,
+   "sha256": "2f491799b3578424c8a14b00d78c289e4933b9f93fd206507d41444230e7717e"
+  },
+  {
+   "rel": "resource_only/243_Midi2.KSAggregateTransport.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Midi2.KSAggregateTransport.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "35c77c6f7dcb65113cbc846e81a7f0aef10d1e654f1b88f03af868f83d517054"
+  },
+  {
+   "rel": "resource_only/244_Midi2.UMP2BSTransform.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Midi2.UMP2BSTransform.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "b9ae4f05e864138d4103e29bcdbaa04fd889f96afb4a40b645706e74df347e86"
+  },
+  {
+   "rel": "resource_only/245_MitigationConfiguration.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\MitigationConfiguration.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "f59e25ed654a6ec0f99a5706b12747978b4fcb6acc1b836813593c1725f5ac90"
+  },
+  {
+   "rel": "resource_only/246_MultiDigiMon.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\MultiDigiMon.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "4a23bd1bab3c34b793a8c2e3fc7f7ac5ac791e9d84f62599895869e4fd7a986a"
+  },
+  {
+   "rel": "resource_only/247_Narrator.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Narrator.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 24576,
+   "sha256": "3eb6bf8f1d30f4b23ad95d6304637382986381ed71de71dc68f3d706d8c1180c"
+  },
+  {
+   "rel": "resource_only/248_NetSetupSvc.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\NetSetupSvc.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 17920,
+   "sha256": "997114e8272d4649beef42169310003918c222ac98830c65271a94e5cf700457"
+  },
+  {
+   "rel": "resource_only/249_NetworkIcon.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\NetworkIcon.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "a391acb2341b88825c1c416a16ea9f319d6e98503f2f4829255e25d55c879b34"
+  },
+  {
+   "rel": "resource_only/250_Ninput.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Ninput.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "8e31526c63407835e87ca5cc337424c499c2793d771ab3135d0f6bcdd76a888b"
+  },
+  {
+   "rel": "resource_only/251_OptionalFeatures.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\OptionalFeatures.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "00bf4f32497ee04ec96c2a9f9f9e98859e02170c26da137ad6ff4c382a552f36"
+  },
+  {
+   "rel": "resource_only/252_PasswordOnWakeSettingFlyout.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\PasswordOnWakeSettingFlyout.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "dd2fa00e0f51d9716e13de9a9842d8070b2aaefb4dc8cb582dce177692123320"
+  },
+  {
+   "rel": "resource_only/253_PhoneUtilRes.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\PhoneUtilRes.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "2846842b82373e57f270b5019e0c985008ee5f035360382ea6ddaee6ca08d4a9"
+  },
+  {
+   "rel": "resource_only/254_PlayToDevice.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\PlayToDevice.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "87c193ae4e50ae9fb01103a3e691468c6ea10b921c5ff0e03dab4a45649474ba"
+  },
+  {
+   "rel": "resource_only/255_PortableDeviceApi.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\PortableDeviceApi.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 7168,
+   "sha256": "70482c6e3ef69e75eb4178bb825aab84e093be28ccae813d31a81a618c9a2749"
+  },
+  {
+   "rel": "resource_only/256_PrintDeviceConfigurationService.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\PrintDeviceConfigurationService.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "8d19661165fc9f3016d9e6d81318bca4bf7354300707d384510bdf345e32b92a"
+  },
+  {
+   "rel": "resource_only/257_ProximityUxHost.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\ProximityUxHost.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 4608,
+   "sha256": "70dda05d31ca62fb54d2c9b8266d61056f56c1b9772df9b4854c3a67f8e0c0f9"
+  },
+  {
+   "rel": "resource_only/258_RADCUI.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\RADCUI.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 10240,
+   "sha256": "8a5eaeec3f40d7fb8bd5d9bdf055b215176b59012300ef2c9fe7322936e61787"
+  },
+  {
+   "rel": "resource_only/259_RMActivate_ssp.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\RMActivate_ssp.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "6bfbbfce4765d86185cacce2da88dd1210c993f05b05a6a6a8030c11b7f87921"
+  },
+  {
+   "rel": "resource_only/260_RdpSa.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\RdpSa.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "7974df859c7a3d7da6b7761e88778bb222d8360112fae7b14fa9308edf856afa"
+  },
+  {
+   "rel": "resource_only/261_RemoveDeviceElevated.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\RemoveDeviceElevated.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "21a1fdf0f8d4f98fbed3826a54d0446079cb846871c1ecb4512188cb460a229a"
+  },
+  {
+   "rel": "resource_only/262_RpcEpMap.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\RpcEpMap.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 5120,
+   "sha256": "df1f63c13f42126547038a5a582d1d90ade7eccfa86f2bb1a2e53ae21a092364"
+  },
+  {
+   "rel": "resource_only/263_SHCore.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SHCore.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "f1ce6acc4dc117a12a6461d6fadcf966df231c8775f4191270168ea149d8c767"
+  },
+  {
+   "rel": "resource_only/264_Search.ProtocolHandler.MAPI2.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Search.ProtocolHandler.MAPI2.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 4096,
+   "sha256": "f2a1207f77964427a2748b0ab206e0aee65d6b021012b41f79b35a36e21f7588"
+  },
+  {
+   "rel": "resource_only/265_SensorsApi.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SensorsApi.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "60a1f3e3ce429299a5072688e917f10322966b09d55311dab1bf4788e7b42326"
+  },
+  {
+   "rel": "resource_only/266_SettingsHandlers_CapabilityAccess.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SettingsHandlers_CapabilityAccess.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "4c5600e0004660f77555d8e252c72f87c36926a9ebe2ca71df36296a8e622f3e"
+  },
+  {
+   "rel": "resource_only/267_SettingsHandlers_Flights3.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SettingsHandlers_Flights3.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 11264,
+   "sha256": "725b59f581289b48454e0bd5132abdf4058e5f42a16036c29092c05a31bf4ff2"
+  },
+  {
+   "rel": "resource_only/268_SettingsHandlers_Notifications.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SettingsHandlers_Notifications.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 4096,
+   "sha256": "b330946d1a9a4919e6ba68a725c56d0f3549ae424a624d1920ed7583520a49e1"
+  },
+  {
+   "rel": "resource_only/269_SettingsHandlers_Recovery.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SettingsHandlers_Recovery.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "66a63073629aa1170dd831454c399909c286ef1dde9bb7ca785860de1d4eee82"
+  },
+  {
+   "rel": "resource_only/270_SettingsHandlers_UserAccount.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SettingsHandlers_UserAccount.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "0092605498444caf43f44e0faa950650068464d67c433ce4a2955e903d081748"
+  },
+  {
+   "rel": "resource_only/271_SimAuth.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SimAuth.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 8192,
+   "sha256": "c13aed3752b995e8ddddc48966e85fa08427040defe5c540c7341e424f000988"
+  },
+  {
+   "rel": "resource_only/272_SpaceControl.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SpaceControl.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 28672,
+   "sha256": "1a681a73272bc3be9d640b67f06d215949734d6dccf346d10edeae8d0175631b"
+  },
+  {
+   "rel": "resource_only/273_StorSvc.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\StorSvc.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 7168,
+   "sha256": "b236b7ab678e0ef18988d929109e0bbafab38a31664e048ecb1d77a81fb9320e"
+  },
+  {
+   "rel": "resource_only/274_SyncInfrastructure.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SyncInfrastructure.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 25088,
+   "sha256": "ff5c81ed63d11ef364936abfe48cbfc0816fc3ed0d3aa9c0dfe40debdf4daad1"
+  },
+  {
+   "rel": "resource_only/275_SystemPropertiesAdvanced.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SystemPropertiesAdvanced.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "d6811b1528d52312ed261b644391f4c1d50108853bc21168c2e137f7fcd1e16c"
+  },
+  {
+   "rel": "resource_only/276_SystemPropertiesProtection.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\SystemPropertiesProtection.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "1f2311fb97bb51df2502be960a44a78a649c862a050a1f3ecd621cb2fba56d69"
+  },
+  {
+   "rel": "resource_only/277_TCPMonUI.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\TCPMonUI.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 11264,
+   "sha256": "74ab4f15068657b81cbffc7251359cd83803a4738d03b4b4f29769e182391a2f"
+  },
+  {
+   "rel": "resource_only/278_Tabbtn.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Tabbtn.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 6144,
+   "sha256": "356959828732f47fd71e32f870a27f907865b1db9e1aa5573e18337f4ae2efbb"
+  },
+  {
+   "rel": "resource_only/279_TetheringIeProvider.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\TetheringIeProvider.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "ceb564c7f695795c5e292a96b728ad5a0fb6ae57ce854e95ab65a56dd0ec48ed"
+  },
+  {
+   "rel": "resource_only/280_ThreatExperienceManager.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\ThreatExperienceManager.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 6656,
+   "sha256": "3afe7215787e5a83566ff77786897d61848a5cc8766718d31a605d4f863fff6b"
+  },
+  {
+   "rel": "resource_only/281_TpmCoreProvisioning.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\TpmCoreProvisioning.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 18944,
+   "sha256": "5b8affee6c81ba8335ab228bdbb342b3fff54b34020d2d7ac4e11c6f9dd6b57a"
+  },
+  {
+   "rel": "resource_only/282_TrustedSignalCredProv.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\TrustedSignalCredProv.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "14eb6b1a01cc3c741309f3591e74f7a402260f561596afedd6b898f45151e4f7"
+  },
+  {
+   "rel": "resource_only/283_TtlsExt.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\TtlsExt.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 7680,
+   "sha256": "ea135019a4d0414cac604c19a77a6ad8f231f2be7e845f66d54f08a317dcd235"
+  },
+  {
+   "rel": "resource_only/284_UpgradeResultsUI.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\UpgradeResultsUI.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "56acefb8e14e0b3ff9ea487b05b119638fe5282808b1c5508043cf169cf308cc"
+  },
+  {
+   "rel": "resource_only/285_UserDeviceRegistration.Ngc.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\UserDeviceRegistration.Ngc.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "fd0c821be35eb4d9faf5d8a341544c50fe06f7627ea1f30d710fdc7ead9f32b6"
+  },
+  {
+   "rel": "resource_only/286_VaultCli.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\VaultCli.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 5120,
+   "sha256": "c328984cf72ff65faf3d1f0089dc86688ebfc0365f22c161f51c24955e047c38"
+  },
+  {
+   "rel": "resource_only/287_WFDSConMgrSvc.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\WFDSConMgrSvc.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "522a411ebecd258fdf7712f9ff7c68e46afeb65e193072c7e5edd60283a73fba"
+  },
+  {
+   "rel": "resource_only/288_WMVENCOD.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\WMVENCOD.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "bb2723dfcb9e5c0e4aafd1d4dc882c1c1a4773d2177ecc55764ed55e57beff5c"
+  },
+  {
+   "rel": "resource_only/289_WWAApi.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\WWAApi.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3584,
+   "sha256": "dd3d226f4a1597221be28499862dfaa23ef8fcdb69f137647e2b17c83387cee7"
+  },
+  {
+   "rel": "resource_only/290_Websocket.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Websocket.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 9728,
+   "sha256": "b2c964a600d5ebf8d5320921f82f27395f0e0219efcaa120903c79caf13bb7d4"
+  },
+  {
+   "rel": "resource_only/291_WiFiNetworkManager.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\WiFiNetworkManager.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 67584,
+   "sha256": "579375f64a99c5f1603a8e5e85a2fceeadfb3567f8dd641c275f3bbae52e3d0c"
+  },
+  {
+   "rel": "resource_only/292_WinSAT.exe.mui",
+   "source": "C:\\Windows\\System32\\en-US\\WinSAT.exe.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 80896,
+   "sha256": "2227812fb1f2213d7dc168de6016b28888d79394f6e1f8420008956f9ef1da2b"
+  },
+  {
+   "rel": "resource_only/293_WinSyncProviders.rll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\WinSyncProviders.rll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 16896,
+   "sha256": "f0d78b1c80302e2e45b45a3bdd760ac78ff03d24b78ac3ece359fbf6de3773ac"
+  },
+  {
+   "rel": "resource_only/294_Windows.CloudStore.Schema.DesktopShell.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Windows.CloudStore.Schema.DesktopShell.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 6656,
+   "sha256": "37415e4804434cce02de84de07b50d81ed87874d93c6953b34ae8b5f6d3cb245"
+  },
+  {
+   "rel": "resource_only/295_Windows.Devices.Bluetooth.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Windows.Devices.Bluetooth.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 13312,
+   "sha256": "6ba8262ed18c0cef1bc32d3622e759a60bf984595acc0606c1d541ddaee82860"
+  },
+  {
+   "rel": "resource_only/296_Windows.Devices.PointOfService.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Windows.Devices.PointOfService.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 16384,
+   "sha256": "a9527a6bf1bd953a6ecb6d77654dbd69d90da236c9a990c9ee89e69f7e76f1b3"
+  },
+  {
+   "rel": "resource_only/297_Windows.Globalization.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Windows.Globalization.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 2560,
+   "sha256": "b31b0e5acef40e0ef32523b27e841c37d2ff168687c6ff6f1d89374c7f6c5c35"
+  },
+  {
+   "rel": "resource_only/298_Windows.Internal.CapturePicker.Desktop.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Windows.Internal.CapturePicker.Desktop.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 3072,
+   "sha256": "437d3bb458078895d5a7ca1c2e8fb34553c8b255b96653ce85ecbd70ae778618"
+  },
+  {
+   "rel": "resource_only/299_Windows.Management.Service.dll.mui",
+   "source": "C:\\Windows\\System32\\en-US\\Windows.Management.Service.dll.mui",
+   "class": "resource_only",
+   "csv": "mui_500.csv",
+   "size": 32768,
+   "sha256": "c9b6b0e35deaf2007d0f05d7bce263c08e143ce5c28c694a082e1f979db1272f"
+  },
+  {
+   "rel": "driver/300_1394ohci.sys",
+   "source": "C:\\Windows\\System32\\drivers\\1394ohci.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 294912,
+   "sha256": "9df5d0ebdbcaf08e3f376ae993aca8aedef266228d8f1dd41d6f79f294840b2f"
+  },
+  {
+   "rel": "driver/301_AliPaladinEx64.sys",
+   "source": "C:\\Windows\\System32\\drivers\\AliPaladinEx64.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 169176,
+   "sha256": "88f4bc99cb62d6f8f8e6bccf45ab61e05866a0704b01296567791cc4ee788f1a"
+  },
+  {
+   "rel": "driver/302_BthA2dp.sys",
+   "source": "C:\\Windows\\System32\\drivers\\BthA2dp.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 663552,
+   "sha256": "75c1372f05a9daf308f0a1a45d138aa311bc7548a04d67588f51b130c15fb64f"
+  },
+  {
+   "rel": "driver/303_CEA.sys",
+   "source": "C:\\Windows\\System32\\drivers\\CEA.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 118120,
+   "sha256": "c6e9af9e416b18499e884b829b909e231012c7062bf41aa7ea31939e1d0599c6"
+  },
+  {
+   "rel": "driver/304_CtaChildDriver.sys",
+   "source": "C:\\Windows\\System32\\drivers\\CtaChildDriver.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 56088,
+   "sha256": "c8a0a0a55ad955a5fd584388fedb6a806b7603bc6b8b17fe9f00dc862aa39e25"
+  },
+  {
+   "rel": "driver/305_EhStorClass.sys",
+   "source": "C:\\Windows\\System32\\drivers\\EhStorClass.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 179552,
+   "sha256": "d5fe64fff7e1c950b6048da1dda6f23e74451fa5fa097933ca3e6e54df825318"
+  },
+  {
+   "rel": "driver/306_HdAudio.sys",
+   "source": "C:\\Windows\\System32\\drivers\\HdAudio.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 544768,
+   "sha256": "c0dfe236ef3ddee3b1f31f7c6824a39eb894cc4781ba4e2e22e972a601655c83"
+  },
+  {
+   "rel": "driver/307_ICCWDT.sys",
+   "source": "C:\\Windows\\System32\\drivers\\ICCWDT.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 45624,
+   "sha256": "034eb5124adbf1ed79bc699e6f0cb47eac16d479a4ee49e29febd00ea733b6b1"
+  },
+  {
+   "rel": "driver/308_KNetPwrDepBroker.sys",
+   "source": "C:\\Windows\\System32\\drivers\\KNetPwrDepBroker.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 86016,
+   "sha256": "d41d09d5644be65f392d561e791066710d85f18ce818061173485e00937b0155"
+  },
+  {
+   "rel": "driver/309_LnvDrvFdn.sys",
+   "source": "C:\\Windows\\System32\\drivers\\LnvDrvFdn.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 49336,
+   "sha256": "4756983efe147d9358583fc4729590444a1bc59f3069a4b322b22b9aa312fde3"
+  },
+  {
+   "rel": "driver/310_Microsoft.Bluetooth.AvrcpTransport.sys",
+   "source": "C:\\Windows\\System32\\drivers\\Microsoft.Bluetooth.AvrcpTransport.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 126976,
+   "sha256": "3b2fbe64aec39750bf0fca3a94e3baa1b4f79f15701b5aa8a9ee07c88e44f2b0"
+  },
+  {
+   "rel": "driver/311_NDKPing.sys",
+   "source": "C:\\Windows\\System32\\drivers\\NDKPing.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 122176,
+   "sha256": "b12e9a18aa67d125406044e49526b6dae92e783efd4be93884f95f56b0dadb5f"
+  },
+  {
+   "rel": "driver/312_NdisVirtualBus.sys",
+   "source": "C:\\Windows\\System32\\drivers\\NdisVirtualBus.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 57344,
+   "sha256": "cbe9dc1d03eafe27a0975f5f64d810fe7cf429482073093de23230fc7e52874f"
+  },
+  {
+   "rel": "driver/313_PktMon.sys",
+   "source": "C:\\Windows\\System32\\drivers\\PktMon.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 232792,
+   "sha256": "3475373ff97235e755a5c3c3710075cdb189661fc8df93bd052f3fbda22aecc5"
+  },
+  {
+   "rel": "driver/314_RTKVHD64.sys",
+   "source": "C:\\Windows\\System32\\drivers\\RTKVHD64.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 6333928,
+   "sha256": "5c03f15772c0ba27b64ccee15b01e4c4e2d994394eb89ae7cbab8212ffa31bef"
+  },
+  {
+   "rel": "driver/315_SerCx2.sys",
+   "source": "C:\\Windows\\System32\\drivers\\SerCx2.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 218544,
+   "sha256": "d2f7ebfe1144fd1a2f456e4bbc3a9b90b9d57f12f86fb2b535cabfd138e27dd7"
+  },
+  {
+   "rel": "driver/316_TsUsbGD.sys",
+   "source": "C:\\Windows\\System32\\drivers\\TsUsbGD.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 77824,
+   "sha256": "ddd4e639613473756e8d401622b6362408ab39015aaa3c4efad2cf3ed407eb4e"
+  },
+  {
+   "rel": "driver/317_USBSTOR.SYS",
+   "source": "C:\\Windows\\System32\\drivers\\USBSTOR.SYS",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 216392,
+   "sha256": "f300797adc3316684af813ebf01dbae35b7b0326f4d5d14f361e26c2e5e22737"
+  },
+  {
+   "rel": "driver/318_UcmUcsiAcpiClient.sys",
+   "source": "C:\\Windows\\System32\\drivers\\UcmUcsiAcpiClient.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 77824,
+   "sha256": "436c580ce96861187a5299f00eab9e852efa6b33f127d59819c5283b6482ea4e"
+  },
+  {
+   "rel": "driver/319_UsbPmApi.sys",
+   "source": "C:\\Windows\\System32\\drivers\\UsbPmApi.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 98304,
+   "sha256": "8d7800ff98fd8b5262ad58cf519fd6400e47565910b4281675c7e1f66b09cf0c"
+  },
+  {
+   "rel": "driver/320_Vid.sys",
+   "source": "C:\\Windows\\System32\\drivers\\Vid.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 925024,
+   "sha256": "5fc4ed1937689192fa598818f25e13b5f45539a6ef17babf0fa19ccf9418c99b"
+  },
+  {
+   "rel": "driver/321_WdDevFlt.sys",
+   "source": "C:\\Windows\\System32\\drivers\\WdDevFlt.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 283016,
+   "sha256": "6ac5d8d09a13de50d96e7e49ded116e0831ab0e0a39495276a3beee5b45bb63b"
+  },
+  {
+   "rel": "driver/322_WdiWiFi.sys",
+   "source": "C:\\Windows\\System32\\drivers\\WdiWiFi.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 1159168,
+   "sha256": "176b3104c06222aa4a87748ca4c616b4c013f7a67aa5a29bca5adbf95631850c"
+  },
+  {
+   "rel": "driver/323_WifiCx.sys",
+   "source": "C:\\Windows\\System32\\drivers\\WifiCx.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 1232896,
+   "sha256": "f17298a8d22cbec2f1b3a6f0b44d7534a8e8ff0ab74efbe0ad58669c1797df06"
+  },
+  {
+   "rel": "driver/324_WpdUpFltr.sys",
+   "source": "C:\\Windows\\System32\\drivers\\WpdUpFltr.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 71088,
+   "sha256": "45489df939804ffe56e9a833cbed357402795d7d0cbd6dfcda29645cd3df4300"
+  },
+  {
+   "rel": "driver/325_acpi.sys",
+   "source": "C:\\Windows\\System32\\drivers\\acpi.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 884088,
+   "sha256": "5de94c7819c690178fef3d656e4f743b2c46bfd58d6fd981e8bdfe7efa3d3022"
+  },
+  {
+   "rel": "driver/326_afunix.sys",
+   "source": "C:\\Windows\\System32\\drivers\\afunix.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 90112,
+   "sha256": "c0f6cee2c019624d278f0f7079f717d045e45f2159722be7807778155af2cadf"
+  },
+  {
+   "rel": "driver/327_amdk8.sys",
+   "source": "C:\\Windows\\System32\\drivers\\amdk8.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 273768,
+   "sha256": "3702ccc94ca0f987143fa44ed75d2ce60158716649dab26012e7fee6726223b7"
+  },
+  {
+   "rel": "driver/328_amdxata.sys",
+   "source": "C:\\Windows\\System32\\drivers\\amdxata.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 28064,
+   "sha256": "eb4c463a91fc778b335c3a9f4a74539ce0378f59974b2b46d5350c6c8afddb69"
+  },
+  {
+   "rel": "driver/329_asyncmac.sys",
+   "source": "C:\\Windows\\System32\\drivers\\asyncmac.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 61440,
+   "sha256": "6135cbea049e8a2654d4e1d14b7be1afe461df62e3f55190b2b3c05d777858da"
+  },
+  {
+   "rel": "driver/330_bcmfn2.sys",
+   "source": "C:\\Windows\\System32\\drivers\\bcmfn2.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 9728,
+   "sha256": "9ad12e18a042c5b8efb19297bc2e7bd1fef75a138fefb64c6bf0261fd3e53ab1"
+  },
+  {
+   "rel": "driver/331_bridge.sys",
+   "source": "C:\\Windows\\System32\\drivers\\bridge.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 163840,
+   "sha256": "517253c8dd013f1fc222373d259fb58f984b096486f265f73adcb417f31f7e39"
+  },
+  {
+   "rel": "driver/332_bttflt.sys",
+   "source": "C:\\Windows\\System32\\drivers\\bttflt.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 79176,
+   "sha256": "0f65089c4a1b84b51d46cb758fe06ad3651eeecc72ed4a82dad15bc419f60ad5"
+  },
+  {
+   "rel": "driver/333_cdrom.sys",
+   "source": "C:\\Windows\\System32\\drivers\\cdrom.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 233472,
+   "sha256": "d1ea83c009bfa21c09dd78c7886be41e96e335f5135a58f5f699c59f1df23e92"
+  },
+  {
+   "rel": "driver/334_cimfs.sys",
+   "source": "C:\\Windows\\System32\\drivers\\cimfs.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 302456,
+   "sha256": "3b92b77d4ae8e0834c1ed16bb489d0e038f4ea0d4ebdd48cb9dae3c5313e774f"
+  },
+  {
+   "rel": "driver/335_cng.sys",
+   "source": "C:\\Windows\\System32\\drivers\\cng.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 982840,
+   "sha256": "86bcadc4f7d57c5082d96b0cdacf795bc1b5628274a4ee8dae0f4c0288c5da27"
+  },
+  {
+   "rel": "driver/336_devauthe.sys",
+   "source": "C:\\Windows\\System32\\drivers\\devauthe.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 86016,
+   "sha256": "84e0ecce27cde83e2c96b152085b75a23c569c29291fed2584c41ae8954c1428"
+  },
+  {
+   "rel": "driver/337_drmk.sys",
+   "source": "C:\\Windows\\System32\\drivers\\drmk.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 131072,
+   "sha256": "c969d21790131451fb28c8fdd1fe1081a0fa39960539d9f25f382fb11bc5a076"
+  },
+  {
+   "rel": "driver/338_dxgkrnl.sys",
+   "source": "C:\\Windows\\System32\\drivers\\dxgkrnl.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 5320064,
+   "sha256": "1b852557d70f11541a8452c9fd058eb841557b66712de47ba5a7d0b531d4ddaa"
+  },
+  {
+   "rel": "driver/339_evbda.sys",
+   "source": "C:\\Windows\\System32\\drivers\\evbda.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 3441568,
+   "sha256": "60fe372e60f532099a242ef73c24c142ceb66ce7b1f7ca48b826a02d9dd513c9"
+  },
+  {
+   "rel": "driver/340_filecrypt.sys",
+   "source": "C:\\Windows\\System32\\drivers\\filecrypt.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 98304,
+   "sha256": "53f7b5a06af5cc2c79b30f43ca99803d4afc086135bb66700ddcf268ae704104"
+  },
+  {
+   "rel": "driver/341_fs_rec.sys",
+   "source": "C:\\Windows\\System32\\drivers\\fs_rec.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 71072,
+   "sha256": "799c95dec78122055300086193767662a6798b537e21ab2e7b9860be1e252ea3"
+  },
+  {
+   "rel": "driver/342_gvinputmf.sys",
+   "source": "C:\\Windows\\System32\\drivers\\gvinputmf.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 23792,
+   "sha256": "b0e6672bf293a5da509091e1f4ae2b0eeb4ee8629f07347b0b3e6b7bbc474858"
+  },
+  {
+   "rel": "driver/343_hidi2c.sys",
+   "source": "C:\\Windows\\System32\\drivers\\hidi2c.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 131072,
+   "sha256": "ae368cc858e39df94222574c011f16e28577229450864bc1c6278db97227f07a"
+  },
+  {
+   "rel": "driver/344_hidspi.sys",
+   "source": "C:\\Windows\\System32\\drivers\\hidspi.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 139264,
+   "sha256": "394d92b24ec34034bb6dc90f1678a4af36ef969d0ea6aa06e0e20e0a05e30c01"
+  },
+  {
+   "rel": "driver/345_hvsocket.sys",
+   "source": "C:\\Windows\\System32\\drivers\\hvsocket.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 204120,
+   "sha256": "f54ff7fe7087d58c8a735ea29911d22431596ab9e089fec5b7e430ff0630eb1f"
+  },
+  {
+   "rel": "driver/346_iaLPSS2i_GPIO2_BXT_P.sys",
+   "source": "C:\\Windows\\System32\\drivers\\iaLPSS2i_GPIO2_BXT_P.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 93184,
+   "sha256": "2141de558461b592d4111a0388d1aac8062fa72cd1e2a2d2d68279a9633288e9"
+  },
+  {
+   "rel": "driver/347_iaLPSS2i_I2C_CNL.sys",
+   "source": "C:\\Windows\\System32\\drivers\\iaLPSS2i_I2C_CNL.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 177152,
+   "sha256": "f105edd16e38f5c0044cc7139e4084a04b0ae3212171a1c7f6fe759f3f5f77fc"
+  },
+  {
+   "rel": "driver/348_iaStorAVC.sys",
+   "source": "C:\\Windows\\System32\\drivers\\iaStorAVC.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 885568,
+   "sha256": "a46a34e6dc1573d29b87ad22b336c6a7358a657a416b1643c0d3dad671d81692"
+  },
+  {
+   "rel": "driver/349_intelide.sys",
+   "source": "C:\\Windows\\System32\\drivers\\intelide.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 68984,
+   "sha256": "13376485a70b3b749e5b7678361b98262708c828a92aacea61ea065ec9bf6368"
+  },
+  {
+   "rel": "driver/350_iorate.sys",
+   "source": "C:\\Windows\\System32\\drivers\\iorate.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 91624,
+   "sha256": "f35e1f621e1694495ee51306fe950739f3a83cde80d005476d1e960303eef53b"
+  },
+  {
+   "rel": "driver/351_kbdclass.sys",
+   "source": "C:\\Windows\\System32\\drivers\\kbdclass.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 105848,
+   "sha256": "54d8638a6f37534b93ecf00dca956e2f19985ad0bf21b889e6e190ed1e2fda41"
+  },
+  {
+   "rel": "driver/352_kmpdc.sys",
+   "source": "C:\\Windows\\System32\\drivers\\kmpdc.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 101728,
+   "sha256": "cfdb95e1202ab9ddbd061313fb7de1e270f4fc64169abf7d689614c94db0b6da"
+  },
+  {
+   "rel": "driver/353_lltdio.sys",
+   "source": "C:\\Windows\\System32\\drivers\\lltdio.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 106496,
+   "sha256": "fc6f5d453a2485aad7a4f87584296ba24667061bfb4ad595fee330b46d91e43a"
+  },
+  {
+   "rel": "driver/354_lnvscenter_4724373.sys",
+   "source": "C:\\Windows\\System32\\drivers\\lnvscenter_4724373.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 147976,
+   "sha256": "df9fc459f9af992248e378b3f9c54eb4f06e7adcdebec17fbd88e8a351084954"
+  },
+  {
+   "rel": "driver/355_logi_joy_vir_hid.sys",
+   "source": "C:\\Windows\\System32\\drivers\\logi_joy_vir_hid.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 32200,
+   "sha256": "b49a1470625c327ff6fc0771039de12fd40f409acaa63aa24900371dbb2a1115"
+  },
+  {
+   "rel": "driver/356_lsi_sas2i.sys",
+   "source": "C:\\Windows\\System32\\drivers\\lsi_sas2i.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 125344,
+   "sha256": "b0cfed90a269fc79767f2012c64bd256451feab1948fde416daff95a85ff8a69"
+  },
+  {
+   "rel": "driver/357_mcd.sys",
+   "source": "C:\\Windows\\System32\\drivers\\mcd.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 61440,
+   "sha256": "9e0d0caacaa4cd61fd5a1e4f6eee63dcac894d92059c916d9968a5081225851f"
+  },
+  {
+   "rel": "driver/358_modem.sys",
+   "source": "C:\\Windows\\System32\\drivers\\modem.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 81920,
+   "sha256": "488e73e52ca0d5a628efadc200ded8bdb235118a166409d03f1b6a06d25a3564"
+  },
+  {
+   "rel": "driver/359_mpi3drvi.sys",
+   "source": "C:\\Windows\\System32\\drivers\\mpi3drvi.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 90544,
+   "sha256": "9ed1f6d7de917cf5b387eb1856bf2ea6be69cdc804adb3cab00b00647c25c163"
+  },
+  {
+   "rel": "driver/360_mrxsmb20.sys",
+   "source": "C:\\Windows\\System32\\drivers\\mrxsmb20.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 400776,
+   "sha256": "3e5c97e3c4dfd435199caa3944f96b51ea0d920b07ff8d81250111194eb3cae4"
+  },
+  {
+   "rel": "driver/361_mshidumdf.sys",
+   "source": "C:\\Windows\\System32\\drivers\\mshidumdf.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 49152,
+   "sha256": "4e310617a209a1e7a924674ae3dd2c0a6d06828c7da3d2e6d82cd7070bc0d353"
+  },
+  {
+   "rel": "driver/362_mslldp.sys",
+   "source": "C:\\Windows\\System32\\drivers\\mslldp.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 114688,
+   "sha256": "81ecd65f2f6f1d692246f43a5d2630a031fead9a1d6567e17f122d1c305c15cb"
+  },
+  {
+   "rel": "driver/363_msquicprev.sys",
+   "source": "C:\\Windows\\System32\\drivers\\msquicprev.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 531776,
+   "sha256": "c56e4459ab1f7ca16438c89895aa8e20294e279d1583dc38abd5ffb41b6b687d"
+  },
+  {
+   "rel": "driver/364_mup.sys",
+   "source": "C:\\Windows\\System32\\drivers\\mup.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 195960,
+   "sha256": "205efe5a4868013a2d83c17153495f78aaa33aaf133ba4935a8e8c91a188a322"
+  },
+  {
+   "rel": "driver/365_ndistapi.sys",
+   "source": "C:\\Windows\\System32\\drivers\\ndistapi.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 65536,
+   "sha256": "e776cc6f983ec1b73bb0c61f01dbd62c0c6877b26327a40de105f89d32b8c352"
+  },
+  {
+   "rel": "driver/366_netadaptercx.sys",
+   "source": "C:\\Windows\\System32\\drivers\\netadaptercx.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 400736,
+   "sha256": "12623bb4795441f33e742f1bbb742e3718f03d2d480c256fa74a0905deeb22f5"
+  },
+  {
+   "rel": "driver/367_netrtp.sys",
+   "source": "C:\\Windows\\System32\\drivers\\netrtp.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 47648,
+   "sha256": "6619fd52e36dbe5f8f67092a012d079c7fe42df16e29af1352bf61007cb9d626"
+  },
+  {
+   "rel": "driver/368_ntfs.sys",
+   "source": "C:\\Windows\\System32\\drivers\\ntfs.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 3693920,
+   "sha256": "fd8bb864753d8614bd6a722e92f7a972267ab173484885f29dc9617382fe8071"
+  },
+  {
+   "rel": "driver/369_nvmedisk.sys",
+   "source": "C:\\Windows\\System32\\drivers\\nvmedisk.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 138568,
+   "sha256": "a4f4e7461615f2c46a8fd43f011fde90d4bdcf7d4e44bcc79cd78164c9593b32"
+  },
+  {
+   "rel": "driver/370_nvvhci.sys",
+   "source": "C:\\Windows\\System32\\drivers\\nvvhci.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 60112,
+   "sha256": "cbe5ee2c317f9d97f516d7e6410dfc1adaf3c595c2e8e81e3e2895513e9c103f"
+  },
+  {
+   "rel": "driver/371_p9rdr.sys",
+   "source": "C:\\Windows\\System32\\drivers\\p9rdr.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 163144,
+   "sha256": "36b197432977326071bea26623893f53d8fa56ede4cdbc77ba3f2c3104ee5b31"
+  },
+  {
+   "rel": "driver/372_pciide.sys",
+   "source": "C:\\Windows\\System32\\drivers\\pciide.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 64840,
+   "sha256": "f098d9b9547e9b6ba81185779a888563a7fb991f4ec667c486280af2639544ff"
+  },
+  {
+   "rel": "driver/373_percsas2i.sys",
+   "source": "C:\\Windows\\System32\\drivers\\percsas2i.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 59824,
+   "sha256": "7026717ebc767674c3b52e2465fd9298ce02f7560a096162e9b50d6782a8cf08"
+  },
+  {
+   "rel": "driver/374_portcls.sys",
+   "source": "C:\\Windows\\System32\\drivers\\portcls.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 479232,
+   "sha256": "8019eda578a2548451d16c3d48679a94e0856d64c932a70297e4ab78280a3b8b"
+  },
+  {
+   "rel": "driver/375_ramdisk.sys",
+   "source": "C:\\Windows\\System32\\drivers\\ramdisk.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 75232,
+   "sha256": "e706c3c549860d3eb848d30fbd2ea9dbf5e2a96a11f050fd93f73fca53eecfb3"
+  },
+  {
+   "rel": "driver/376_rassstp.sys",
+   "source": "C:\\Windows\\System32\\drivers\\rassstp.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 131072,
+   "sha256": "22e19658abfaf4d3275e47fae133660dfbe845d21d21b1fc4d0ff8a1dc784fb1"
+  },
+  {
+   "rel": "driver/377_refs.sys",
+   "source": "C:\\Windows\\System32\\drivers\\refs.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 3550584,
+   "sha256": "73f090134532221059f8587033b5508f8998e3b70d801df412d511ea83000048"
+  },
+  {
+   "rel": "driver/378_rootmdm.sys",
+   "source": "C:\\Windows\\System32\\drivers\\rootmdm.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 49152,
+   "sha256": "ebcd1fd9a9b659df91db67981cd6747f9f9aa2aacd7f37bd714f9c942a43be2b"
+  },
+  {
+   "rel": "driver/379_scfilter.sys",
+   "source": "C:\\Windows\\System32\\drivers\\scfilter.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 77824,
+   "sha256": "54341c844a722f25d72bebfb860d31b432bc4c2e47c03694b0fc24a3e7cb0c8b"
+  },
+  {
+   "rel": "driver/380_sdstor.sys",
+   "source": "C:\\Windows\\System32\\drivers\\sdstor.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 150904,
+   "sha256": "0b27ca53e938211d29bd3470fc937790f22892a201b51c5c55ef9b6da200a317"
+  },
+  {
+   "rel": "driver/381_sisraid2.sys",
+   "source": "C:\\Windows\\System32\\drivers\\sisraid2.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 45984,
+   "sha256": "b4a9423e6a418565bfca7f1c41940a5cb899e08b77ba13fe0b5394aee693002a"
+  },
+  {
+   "rel": "driver/382_spaceparser.sys",
+   "source": "C:\\Windows\\System32\\drivers\\spaceparser.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 86016,
+   "sha256": "c293f6a1d770cb3a564546d1d7989eed25a8baa7b6f53cd5720cea3562eed275"
+  },
+  {
+   "rel": "driver/383_storahci.sys",
+   "source": "C:\\Windows\\System32\\drivers\\storahci.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 253304,
+   "sha256": "e7d3e11341df38cb8169379c73510d1f4a88674cc6977bc86b2bc99620ee6a8d"
+  },
+  {
+   "rel": "driver/384_storvsc.sys",
+   "source": "C:\\Windows\\System32\\drivers\\storvsc.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 105880,
+   "sha256": "56fc04a3f735ab1e51bed7d774835a07d120d82fa2ba7100678c11c13db78412"
+  },
+  {
+   "rel": "driver/385_tcpipreg.sys",
+   "source": "C:\\Windows\\System32\\drivers\\tcpipreg.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 86016,
+   "sha256": "c05c9aa657c49c8515f2667289038f37c91cdcb8f5c489d8fdb6f3ca13f470ca"
+  },
+  {
+   "rel": "driver/386_tm.sys",
+   "source": "C:\\Windows\\System32\\drivers\\tm.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 195912,
+   "sha256": "23ded8085eeff06ebbccac00e93cfd97b7d1902c623773b2414db98bb144841b"
+  },
+  {
+   "rel": "driver/387_ufx01000.sys",
+   "source": "C:\\Windows\\System32\\drivers\\ufx01000.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 361776,
+   "sha256": "78ed801f832e1a3d6309665db93c06434f89a24319311a9b632158be4e16cec3"
+  },
+  {
+   "rel": "driver/388_usbccgp.sys",
+   "source": "C:\\Windows\\System32\\drivers\\usbccgp.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 232800,
+   "sha256": "529f0822230aae96c22e7325a01c8ad5b67552dba667fb46f0a15bf0a40f2fcf"
+  },
+  {
+   "rel": "driver/389_usbohci.sys",
+   "source": "C:\\Windows\\System32\\drivers\\usbohci.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 69632,
+   "sha256": "4b5b5ad44c07025f05229b1f27f22bd53689d91d5c34ddc8411dd39f3e1f5370"
+  },
+  {
+   "rel": "driver/390_usbuhci.sys",
+   "source": "C:\\Windows\\System32\\drivers\\usbuhci.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 73728,
+   "sha256": "71b7ef61305ef06284eade04b2875cf0b239d6d3c870c93aeeef0e8c90db68de"
+  },
+  {
+   "rel": "driver/391_vhf.sys",
+   "source": "C:\\Windows\\System32\\drivers\\vhf.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 90112,
+   "sha256": "02f66b0b37d65f40c803c118d85b134e50048b96115c7846d51e0b52d9271f60"
+  },
+  {
+   "rel": "driver/392_vmgencounter.sys",
+   "source": "C:\\Windows\\System32\\drivers\\vmgencounter.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 58672,
+   "sha256": "bfd17e40b498aa842d59fd38e0ff128416cc6cf0af9cb2eb7637c5e265180258"
+  },
+  {
+   "rel": "driver/393_volmgr.sys",
+   "source": "C:\\Windows\\System32\\drivers\\volmgr.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 142664,
+   "sha256": "38256127ad250192e8990a4220d262dc7e2fd8704d1f4bea9f7b8e523c7e64e3"
+  },
+  {
+   "rel": "driver/394_vpci.sys",
+   "source": "C:\\Windows\\System32\\drivers\\vpci.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 179552,
+   "sha256": "4739644f99f6b233013fecb44dec17325ff535214aa41f37dd14f822591fbc16"
+  },
+  {
+   "rel": "driver/395_watchdog.sys",
+   "source": "C:\\Windows\\System32\\drivers\\watchdog.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 150880,
+   "sha256": "f95f8e67405b81d4f219813145a06e829e8c53f45f4aff38ada0697500b9dfc3"
+  },
+  {
+   "rel": "driver/396_winhv.sys",
+   "source": "C:\\Windows\\System32\\drivers\\winhv.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 85400,
+   "sha256": "8b7169532eaa424be1a6a378d8c5bd9e4ae6efcf437acac9be533d3d221d9289"
+  },
+  {
+   "rel": "driver/397_winusb.sys",
+   "source": "C:\\Windows\\System32\\drivers\\winusb.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 143360,
+   "sha256": "0fe1d3b99262f72d9f06b86b8ed8130fb4ee3257f95b3156a60518f744b36d2a"
+  },
+  {
+   "rel": "driver/398_wof.sys",
+   "source": "C:\\Windows\\System32\\drivers\\wof.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 302448,
+   "sha256": "263f52d29a69d3176aa4b8d043ad2a36192d10f5446a4e4f712152a94ee521c3"
+  },
+  {
+   "rel": "driver/399_xusb22.sys",
+   "source": "C:\\Windows\\System32\\drivers\\xusb22.sys",
+   "class": "driver",
+   "csv": "drivers.csv",
+   "size": 172032,
+   "sha256": "8347b6338f2b966e7f8743c7fb91c7237ef6810aedf739f031f22185350c528a"
+  },
+  {
+   "rel": "dotnet/400_Accessibility.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Accessibility.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 32152,
+   "sha256": "d4cc4d55f254a11e355a3a5e8b2aead96e54e6412f94e6dc6fbaea3a62eb062c"
+  },
+  {
+   "rel": "dotnet/401_AddInUtil.exe",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\AddInUtil.exe",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 36904,
+   "sha256": "bf165737e216ac7bfc7f5b49113d26ca9c770a2fef8b1fdf19dbbbee19bf37bc"
+  },
+  {
+   "rel": "dotnet/402_CustomMarshalers.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\CustomMarshalers.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 108600,
+   "sha256": "d15e7db0868994568aa65130e5f7a1970b6bcb8690ff18098321c28f984cf52a"
+  },
+  {
+   "rel": "dotnet/403_EdmGen.exe",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\EdmGen.exe",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 91168,
+   "sha256": "9cd177167ecf389587ac1d6af8a14f34ccaaed45280258dc4192ca1cab7027fb"
+  },
+  {
+   "rel": "dotnet/404_MSBuild.exe",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 252448,
+   "sha256": "78a7ec4f772769d45eb6a7f705da705e5a8981a53b056521cbfc63c3a15244cd"
+  },
+  {
+   "rel": "dotnet/405_Microsoft.Build.Engine.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Microsoft.Build.Engine.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 653344,
+   "sha256": "67e0e4e85745cad990d8c1013f7f16ff2efe1fc9f13d3eaef5daa4dadffc3707"
+  },
+  {
+   "rel": "dotnet/406_Microsoft.Build.Utilities.v4.0.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Microsoft.Build.Utilities.v4.0.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 263712,
+   "sha256": "803239bfd6a91724ea5cfc9ba8ece1db9d1ad933ea8e4473ce149060db629e28"
+  },
+  {
+   "rel": "dotnet/407_Microsoft.Data.Entity.Build.Tasks.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Microsoft.Data.Entity.Build.Tasks.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 47136,
+   "sha256": "6b2a43fce230a5ab0a4085a419d7d969a2e27964f97e1228ad2cff0f98444ee1"
+  },
+  {
+   "rel": "dotnet/408_Microsoft.JScript.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Microsoft.JScript.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 748600,
+   "sha256": "989f7c164d8aa7b06831f1ce318bcdc43efb6ab689b0336753d575620702fa81"
+  },
+  {
+   "rel": "dotnet/409_Microsoft.VisualBasic.Activities.Compiler.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Microsoft.VisualBasic.Activities.Compiler.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 3813432,
+   "sha256": "0eeb91f96f5d869416f1947958db543c6131c2435f06dc6be04f3c5c2a1d8658"
+  },
+  {
+   "rel": "dotnet/410_Microsoft.VisualBasic.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Microsoft.VisualBasic.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 636824,
+   "sha256": "806f0976c9310084bf31a56da6fd2ed1d738e75ca89f3221347b1d76baea68bb"
+  },
+  {
+   "rel": "dotnet/411_Microsoft.Win32.Primitives.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Microsoft.Win32.Primitives.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25040,
+   "sha256": "439c8a1ab956e46312dd6de23c9ac5c67bede249b9c5cc072d72f3654461324f"
+  },
+  {
+   "rel": "dotnet/412_RegAsm.exe",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\RegAsm.exe",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 57976,
+   "sha256": "3e26a8ba9db5d89b5732dbc47ec4f08f4e7375b425cba857d788668ce1cd9fc3"
+  },
+  {
+   "rel": "dotnet/413_SMSvcHost.exe",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\SMSvcHost.exe",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 132672,
+   "sha256": "d4049183b485b44da95a359cf9dae14934aa95cfb542ee4721e7038e3f38c5b5"
+  },
+  {
+   "rel": "dotnet/414_System.Activities.DurableInstancing.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Activities.DurableInstancing.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 138160,
+   "sha256": "338fc5306fb388f778de858ca0dfea76415f8e21ef17ab89696fa244dcdc5707"
+  },
+  {
+   "rel": "dotnet/415_System.AddIn.Contract.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.AddIn.Contract.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 46624,
+   "sha256": "7c76f998ff683c33865aa40134dfa0511f65508cfe4092ef227a16f3ec915ffe"
+  },
+  {
+   "rel": "dotnet/416_System.Collections.Concurrent.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Collections.Concurrent.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "5bfe1460e31c0e089f0cd5b77c3390c02c48ef9481bdff046daaa83d71cf6c6b"
+  },
+  {
+   "rel": "dotnet/417_System.Collections.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Collections.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 26056,
+   "sha256": "19ab524715ad9b1262a1b8a81befc596ebb19730ddbb448f8b61bd5027867ef5"
+  },
+  {
+   "rel": "dotnet/418_System.ComponentModel.DataAnnotations.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ComponentModel.DataAnnotations.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 123824,
+   "sha256": "820c1b8cbf53763c12124557d7e74e887419b01daf51fe72f015ec97c87232dd"
+  },
+  {
+   "rel": "dotnet/419_System.ComponentModel.Primitives.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ComponentModel.Primitives.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 26056,
+   "sha256": "4a59c67271eb998182ef6b18787445b4e9927efbc76dfae6c8d772867a2db4de"
+  },
+  {
+   "rel": "dotnet/420_System.Configuration.Install.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Configuration.Install.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 99224,
+   "sha256": "cc11305816b289ea7ac5d574f91356710337bc7198d63096b83ef41d55c6ccc3"
+  },
+  {
+   "rel": "dotnet/421_System.Core.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Core.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 1551104,
+   "sha256": "8b898bed54ae8cc61f9c58cc3eb062724f8357d2bdda338b5d363654ecff333d"
+  },
+  {
+   "rel": "dotnet/422_System.Data.Entity.Design.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Data.Entity.Design.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 1076768,
+   "sha256": "eca1e0f0629e783ebdb25a44c270cd09e5d2d49513e41741c066ff2a21153a90"
+  },
+  {
+   "rel": "dotnet/423_System.Data.OracleClient.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Data.OracleClient.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 506936,
+   "sha256": "f9f2dc98ea45dc092b035bb933c978042e0768e815a4eae97efff38ce055a2ef"
+  },
+  {
+   "rel": "dotnet/424_System.Data.Services.Design.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Data.Services.Design.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 168480,
+   "sha256": "fe66463b29b75f47f9234f292a6f216c9e24a6908448a4e8ffd4b08b56f07762"
+  },
+  {
+   "rel": "dotnet/425_System.Data.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Data.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 3535416,
+   "sha256": "44ef042fa9fbca676466cf9ddd7541ec00c8887c10672880702cc5a4a8182606"
+  },
+  {
+   "rel": "dotnet/426_System.Device.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Device.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 58912,
+   "sha256": "ef58b7dd945d71d40f88591a7371e13969d525468d199be58e8e0b3839332c14"
+  },
+  {
+   "rel": "dotnet/427_System.Diagnostics.FileVersionInfo.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Diagnostics.FileVersionInfo.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25032,
+   "sha256": "576e365bb2f53d395196b24ddd5ae83d35b05e7d5ed5d8c5b262d00744d5a808"
+  },
+  {
+   "rel": "dotnet/428_System.Diagnostics.TextWriterTraceListener.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Diagnostics.TextWriterTraceListener.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "6da3e71a5b4f912bc82a5c3f047397a3a217f05f2eb306593a4be092c3763d66"
+  },
+  {
+   "rel": "dotnet/429_System.Diagnostics.TraceSource.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Diagnostics.TraceSource.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "5a8be87cfca59c6bd8e9d9addebd19df36e9209b876c234780db2789af1b42b9"
+  },
+  {
+   "rel": "dotnet/430_System.DirectoryServices.Protocols.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.DirectoryServices.Protocols.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 197520,
+   "sha256": "8663b65ecc79d138a49736aba7cf3f2937daa573c4829baa63dc05dcba740a4c"
+  },
+  {
+   "rel": "dotnet/431_System.Drawing.Primitives.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Drawing.Primitives.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "536f7c4ed0ce360915830b7a2bcc309f05ade91f7f7c6ef6e05ae8a7f884aed9"
+  },
+  {
+   "rel": "dotnet/432_System.Dynamic.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Dynamic.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 126920,
+   "sha256": "c813de4b3f37c95987a1cc1dd3a1c4eb722cea4c2591548c39275fcde5e4b8ba"
+  },
+  {
+   "rel": "dotnet/433_System.Globalization.Calendars.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Globalization.Calendars.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "19d2be00923cb89efad9de30efa7765186dada5504a67d0d03662498595e76f2"
+  },
+  {
+   "rel": "dotnet/434_System.IO.Compression.FileSystem.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.IO.Compression.FileSystem.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 27704,
+   "sha256": "d64d677300ff3aa35229cb1b2418307c593c1417b3f49df9315b14a935424950"
+  },
+  {
+   "rel": "dotnet/435_System.IO.Compression.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.IO.Compression.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 68504,
+   "sha256": "c68d37a11a072affbb50bbfa7299e6410811a24c946b11f9f430d0a5f66bd2b1"
+  },
+  {
+   "rel": "dotnet/436_System.IO.FileSystem.Watcher.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.IO.FileSystem.Watcher.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "fae27dacf365b4ab233198f0a3e1496802a4949a80c8dd5a938f457e24116e6e"
+  },
+  {
+   "rel": "dotnet/437_System.IO.Log.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.IO.Log.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 128056,
+   "sha256": "43e9dc61086a60ec1e52ffdcfc44e097c12aea34cefba159207998102aa0321e"
+  },
+  {
+   "rel": "dotnet/438_System.IO.UnmanagedMemoryStream.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.IO.UnmanagedMemoryStream.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25024,
+   "sha256": "d89e67b0595b412a11d03f28240cc04c8236e235b4d9f25a460636d5cc1293b2"
+  },
+  {
+   "rel": "dotnet/439_System.IdentityModel.Services.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.IdentityModel.Services.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 191800,
+   "sha256": "41dc81addace73e2975a9759449cdaca01893fd68f139c59ad612bd4db3f36ef"
+  },
+  {
+   "rel": "dotnet/440_System.Linq.Expressions.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Linq.Expressions.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 26520,
+   "sha256": "8c3b281617d82d30365ddc22b4de6f0c7397b1a4c0229c06b9f2dc0618813185"
+  },
+  {
+   "rel": "dotnet/441_System.Linq.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Linq.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25040,
+   "sha256": "88e76836f417f258bf061279d3eafc18a90057da68af0acac4ae12fd1b107e7e"
+  },
+  {
+   "rel": "dotnet/442_System.Messaging.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Messaging.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 273864,
+   "sha256": "b17f2430fa0aff9281f60e4abadc7023a99ad8d489ea61164a9189c4aafaf7c0"
+  },
+  {
+   "rel": "dotnet/443_System.Net.Http.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Net.Http.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 200368,
+   "sha256": "d7ce24424f16bd410179bd202b3e375b2b731a6bd57d5d03a8d38cf9062a14db"
+  },
+  {
+   "rel": "dotnet/444_System.Net.Ping.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Net.Ping.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "f9cd8d921f82d452ff8f124810506e8e8893d7092d7b27b5fd139c4d516e953d"
+  },
+  {
+   "rel": "dotnet/445_System.Net.Requests.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Net.Requests.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "799d5e7a1188c442f856e6e0b85bfbd3fb975f31254835f60549d8ffcf318f90"
+  },
+  {
+   "rel": "dotnet/446_System.Net.WebHeaderCollection.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Net.WebHeaderCollection.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "c084f528755b915e0af2a12c7f76f21fdcfa118a07bf0e8cd58637b927c361f0"
+  },
+  {
+   "rel": "dotnet/447_System.Net.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Net.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 253104,
+   "sha256": "833768cd5b4394ad4abce5796798dadceed897c70fad3bd24940d0ab2185b5e6"
+  },
+  {
+   "rel": "dotnet/448_System.ObjectModel.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ObjectModel.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 26008,
+   "sha256": "9126cef664c5fac2be491c183680cd18a80d0e0ffcfb74f7fdfb779786e90e12"
+  },
+  {
+   "rel": "dotnet/449_System.Reflection.Emit.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Reflection.Emit.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "ddb53e188c58ccf0e090f24f6ad93c30bd44faa4208f50970da8d2257e17c637"
+  },
+  {
+   "rel": "dotnet/450_System.Reflection.Primitives.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Reflection.Primitives.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "c2533dab5787c06b4198f7a94b62efe744c83f0db8589289d6046257430eb20b"
+  },
+  {
+   "rel": "dotnet/451_System.Resources.Reader.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Resources.Reader.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25032,
+   "sha256": "3cc18c92dd2be99191f3e917e026d734e415657a6db203bbff13c0ffdd36f650"
+  },
+  {
+   "rel": "dotnet/452_System.Runtime.Caching.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.Caching.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 105504,
+   "sha256": "d600f5d974e309b9ac5d8a8f4f78971231f0d75b844ebf7a68d77ff378d6e1fa"
+  },
+  {
+   "rel": "dotnet/453_System.Runtime.Extensions.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.Extensions.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "e65ef1aa2f9e1bd8af53eb8b2af8daae0f2a88ddbb58702363966d7d0d549c74"
+  },
+  {
+   "rel": "dotnet/454_System.Runtime.InteropServices.WindowsRuntime.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.InteropServices.WindowsRuntime.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25536,
+   "sha256": "93ecbfdb6f547a090e405c6f6108f0fe454f0ece6f97f943f2c508db7e5ec160"
+  },
+  {
+   "rel": "dotnet/455_System.Runtime.Numerics.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.Numerics.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25032,
+   "sha256": "983c32d617c11597a488f90a10c1ad0f3ba1638b9d14323c098e95d6349f0326"
+  },
+  {
+   "rel": "dotnet/456_System.Runtime.Serialization.Formatters.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.Serialization.Formatters.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "2bd3cba3b3166006b79589dd306a530f3838a91917d3e4a413d5a29084275a5e"
+  },
+  {
+   "rel": "dotnet/457_System.Runtime.Serialization.Xml.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.Serialization.Xml.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 26000,
+   "sha256": "3e0eb16fe3a7be28f26f39516d9e360ba49872e1a58c43ab252f59cf3a8cd3d3"
+  },
+  {
+   "rel": "dotnet/458_System.Runtime.WindowsRuntime.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.WindowsRuntime.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 157136,
+   "sha256": "4bcb3763ec42dcdb8b01a530b99c6e8de5700c1b50fa31ebb18a8378bf6fc8f7"
+  },
+  {
+   "rel": "dotnet/459_System.Security.Cryptography.Algorithms.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Security.Cryptography.Algorithms.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 26056,
+   "sha256": "6c81ac1f10a52b62c202e8980854c6d2631d34717632ea488e47802998b8b916"
+  },
+  {
+   "rel": "dotnet/460_System.Security.Cryptography.Primitives.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Security.Cryptography.Primitives.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25536,
+   "sha256": "a706d5f29d3a28fa3e8dc36abda5f2ddd4e8623bf55c5e7ea37bb73062b0d2cd"
+  },
+  {
+   "rel": "dotnet/461_System.Security.Principal.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Security.Principal.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25032,
+   "sha256": "28782b77d93bcce9737dc70cfa3d5eb876442a055ffd90208ea4476453244a39"
+  },
+  {
+   "rel": "dotnet/462_System.ServiceModel.Activation.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceModel.Activation.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 196664,
+   "sha256": "302ba7f05b31ce20bafffa047e72c802f9ef4dd977bb0c7199a5450ae4527bf2"
+  },
+  {
+   "rel": "dotnet/463_System.ServiceModel.Discovery.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceModel.Discovery.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 302392,
+   "sha256": "00fad8a5291af3a581deeb245d02a13604edae8893f750d6160295e4dae55f1e"
+  },
+  {
+   "rel": "dotnet/464_System.ServiceModel.Internals.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceModel.Internals.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 249520,
+   "sha256": "4830dc6cb5023b2fb142834e181d15347800ed310603b336e4eb386d0d66a18f"
+  },
+  {
+   "rel": "dotnet/465_System.ServiceModel.Routing.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceModel.Routing.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 124960,
+   "sha256": "05b98e2dd72178e4c11aacd3c2b9e1c97d56ad5dd0cba33e89dae03e7d5662ae"
+  },
+  {
+   "rel": "dotnet/466_System.ServiceModel.ServiceMoniker40.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceModel.ServiceMoniker40.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 17464,
+   "sha256": "607b8c3c84c02448761da81f64e4703668fbcabcb6d5ebbb745b9275bc4281f5"
+  },
+  {
+   "rel": "dotnet/467_System.ServiceModel.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceModel.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 6388480,
+   "sha256": "fe2d5f0fd55d5799edfb7c21cda9daad5d241ecf4a1af59d28cbf746521c1e00"
+  },
+  {
+   "rel": "dotnet/468_System.Text.Encoding.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Text.Encoding.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "a71ad88f7e4cfc4012146118abb740d67ec1de6326801e6277539845a86ca74c"
+  },
+  {
+   "rel": "dotnet/469_System.Threading.Tasks.Parallel.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Threading.Tasks.Parallel.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "68f49597e68211cd7ca3a3af36e74db60f3d09cfa3cc8c6d925acd0dada6dcd6"
+  },
+  {
+   "rel": "dotnet/470_System.Threading.ThreadPool.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Threading.ThreadPool.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25544,
+   "sha256": "1d1e6a49ad239997ee1fc74294fdeab672f9ed26a367649325a35d98c6c9a845"
+  },
+  {
+   "rel": "dotnet/471_System.Threading.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Threading.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 26056,
+   "sha256": "a42d1248d01a8101c6b1bf466ebed50912fe652dbff2667cb94ae4b2e15820c8"
+  },
+  {
+   "rel": "dotnet/472_System.Web.Abstractions.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.Abstractions.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 16952,
+   "sha256": "7c7098f30c8f9a2cd901502741e9df062fdd5ecf8d6e24445d42fe4219d52105"
+  },
+  {
+   "rel": "dotnet/473_System.Web.DataVisualization.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.DataVisualization.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 1692704,
+   "sha256": "076c96b4715a69d65251a3f46801032699754cab8aeebe8ac5abc200b24a81dc"
+  },
+  {
+   "rel": "dotnet/474_System.Web.Entity.Design.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.Entity.Design.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 171040,
+   "sha256": "4d9bead9bfb0dc0bfac2cf01d1f7060382cef36a844de63c24e55499cb91b935"
+  },
+  {
+   "rel": "dotnet/475_System.Web.Extensions.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.Extensions.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 1846016,
+   "sha256": "5e6378edc06f5a61920aaadb2aba839dd3cf302d6192e08aacd4454ba4cff0b3"
+  },
+  {
+   "rel": "dotnet/476_System.Web.RegularExpressions.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.RegularExpressions.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 100384,
+   "sha256": "dd48414ee01a27413c413198d6b1f3afc2407829e6289c85701b43ddb5556dec"
+  },
+  {
+   "rel": "dotnet/477_System.Web.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 5400376,
+   "sha256": "0d195af8d1df42e395308f2c91b95c8bb5143693688b20908e42094a24ba2c60"
+  },
+  {
+   "rel": "dotnet/478_System.Windows.Forms.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Windows.Forms.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 6002072,
+   "sha256": "8c0f533e089647aeffb3ce0868f01d696a3fd2893ced5c3570e8438c96613a98"
+  },
+  {
+   "rel": "dotnet/479_System.Workflow.ComponentModel.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Workflow.ComponentModel.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 1551392,
+   "sha256": "97c6e31535eb6282737f977226457288faf124067781100f09eabd36734a5565"
+  },
+  {
+   "rel": "dotnet/480_System.XML.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.XML.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 2629296,
+   "sha256": "08bb5145db0ec469eb1818ef386bf8f8ae74696f947300ad7299d1b7328314c4"
+  },
+  {
+   "rel": "dotnet/481_System.Xml.Linq.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Xml.Linq.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 159640,
+   "sha256": "abc96c873a7447c9d8857eb30cda54afe9b4aa069b0762f6535197025a1f8807"
+  },
+  {
+   "rel": "dotnet/482_System.Xml.Serialization.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Xml.Serialization.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 41880,
+   "sha256": "53400606b46d86dae5e78c09b2bbd7712b778cf7323d9bb57842b2d241d280c3"
+  },
+  {
+   "rel": "dotnet/483_System.Xml.XPath.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Xml.XPath.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 25496,
+   "sha256": "d1e21479b9859aeaf010325a887a6c80129d5f4201241568d0c405db38774876"
+  },
+  {
+   "rel": "dotnet/484_System.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\System.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 3545264,
+   "sha256": "2b3c17c6208a0b4b6beb94e1a066f99ba06cdb2ea919479e99d47e8c6d96dc71"
+  },
+  {
+   "rel": "dotnet/485_XsdBuildTask.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\XsdBuildTask.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 62008,
+   "sha256": "772ea35dfc26a2223eb255d828beb0d5ac2be60fe443a286368304604d5d97cf"
+  },
+  {
+   "rel": "dotnet/486_aspnet_regsql.exe",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\aspnet_regsql.exe",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 120880,
+   "sha256": "0d1138352c917109a9b656dcbea0f86190123ed10de4a98daaa91b498b52274f"
+  },
+  {
+   "rel": "dotnet/487_jsc.exe",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\jsc.exe",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 41008,
+   "sha256": "e3e8a8ea86992f4cbf0b0f152def0536214dcbea4377bf4d976c5413a82274e3"
+  },
+  {
+   "rel": "dotnet/488_ngentask.exe",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\ngentask.exe",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 80256,
+   "sha256": "c83e2cb16fdf26d54963d6001203c0d9f9c8fa4c8310aed9161d3ceb35227f50"
+  },
+  {
+   "rel": "dotnet/489_system.componentmodel.composition.registration.dll",
+   "source": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\system.componentmodel.composition.registration.dll",
+   "class": "dotnet",
+   "csv": "dotnet.csv",
+   "size": 59288,
+   "sha256": "37d934f3d8b33779ba2ca04217b2d34381c4a5fb6f286ab4a368c792b796a446"
+  },
+  {
+   "rel": "huge/490_MRT.exe",
+   "source": "C:\\Windows\\System32\\MRT.exe",
+   "class": "huge",
+   "csv": "huge.csv",
+   "size": 238121080,
+   "sha256": "2c97373ec6062510b687b25113a85274085dc8d7288676b19a45a2f8878b3c54"
+  },
+  {
+   "rel": "huge/491_OneDriveSetup.exe",
+   "source": "C:\\Windows\\System32\\OneDriveSetup.exe",
+   "class": "huge",
+   "csv": "huge.csv",
+   "size": 89771848,
+   "sha256": "18980a6b7fbfdada0f00789b229ed6331779611286102abcfa0917edb0bee82c"
+  },
+  {
+   "rel": "huge/492_edgehtml.dll",
+   "source": "C:\\Windows\\System32\\edgehtml.dll",
+   "class": "huge",
+   "csv": "huge.csv",
+   "size": 26042368,
+   "sha256": "d49782b3f6bf12d3e185f2e0806f174c3ebe1b09248f2316b43fd2006cee83bb"
+  },
+  {
+   "rel": "huge/493_mfxplugin64_hw.dll",
+   "source": "C:\\Windows\\System32\\mfxplugin64_hw.dll",
+   "class": "huge",
+   "csv": "huge.csv",
+   "size": 27984048,
+   "sha256": "0d57f7a037577e52438c3f710cd2304b8a895b2633946def1b4346f50f27d3e1"
+  },
+  {
+   "rel": "huge/494_mshtml.dll",
+   "source": "C:\\Windows\\System32\\mshtml.dll",
+   "class": "huge",
+   "csv": "huge.csv",
+   "size": 24035328,
+   "sha256": "2234aa7836d8f3fd9823d25d230fb55119050b48b17e7f6af61bcb6eed935025"
+  },
+  {
+   "rel": "corrupt/495_bad_magic.corrupt.exe",
+   "source": "D:\\逆向学习\\实践\\2026-11-11-m1\\corrupt\\bad_magic.corrupt.exe",
+   "class": "corrupt",
+   "csv": "corrupt.csv",
+   "size": 130560,
+   "sha256": "b66ea9ab6ea6718f1e4f2dee4d33b743b4cf4ba054934b0057a9c319502f7e60"
+  },
+  {
+   "rel": "corrupt/496_import_rva_oob.corrupt.exe",
+   "source": "D:\\逆向学习\\实践\\2026-11-11-m1\\corrupt\\import_rva_oob.corrupt.exe",
+   "class": "corrupt",
+   "csv": "corrupt.csv",
+   "size": 130560,
+   "sha256": "aaab9312d6fca60f5a25d3b26f56b730fa046f27e77252330beece68434a8aa8"
+  },
+  {
+   "rel": "corrupt/497_opt_header_zero.corrupt.exe",
+   "source": "D:\\逆向学习\\实践\\2026-11-11-m1\\corrupt\\opt_header_zero.corrupt.exe",
+   "class": "corrupt",
+   "csv": "corrupt.csv",
+   "size": 130560,
+   "sha256": "7b338e5285eef6a5187305c4d7c242439008d6eec1f51ee48b761fd8cd5bb2f9"
+  },
+  {
+   "rel": "corrupt/498_trunc_0x40.corrupt.exe",
+   "source": "D:\\逆向学习\\实践\\2026-11-11-m1\\corrupt\\trunc_0x40.corrupt.exe",
+   "class": "corrupt",
+   "csv": "corrupt.csv",
+   "size": 64,
+   "sha256": "52ea4dd296abe995cc1052a3a29325a8306fc888b3d6fea352d2cebdd83e6eaa"
+  },
+  {
+   "rel": "corrupt/499_zero_dos.corrupt.exe",
+   "source": "D:\\逆向学习\\实践\\2026-11-11-m1\\corrupt\\zero_dos.corrupt.exe",
+   "class": "corrupt",
+   "csv": "corrupt.csv",
+   "size": 130560,
+   "sha256": "6e6fd59f0bd44140e1a535a519d0212811a808a9c03409f732021bc76c0d832e"
+  }
+ ]
+}
