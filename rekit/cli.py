@@ -6,6 +6,7 @@
     rekit map    <路径...> [--rva 0x...] [-j out.json]
     rekit funcs  <路径...> [--json out.json] [--csv out.csv] [--exhaust full]
     rekit xref   <路径...> (--string S | --va 0x.. | --rva 0x.. | --const N)...
+    rekit dotnet <路径...> [-j out.json]      # v0.9：只读 IL/堆/资源事实
     rekit symbols <路径...>   # v0.3
 
 triage / unpack / map / funcs / data / xref 已实现；symbols 报"未实现 + 计划版本"，
@@ -366,6 +367,71 @@ def cmd_data(args: argparse.Namespace) -> int:
     return 0 if payload["results"] or not payload["errors"] else 1
 
 
+def cmd_dotnet(args: argparse.Namespace) -> int:
+    """只读 .NET IL/堆/资源事实；不参与 identify/report 的判定口径。"""
+    from .core.dotnet import DotnetError
+    from .core import dotnet_il
+    from .core.pe import PE, PEError
+
+    files: list[str] = []
+    for p in args.paths:
+        if os.path.isdir(p):
+            files.extend(os.path.join(p, n) for n in sorted(os.listdir(p))
+                         if n.lower().endswith((".dll", ".exe")))
+        else:
+            import glob
+            files.extend(sorted(glob.glob(p)) or [p])
+
+    results, errors = [], []
+    for path in files:
+        try:
+            with PE(path, allow_large=args.allow_large) as pe:
+                info = dotnet_il.scan(pe)
+            if info is None:
+                errors.append({"file": path, "error": "不是 .NET 程序集（无 CLR 目录）"})
+                continue
+            results.append({"file": path, **info.as_dict()})
+        except (PEError, DotnetError, OSError, ValueError) as e:
+            errors.append({"file": path, "error": f"{type(e).__name__}: {e}"})
+
+    for r in results:
+        il = r["il"]
+        print(f"{r['file']}  {r['assembly']} {r['assembly_version']}  "
+              f"{r['target_framework'] or 'TargetFramework=?'}")
+        print(f"  类型 {r['types']['count']} / 方法 {r['methods']['count']}"
+              f"（有体 {r['methods']['with_body']}，无体 {r['methods']['no_body']}）  "
+              f"IL {il.get('il_bytes', 0):,} B  "
+              f"EH {il.get('eh_methods', 0)}/{il.get('eh_clauses', 0)}")
+        print(f"  #US {r['strings']['us_count']}  ldstr {il.get('ldstr', 0)}  "
+              f"call {il.get('calls', 0)}  ldftn {il.get('ldftn', 0)}  "
+              f"资源 {len(r['resources'])} 项")
+        if il.get("invalid"):
+            print(f"  [结构异常] {len(il['invalid'])} 个方法体；例：{il['invalid'][0]}")
+        if il.get("unknown_opcode"):
+            print(f"  [未知操作码] {len(il['unknown_opcode'])} 处；例：{il['unknown_opcode'][0]}")
+        if r["obfuscation_signals"]:
+            print("  [混淆信号] " + "；".join(
+                f"{s['id']}({s['detail']})" for s in r["obfuscation_signals"]))
+        else:
+            print("  [混淆信号] 无")
+        if r["attributes"].get("System.Runtime.Versioning.TargetFrameworkAttribute") is None \
+                and r["target_framework"] is None:
+            print("  [注] 无 TargetFrameworkAttribute：可能是 .NET Framework 旧程序集")
+        print()
+
+    for e in errors:
+        print(f"[跳过] {e['file']}: {e['error']}", file=sys.stderr)
+
+    if args.json:
+        try:
+            _write_json(args.json, {"results": results, "errors": errors})
+            print(f"[JSON] {args.json}")
+        except OSError as e:
+            print(f"[输出失败] {type(e).__name__}: {e}", file=sys.stderr)
+            return 1
+    return 0 if results or not errors else 1
+
+
 def cmd_xref(args: argparse.Namespace) -> int:
     from .analyzers.xref import CSV_FIELDS, csv_rows
 
@@ -645,6 +711,13 @@ def build_parser() -> argparse.ArgumentParser:
     x.add_argument("--allow-large", action="store_true",
                    help="允许解析超过 512 MiB 的文件（默认拒绝）")
     x.set_defaults(func=cmd_xref)
+
+    dn = sub.add_parser("dotnet", help="只读 .NET 元数据/IL/资源事实（不反编译、不判家族）")
+    dn.add_argument("paths", nargs="+", help=".dll/.exe、目录或通配符")
+    dn.add_argument("-j", "--json", metavar="PATH", help="输出 JSON")
+    dn.add_argument("--allow-large", action="store_true",
+                    help="允许解析超过 512 MiB 的文件（默认拒绝）")
+    dn.set_defaults(func=cmd_dotnet)
 
     i = sub.add_parser("identify", help=REGISTRY["identify"].DESCRIPTION)
     i.add_argument("paths", nargs="+", help="文件、目录或通配符")

@@ -24,6 +24,7 @@ rekit xref   <path...>   → 谁引用了这个字符串/地址/函数  [v0.5 �
 rekit identify <path...> → 工具链族 + 壳判定 + 证据类型 + 位数范围  [v0.6 扩展 M4a/M4b]
 rekit symbols <path...>  → Ghidra headless 出函数边界  [计划]
 rekit report <sample>    → 单样本自动化报告（24 字段）+ 规则命中  [v0.6 新增 M5]
+rekit dotnet <path...>   → 只读 .NET 元数据 / IL / 堆 / 资源事实（不反编译）  [v0.9 已实现]
 ```
 
 `rekit data` 的三条硬规则（详见 [docs/data.md](docs/data.md)）：
@@ -388,8 +389,10 @@ python -m rekit report samples/foo.dll --id foo --rules rules/m5.json \
 ```
 
 24 个字段每个都带来源标记：**22 个自动推导 + 2 个人工判断**（「结论」「建议」）。
-报告头部先给统计口径，再列字段表，人工字段留空不预填。.NET 走 CLI 元数据
-（`#~` 表流的 TypeDef / MethodDef / AssemblyRef，纯标准库、不反编译）；
+报告头部先给统计口径，再列字段表，人工字段留空不预填。.NET 的 `report` 走 CLI 元数据
+（`#~` 表流的 TypeDef / MethodDef / AssemblyRef，纯标准库、不反编译）；需要 IL / `#US` /
+资源 / TargetFramework 时用只读的 `rekit dotnet`（见 [docs/dotnet.md](docs/dotnet.md)，
+同样不反编译、不参与 `identify` 判定）；
 Go 从 `_func.nameoff` 恢复函数名（1.2–1.15 旧格式与 1.16+/1.18+/1.20+ 分开处理，
 失败显式写「不可恢复」）；原生走 `.pdata` 函数区间。
 
