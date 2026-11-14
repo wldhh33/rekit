@@ -194,12 +194,19 @@ def cmd_funcs(args: argparse.Namespace) -> int:
         tc = r["toolchain"]
         print(f"{r['file']}  {r['format']}{r['bits']}  "
               f"工具链={tc['family']}({tc['confidence']})/{tc['profile']}  "
-              f"权威表={a['name']}  {a['starts']} 项")
-        print(f"  起点        终点        大小  {'证据':<28}{'组':<8}{'口径':<8}节")
+              f"权威表={a['name']}  {a['starts']} 项"
+              + (f"，名称 {a['names_recovered']}" if a.get("names_recovered") else ""))
+        has_names = any(f.get("name") for f in r["functions"])
+        if has_names:
+            print(f"  起点        终点        大小  函数名"
+                  f"{'':<32}{'证据':<28}{'组':<8}{'口径':<8}节")
+        else:
+            print(f"  起点        终点        大小  {'证据':<28}{'组':<8}{'口径':<8}节")
         for f in r["functions"]:
             ev = "+".join(f["evidence"]) or "-"
+            name = f"{(f.get('name') or '-')[:38]:<38}  " if has_names else ""
             print(f"  0x{f['start']:<10X} 0x{f['end']:<10X} {f['size']:>5}  "
-                  f"{ev:<28}{f['evidence_group']:<8}"
+                  f"{name}{ev:<28}{f['evidence_group']:<8}"
                   f"{layer_cn.get(f['layer'], f['layer']):<8}{f['section'] or '-'}")
         s = m["seeded"]
         if a["usable"]:

@@ -134,6 +134,10 @@ caller-saved 寄存器（`rax/rcx/rdx/rsi/rdi/r8–r11`）清空。解析不出�
 | `evidence_group` | 主要证据组（取 `evidence` 里最靠前的一个） |
 | `layer` | `A` / `B-reachable` / `B-isolated` |
 | `section` | 起点所在节（`.text` / `.plt` / 其他） |
+| `name` | Go 权威表命中的函数名；其他族或名字不可恢复时为 `null`（CSV 为空串），不编造 |
+
+`authority.names_recovered` 是 `functions[].name` 非空的条数，`authority.name_status`
+取 `ok` / `部分恢复 x/y` / `不可恢复: 原因`（与 `report` 的 Go 名字口径一致）。
 
 ### 证据 token
 
@@ -162,7 +166,7 @@ caller-saved 寄存器（`rax/rcx/rdx/rsi/rdi/r8–r11`）清空。解析不出�
 列顺序固定：
 
 ```
-file,format,arch,bits,layer,deliverable,evidence,evidence_group,start,end,size,insns,section
+file,format,arch,bits,layer,deliverable,evidence,evidence_group,start,end,size,insns,section,name
 ```
 
 - `deliverable`：`B-isolated` 行恒为 `false`，其余为 `true`。这是给下游的硬标记，

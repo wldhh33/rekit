@@ -181,3 +181,78 @@ def test_cli_non_upx_reports_not_crashes(tmp_path):
     assert proc.returncode == 1
     assert "UnpackError" in proc.stderr and "UPX1" in proc.stderr
     assert "Traceback" not in proc.stderr
+
+
+# --- 证书目录恢复：区分“有签名字节”和“目录有效” ---------------------------
+
+SEC_DIR_OFF = 24 + 112 + 4 * 8
+
+
+def test_no_overlay_keeps_cert_directory_zeroed(tmp_path):
+    """没有 overlay 就是没有签名字节，NotSigned 是事实，不能伪造目录。"""
+    out = tmp_path / "hello_rs.unpacked.exe"
+    r = upx.unpack(PACKED, out, verify_only=False)
+    sig = r["signature"]
+    assert sig["overlay_bytes"] == 0
+    assert sig["bytes_present"] is False
+    assert sig["directory_restored"] is False
+    assert PE(str(out)).directories[4] == (0, 0)
+
+
+def test_restore_certificate_writes_valid_directory():
+    image = bytearray(0x400)
+    pe_offset = 0x80
+    cert = struct.pack("<IHH", 16, 0x0200, 0x0002) + b"\x00" * 8
+    sig, ok, _note = upx.restore_certificate(image, 0x200, cert, pe_offset)
+    assert ok
+    assert sig["bytes_present"] is True
+    assert sig["certificate_valid"] is True
+    assert sig["directory_restored"] is True
+    assert sig["directory"] == {"offset": 0x200, "size": 16}
+    assert struct.unpack_from("<II", image, pe_offset + SEC_DIR_OFF) == (0x200, 16)
+
+
+def test_restore_certificate_rejects_unclosed_block():
+    image = bytearray(0x400)
+    cert = struct.pack("<IHH", 16, 0x0200, 0x0002) + b"\x00" * 8 + b"junk"
+    sig, ok, note = upx.restore_certificate(image, 0x200, cert, 0x80)
+    assert sig["bytes_present"] is True
+    assert sig["certificate_valid"] is False
+    assert sig["directory_restored"] is False
+    assert not ok and "不闭合" in note
+    assert image[0x80 + SEC_DIR_OFF:0x80 + SEC_DIR_OFF + 8] == b"\x00" * 8
+
+
+def test_restore_certificate_rejects_non_pkcs7():
+    image = bytearray(0x400)
+    cert = struct.pack("<IHH", 16, 0x0100, 0x0001) + b"\x00" * 8
+    sig, ok, _note = upx.restore_certificate(image, 0x200, cert, 0x80)
+    assert sig["bytes_present"] is True
+    assert sig["certificate_valid"] is False
+    assert sig["directory_restored"] is False
+    assert not ok
+
+
+GLAB_PACKED = (ROOT.parent / "实践" / "B" / "_assets_v4_1" / "_packed"
+               / "v41-go-glab-1129_upx.exe")
+
+
+@pytest.mark.skipif(not GLAB_PACKED.exists(), reason="glab 样本不在本机")
+def test_glab_restores_certificate_directory(tmp_path):
+    """真实样本：overlay 9,104 B 是 GitLab 的 WIN_CERTIFICATE，目录要恢复。"""
+    out = tmp_path / "glab.exe"
+    r = upx.unpack(GLAB_PACKED, out, verify_only=False)
+    sig = r["signature"]
+    assert sig["overlay_bytes"] == 9104
+    assert sig["bytes_present"] is True
+    assert sig["certificate_valid"] is True
+    assert sig["directory_restored"] is True
+    assert sig["revision"] == 0x0200 and sig["type"] == 0x0002
+    assert sig["length"] == 9104
+    assert sig["directory"] == {"offset": 52363776, "size": 9104}
+    assert r["ok"], [c for c in r["checks"] if not c["ok"]]
+    assert PE(str(out)).directories[4] == (52363776, 9104)
+
+    raw = out.read_bytes()
+    assert len(raw) == 52372880
+    assert raw[-9104:-9100] == struct.pack("<I", 9104)

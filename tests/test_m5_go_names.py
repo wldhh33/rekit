@@ -68,3 +68,34 @@ def test_real_go115_sample_recovers_main_main():
     main_sites = [pc for pc, name in tab.names.items() if name == "main.main"]
     assert len(main_sites) == 1
     assert main_sites[0] in tab.starts
+
+
+@pytest.mark.skipif(not os.path.exists(GO_SAMPLE), reason="缺少 M3 Go 样本")
+def test_funcs_cli_exposes_go_names(tmp_path):
+    """CLI 必须直接给出行级 Go 函数名，不再需要绕过 CLI 调 pclntab。"""
+    import contextlib
+    import io
+    import json
+
+    from rekit import cli
+    from rekit.core.funcs import csv_rows
+
+    json_path = tmp_path / "funcs.json"
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        code = cli.main(["funcs", GO_SAMPLE, "-j", str(json_path)])
+    assert code == 0
+    text_out = out.getvalue()
+    assert "名称 1836" in text_out
+    assert "main.main" in text_out
+
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    result = payload["results"][0]
+    assert result["authority"]["names_recovered"] == 1836
+    assert result["authority"]["name_status"] == "ok"
+    named = [f for f in result["functions"] if f["name"]]
+    assert len(named) == 1836
+    assert any(f["name"] == "main.main" for f in named)
+    rows = csv_rows(result)
+    assert rows[0]["name"] == "go.buildid"
+    assert tuple(rows[0].keys())[-1] == "name"

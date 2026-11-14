@@ -136,6 +136,15 @@ lc=b1&15`），不是 LZMA-alone：没有 5 字节属性头、没有 EOS marker�
 有同源未加壳文件时，`unpack` 还会把重建的 `.reloc` 字节表与原表逐项对照（含块对齐 ABS 填充）：
 hello_rs 304/304、notepad 366/366 逐项相等（页、偏移、类型、顺序）。
 
+overlay 不参与压缩，所以产物末尾接的是**打包文件的 overlay**（不是解压流尾部）。
+若 overlay 是结构合法的 `WIN_CERTIFICATE`（`dwLength` 8 字节对齐后正好闭合、
+`revision=0x0200`、`type=0x0002`），`unpack` 会把 security directory 恢复成
+`offset=证书起点 / size=overlay 长度`，并在 JSON 的 `signature` 里分开报告
+`bytes_present` / `certificate_valid` / `directory_restored`；结构不合格就保持清零。
+rekit **不验签**：脱壳重建了头部，外部验证器预期报 `HashMismatch`（glab 实测签名者
+`CN=GitLab Inc.`、状态 HashMismatch），不能据此认为发布链一致。无 overlay 时
+`NotSigned` 就是事实，不追加检查项。
+
 真实输出（2026-11-11，rekit 0.3.0）：
 
 ```
@@ -219,10 +228,18 @@ python -m rekit xref tests/fixtures/gcc_o2.exe --string "hello from C, sum=%d le
 python -m rekit xref tests/fixtures/gcc_o2.exe --va 0x1400034B0
 ```
 
+52 MB 级目标不再按目标重复遍历：先解析全部目标，再只走一遍指令流，用字节级候选预筛
+（RIP disp / 立即数 / rel8/rel32）跳过无关指令，命中后仍走原 operand 判定，结果逐条不变。
+glab 脱壳件 `--string https://gitlab.com/` 全流程 **87.7 s**（旧实现单目标约 248 s，
+且按命中数线性放大）；实现与等价性约束见 [docs/xref.md](docs/xref.md) §8。
+
 PE64 用 `.pdata`、ELF64 用 `.eh_frame`、Go 用 `.gopclntab` 当权威函数表（A 层）；
 Go PE 没有同名节，按 pclntab 魔数在数据节里扫（`go_win.exe`：`.pdata` 1588 → `.gopclntab` 1890，
 表头 1892 里末尾 2 项是填充，已剔除）。Go 1.2–1.15 的旧头（`0xFFFFFFFB`）另走绝对
 PC 解析（`goCrackMe.exe` 实测 1836 函数、冷启动 93.85%）。
+**Go 函数名直接进 `funcs` 输出**：JSON 行级 `name`、CSV 末尾 `name` 列、控制台多一列
+`函数名`；`authority.names_recovered/name_status` 说明恢复数量与状态，恢复不了就写
+`不可恢复: 原因`，不用再绕过 CLI 调 `pclntab_from_data()`。
 没有权威表的样本走 B 层（可达 / 含孤立两个口径）。`.eh_frame_hdr` 缺失时自动退回
 线性扫描并标注。`.plt` 的误报单列，不混进 `.text` 的召回/误报。
 
@@ -375,6 +392,12 @@ python -m rekit report samples/foo.dll --id foo --rules rules/m5.json \
 （`#~` 表流的 TypeDef / MethodDef / AssemblyRef，纯标准库、不反编译）；
 Go 从 `_func.nameoff` 恢复函数名（1.2–1.15 旧格式与 1.16+/1.18+/1.20+ 分开处理，
 失败显式写「不可恢复」）；原生走 `.pdata` 函数区间。
+
+`--family auto` 的判定顺序：CLR 元数据 → `\xff Go buildinf:` / `.gopclntab` →
+`pclntab_from_data()` 结构命中（pclntab 嵌在 `.rdata` 也能识别）→ `identify` 的
+go 族/前端证据 → `unknown` → `native`。没有 CLR/Go 元数据且 `identify` 也判
+`unknown` 时，报告写「无法判定」，**不落到 `native` 猜一个族**（规则见
+[docs/rules.md](docs/rules.md) §0.7）。
 
 | 样本（单样本口径） | 自动结果 | 规则命中 |
 |---|---|---|

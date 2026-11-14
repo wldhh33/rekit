@@ -138,12 +138,13 @@ def _dotnet_fields(info: dotnet.DotnetInfo | None,
     return ([version], [inv1], [inv2], ev)
 
 
-def _go_fields(pe: PE) -> tuple[list[str], list[str], list[str],
-                                list[dict[str, Any]]]:
+def _go_fields(pe: PE, tab: funcs.GoPclnTable | None = None
+               ) -> tuple[list[str], list[str], list[str], list[dict[str, Any]]]:
     m = GO_VERSION_RE.search(pe.data)
     version = m.group().decode("ascii", "replace") if m else "未找到版本串"
 
-    tab = funcs.pclntab_from_data(pe)
+    if tab is None:
+        tab = funcs.pclntab_from_data(pe)
     if tab is None:
         return ([f"Go 版本：{version}"],
                 ["`.gopclntab` 未找到，函数名不可恢复"],
@@ -183,6 +184,42 @@ def _native_fields(pe: PE) -> tuple[list[str], list[str], list[str],
              f"；总字节 {total:,}，中位 {median:,}"], ev)
 
 
+def _unknown_fields(pe: PE) -> tuple[list[str], list[str], list[str],
+                                     list[dict[str, Any]]]:
+    """无 CLR / Go 元数据，且 identify 也无法确定链接器族：明确报“无法判定”。
+
+    不能落到 `native`：`native` 断言的是“没有 CLR/Go 元数据”，而这里连
+    “是哪种原生工具链”都没有证据。`.pdata` 仍作为**观测**列出，不作族判定。
+    """
+    _v1, inv1, inv2, ev = _native_fields(pe)
+    return (["无法判定（无 CLR / Go 元数据，且工具链族证据不足；不按 native 断言）"],
+            inv1, inv2, ev)
+
+
+def _auto_family(pe: PE, ident: dict[str, Any],
+                 dotnet_info: dotnet.DotnetInfo | None
+                 ) -> tuple[str, funcs.GoPclnTable | None]:
+    """自动判定家族，返回 (family, pclntab 或 None)。
+
+    顺序按证据直接性：CLR 元数据 → Go 魔数/节名 → pclntab 结构扫描
+    （覆盖 pclntab 嵌在 `.rdata`、无 `.gopclntab` 节的样本）→ identify 的
+    go 族/前端证据 → identify 的 unknown（不硬猜）→ native。
+    """
+    if dotnet_info is not None:
+        return "dotnet", None
+    if b"\xff Go buildinf:" in pe.data or any(
+            s.name == ".gopclntab" for s in pe.sections):
+        return "go", None
+    tab = funcs.pclntab_from_data(pe)
+    if tab is not None:
+        return "go", tab
+    if ident.get("family") == "go" or ident.get("compiler_frontend") == "go":
+        return "go", None
+    if ident.get("family") == "unknown":
+        return "unknown", None
+    return "native", None
+
+
 def analyze_file(path: str, sample_id: str, family: str = "auto",
                  rules_path: str | None = None,
                  allow_large: bool = False) -> dict[str, Any]:
@@ -199,14 +236,11 @@ def analyze_file(path: str, sample_id: str, family: str = "auto",
         except (PEError, dotnet.DotnetError) as e:
             dotnet_error = f"{type(e).__name__}: {e}"
 
+        tab: funcs.GoPclnTable | None = None
         if family == "auto":
-            if dotnet_info is not None:
-                family = "dotnet"
-            elif b"\xff Go buildinf:" in pe.data or any(
-                    s.name == ".gopclntab" for s in pe.sections):
-                family = "go"
-            else:
-                family = "native"
+            family, tab = _auto_family(pe, ident, dotnet_info)
+        elif family == "go":
+            tab = funcs.pclntab_from_data(pe)
 
         section_lines = [
             f"{s.index} {s.name} VA=0x{pe.image_base + s.virtual_address:X} "
@@ -231,7 +265,9 @@ def analyze_file(path: str, sample_id: str, family: str = "auto",
         if family == "dotnet":
             fam = _dotnet_fields(dotnet_info, dotnet_error)
         elif family == "go":
-            fam = _go_fields(pe)
+            fam = _go_fields(pe, tab)
+        elif family == "unknown":
+            fam = _unknown_fields(pe)
         else:
             fam = _native_fields(pe)
 

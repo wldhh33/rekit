@@ -110,6 +110,32 @@ ABS 条目是块对齐填充（每块 `8 + 2n` 字节需补到 4 字节对齐）
 工具侧：`rekit unpack` 的检查项「解压」与「重定位表对照」（有同源原件时才出）；
 `tests/test_upx_chain.py` 钉住 props `(3,0,2)`、非法 props 报错、LZMA/NRV2B 产物逐字节相同。
 
+**证书目录与签名（2026-11-13 起）**：
+
+- overlay 不参与压缩，脱壳产物末尾要接**打包文件的 overlay**，不是解压流的尾部
+  （glab 实测解压流尾部是 `0x28` 填充，真正的 `WIN_CERTIFICATE` 在打包文件末尾）。
+- 只在 overlay 前 8 字节可解析、`dwLength` 按 8 字节对齐后正好等于 overlay 长度、
+  `revision=0x0200`、`type=0x0002`（PKCS#7 SignedData）时，才把 security directory
+  写成 `offset=产物中的证书起点 / size=overlay 长度`。
+- `signature` 对象分三个布尔：`bytes_present`（有无可解析的 WIN_CERTIFICATE 头）、
+  `certificate_valid`（结构是否闭合且为 PKCS#7）、`directory_restored`（目录是否写回）。
+  结构不合格时保持目录清零并给出原因，不把“有字节”写成“签名有效”。
+- **rekit 不验签**：脱壳重建了头部，外部验证器预期报 `HashMismatch`；
+  glab 实测签名者为 `CN=GitLab Inc.`，但状态是 HashMismatch，不能据此认定发布链一致。
+- 无 overlay 时不追加「签名」检查项，`NotSigned` 就是事实；有 overlay 才出检查项。
+
+### 0.7 `report --family auto` 的判定顺序与 `unknown`
+
+- **判定顺序**（证据从直接到间接）：CLR 元数据 → `\xff Go buildinf:` 魔数 / `.gopclntab` 节 →
+  `pclntab_from_data()` 结构命中（覆盖 pclntab 嵌在 `.rdata`、没有 `.gopclntab` 节的样本，
+  如 glab v1.129.0）→ `identify` 的 `family=go` 或 `compiler_frontend=go` → `unknown` → `native`。
+- **`unknown` 只在一种情况输出**：没有 CLR、没有 Go 元数据，且 `identify` 本身判 `unknown`。
+  此时报告写「无法判定」，并在 `.pdata` 字段只列观测值。
+- **不得把 `unknown` 落成 `native`**：`native` 断言的是「没有 CLR/Go 元数据」，
+  而 `unknown` 表示「连原生工具链是哪一族都没有证据」；两者不是同一结论。
+- 实测：glab 脱壳件（52 MB）一条 `report --family auto` 4.2 s 完成，判 `go`，
+  恢复 **43,295** 个函数名、`main.main @ 0x141338D40`；该文件没有 `.gopclntab` 节。
+
 ---
 
 # triage 判据与阈值

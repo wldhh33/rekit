@@ -158,6 +158,8 @@ class AuthorityTable:
     starts: list[int] = field(default_factory=list)
     detail: dict[str, Any] = field(default_factory=dict)
     reason: str = ""
+    # Go 权威表可恢复的函数名：起点 → 名字。其他族为空，由 name_status 说明。
+    names: dict[int, str] = field(default_factory=dict)
 
     @property
     def usable(self) -> bool:
@@ -858,13 +860,22 @@ def pclntab_from_data(img: Any, min_func: int = 10) -> GoPclnTable | None:
     text = next((s for s in img.sections if s.name == ".text"), None)
     text_start = img.image_base + text.virtual_address if text else 0
     text_end = text_start + len(text.raw) if text else None
+    magic_bytes = [m.to_bytes(4, "little") for m in GO_MAGICS]
     for s in img.sections:
         if s.is_executable or s.size_of_raw_data < 72:
             continue
         raw = bytes(s.raw)
-        for off in range(0, len(raw) - 71):
-            if int.from_bytes(raw[off:off + 4], "little") not in GO_MAGICS:
-                continue
+        # 用 bytes.find 收集候选偏移（C 速度），再按偏移升序解析：
+        # 与逐字节扫描的候选集合、先后顺序完全一致，只是不再逐字节跑 Python。
+        offsets: list[int] = []
+        limit = len(raw) - 72
+        for pat in magic_bytes:
+            off = raw.find(pat)
+            while off != -1:
+                if off <= limit:
+                    offsets.append(off)
+                off = raw.find(pat, off + 1)
+        for off in sorted(offsets):
             tab = parse_gopclntab(raw[off:], text_start, text_end)
             if tab is not None and tab.nfunc >= min_func:
                 tab.va = img.image_base + s.virtual_address + off
@@ -1104,7 +1115,8 @@ def authority_table(img: Any, use_eh_frame: bool = True) -> AuthorityTable:
         if go is not None:
             return AuthorityTable(".gopclntab", go.spans, go.starts,
                                   {"source": "Go functab",
-                                   "functions": len(go.starts), **go.detail})
+                                   "functions": len(go.starts), **go.detail},
+                                  names=go.names)
         if not use_eh_frame:
             return AuthorityTable(".eh_frame", [], [], reason="已用 --no-eh-frame 关闭")
         table = eh_frame_table(img)
@@ -1132,7 +1144,8 @@ def authority_table(img: Any, use_eh_frame: bool = True) -> AuthorityTable:
     if go is not None:
         return AuthorityTable(".gopclntab", go.spans, go.starts,
                               {"source": "Go functab",
-                               "functions": len(go.starts), **go.detail})
+                               "functions": len(go.starts), **go.detail},
+                              names=go.names)
     spans = pdata_spans(img)
     detail: dict[str, Any] = {"entries": len(spans)}
     if not spans:
@@ -2867,6 +2880,8 @@ def analyze_image(path: str, *, pointers: bool = True,
             "evidence_group": _primary_group(tokens),
             "layer": _layer(start, tokens, authority_starts),
             "section": section_name_at(img, start),
+            # Go 权威表命中的名字；其他族为 None，不编造。
+            "name": auth.names.get(start),
         })
 
     counts: dict[str, int] = {}
@@ -2890,6 +2905,8 @@ def analyze_image(path: str, *, pointers: bool = True,
             "name": auth.name, "usable": auth.usable,
             "starts": len(auth.starts), "starts_text": len(starts_text),
             "reason": auth.reason, "detail": auth.detail,
+            "names_recovered": len(auth.names),
+            "name_status": auth.detail.get("name_status"),
         },
         "metrics": {
             "seeded": {
@@ -2922,7 +2939,7 @@ def analyze_image(path: str, *, pointers: bool = True,
 
 CSV_FIELDS = ("file", "format", "arch", "bits", "layer", "deliverable",
               "evidence", "evidence_group",
-              "start", "end", "size", "insns", "section")
+              "start", "end", "size", "insns", "section", "name")
 
 
 def csv_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -2942,5 +2959,6 @@ def csv_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
             "start": f"0x{f['start']:X}", "end": f"0x{f['end']:X}",
             "size": f["size"], "insns": f["insns"],
             "section": f["section"] or "",
+            "name": f.get("name") or "",
         })
     return out

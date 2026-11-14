@@ -42,9 +42,14 @@ METHODS = {2: "NRV2B_LE32", 5: "NRV2D_LE32", 8: "NRV2E_LE32", 11: "CL1B_LE32", 1
 
 IMPORT, RESOURCE, BASERELOC = 1, 2, 5
 DEBUG, BOUND_IMPORT, IAT = 6, 11, 12
+SECURITY = 4
 DIR64, RELOC_HIGH, RELOC_LOW = 10, 1, 2
 ORD_MASK64 = 1 << 63
 MASK64 = (1 << 64) - 1
+
+# WIN_CERTIFICATE：取值为 Authenticode（PKCS#7 SignedData）
+WIN_CERT_REVISION_2_0 = 0x0200
+WIN_CERT_TYPE_PKCS_SIGNED_DATA = 0x0002
 
 
 class UnpackError(Exception):
@@ -877,6 +882,62 @@ def check_layout(sections: int, oep: int, headers: int, raw: PE, report: Report)
                f"（原件 {raw.number_of_sections} 个节、OEP=0x{raw.entry_rva:X}）")
 
 
+def restore_certificate(image: bytearray, cert_offset: int, cert: bytes,
+                        pe_offset: int) -> tuple[dict, bool, str]:
+    """按 overlay 里的签名字节恢复 security directory，但不对“签名有效”下结论。
+
+    只做结构复原：`dwLength` 按 8 字节对齐后必须正好等于 overlay 长度，
+    revision/type 必须是 Authenticode PKCS#7。否则保持目录清零。
+    返回 (signature, check_ok, note)。
+    """
+    dir_off = pe_offset + 24 + 112 + SECURITY * 8
+    sig: dict = {
+        "overlay_bytes": len(cert),
+        "bytes_present": False,       # 能否解析出 WIN_CERTIFICATE 头
+        "certificate_valid": False,   # 结构是否闭合且为 PKCS#7
+        "directory_restored": False,
+        "directory": {"offset": 0, "size": 0},
+        "length": None, "revision": None, "type": None,
+    }
+    if not cert:
+        note = ("overlay 为空：文件里没有签名字节，证书目录保持清零"
+                "（此时 NotSigned 是事实，不是缺口）")
+        sig["note"] = note
+        return sig, True, note
+    if len(cert) < 8:
+        note = f"overlay 仅 {len(cert)} 字节，不足 WIN_CERTIFICATE 头，未恢复证书目录"
+        sig["note"] = note
+        return sig, False, note
+
+    length, revision, ctype = u32(cert, 0), u16(cert, 4), u16(cert, 6)
+    sig.update(length=length, revision=revision, type=ctype)
+    sig["bytes_present"] = True
+    valid = (revision == WIN_CERT_REVISION_2_0
+             and ctype == WIN_CERT_TYPE_PKCS_SIGNED_DATA
+             and 8 <= length <= len(cert)
+             and align_up(length, 8) == len(cert))
+    sig["certificate_valid"] = valid
+    if not valid:
+        note = (f"overlay {len(cert):,} 字节有 WIN_CERTIFICATE 头但结构不闭合"
+                f"（dwLength=0x{length:X}, revision=0x{revision:04X}, type=0x{ctype:04X}），"
+                "未恢复证书目录，保持清零")
+        sig["note"] = note
+        return sig, False, note
+
+    put32(image, dir_off, cert_offset)
+    put32(image, dir_off + 4, len(cert))
+    restored = (u32(image, dir_off) == cert_offset
+                and u32(image, dir_off + 4) == len(cert))
+    sig["directory_restored"] = restored
+    sig["directory"] = {"offset": cert_offset, "size": len(cert)}
+    note = (f"overlay {len(cert):,} 字节 = 1 个 WIN_CERTIFICATE"
+            f"（dwLength={length:,}，PKCS#7 SignedData），证书目录已恢复为 "
+            f"offset=0x{cert_offset:X}/size={len(cert):,}；rekit 只复原目录，不验签——"
+            "脱壳重建了头部，外部验证器预期报 HashMismatch，不能据此认为发布链一致")
+    sig["note"] = note
+    return sig, restored, note
+
+
 # ---------------------------------------------------------------------------
 # 主流程
 # ---------------------------------------------------------------------------
@@ -978,8 +1039,17 @@ def unpack(packed_path: Path, out_path: Path | None, verify_only: bool = False) 
     last = packed.sections[-1]
     overlay = len(data) - align_up(last.pointer_to_raw_data + last.size_of_raw_data,
                                    packed.file_alignment)
+    cert_offset = len(out)
+    cert_bytes = b""
     if overlay > 0:
-        out += blob[ph.u_len - overlay:]
+        # overlay 不参与压缩：签名字节原样留在打包文件末尾；解压流对应位置是
+        # UPX 的填充（glab 实测为 0x28），不能拿它当证书。
+        cert_bytes = data[len(data) - overlay:]
+        out += cert_bytes
+    # 只复原 security directory（结构合法时），签名有效性不在 rekit 内断言；
+    # 检查项在最后追加，避免打乱既有 checks 的顺序。
+    signature, sig_ok, sig_note = restore_certificate(
+        out, cert_offset, cert_bytes, pe_offset)
 
     report.add("DOS stub", out[:2] == b"MZ" and out[pe_offset:pe_offset + 4] == b"PE\0\0"
                and bytes(out[:pe_offset]) == data[:pe_offset],
@@ -1011,6 +1081,11 @@ def unpack(packed_path: Path, out_path: Path | None, verify_only: bool = False) 
                    f"整文件 {diff['file_size']:,} 字节中 {diff['file_mismatch']:,} 字节不同"
                    f"（DEBUG/IAT 目录项、调试记录与导入名区由 UPX 规范化）")
 
+    if overlay > 0:
+        # 无 overlay 时不出检查项（NotSigned 是事实）；有 overlay 才需要说明
+        # 是否解析出 WIN_CERTIFICATE、目录是否恢复。
+        report.add("签名", sig_ok, sig_note)
+
     return {
         "packed": str(packed_path),
         "raw": diff["reference"],
@@ -1033,6 +1108,7 @@ def unpack(packed_path: Path, out_path: Path | None, verify_only: bool = False) 
         "imports": iat,
         "relocs": reloc,
         "resources": resrc,
+        "signature": signature,
         "layout": {
             "sections": len(secs), "oep": f"0x{u32(oh, 24 + 16):X}",
             "size_of_headers": f"0x{u32(oh, 24 + 60):X}", "file_size": len(out_bytes),
