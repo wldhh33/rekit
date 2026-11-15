@@ -1,5 +1,27 @@
 # 变更日志
 
+## 0.9.1 — 2026-11-15 — PE 补充播种源回流（DD#13 / DD#10）
+
+能力新增；`schema_version`、`identify`/`triage`/`map`/`data` 口径与既有阈值 **0 改动**，
+`funcs` 的冷启动（B 层）路径 **未触碰**，`snapshot_v0.8.0.json` 的 89 个 case **逐字段不变**。
+
+- 新增 `rekit/core/funcs.py::delay_import_stubs()`：DD#13 描述符 → INT 计数 → IAT 槽值
+  （PE32/PE32+ 各按 4/8 字节），槽里存的是 DelayLoad 桩地址，作为 `delay_import` 播种。
+  notepad 召回 25 个（与工具库实现逐个一致）。
+- 新增 `cfg_function_table()`：DD#10 Load Config 的 `GuardCFFunctionTable`，防护条件照抄
+  工具库实现——仅 PE32+、`GuardFlags & 0x400`、步长 `4 + ((flags>>28)&0xF)`、Count 上限
+  65,536、目标须落可执行节；`jmp`+填充的跳板单列 `cfg_table_thunk`。
+- **两阶段入队**（口径的一部分）：入口/`.pdata`/导出/DD#13/递归排空后，才把 CFG 目标入队。
+  并进首相同队会让远跳包络先覆盖 `_guard_dispatch_icall`，净丢入口（实测 527→526 类回归）。
+- 实测（同工具前后对比，`lost=0`）：notepad **494→527**（delay 25 / cfg 37 / thunk 3）、
+  winhttp **3,659→3,887**（delay 178 / cfg 134 / thunk 9）、cmd **886→920**（delay 19 / cfg 32 /
+  thunk 3）、SysWOW64 notepad **390→422**（仅 delay 25，PE32 不做 CFG）。
+- 基线：`snapshot_v0.8.0.json` **未重记**——5 个 `funcs` case 的样本均无 DD#13/DD#10
+  （`msvc_x64.exe` 实测无播种注记），递归子集比较逐字段相等；若后续换用带 CFG 的基线样本，
+  按同一格式重记并在本节写明变化。
+- 回滚：删除 `delay_import_stubs`/`cfg_function_table`/`_cfg_thunk_like` 与 `discover()` 中的
+  播种块、`EVIDENCE_*` 的三个新 token 即可；不涉及任何阈值或已有检查项。
+
 ## 0.9.0 — 2026-11-15 — Rust 语言证据层（只读）
 
 能力新增；`identify` 的 `family` / `verdict` / `confidence` 与 M4a/M4b 口径 **0 改动**。

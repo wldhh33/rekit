@@ -154,10 +154,18 @@ caller-saved 寄存器（`rax/rcx/rdx/rsi/rdi/r8–r11`）清空。解析不出�
 | `rel` | 重定位表 | ELF `RELATIVE` 重定位 addend（PIE 的 vtable）；仅冷启动 |
 | `addr` | 代码取址 | `lea reg,[rip+code]` 的代码地址；仅冷启动 |
 | `init` | 数据表 | `.init_array` / PE `.CRT*` / TLS 回调；仅冷启动 |
+| `delay_import` | 数据表 | DD#13 延迟导入描述符 IAT 槽里的桩地址；PE 非冷启动，补充源 |
+| `cfg_table` | 数据表 | DD#10 `GuardCFFunctionTable`（CFG 取址函数表）；PE32+ 非冷启动，补充源 |
+| `cfg_table_thunk` | 数据表 | 同上，但入口是 `jmp`+填充的跳板形态；**单列**，不计入真实函数口径 |
 | `plt` | PLT/GOT | `.got*` 里指向可执行节的指针；仅冷启动 |
 | `str` | 字符串引用 | `lea reg,[rip+str]` 回退到序言；仅冷启动 |
 | `exhaust-reachable` | 穷举+可达 | 穷举候选，且被直接引用命中 |
 | `exhaust-isolated` | 穷举+孤立 | 穷举候选，没有任何引用 |
+
+> **播种顺序是口径的一部分。** PE 非冷启动分两相：入口 / `.pdata` / 导出 / DD#13 / 递归
+> 这一相排空后，才把 DD#10 CFG 表的目标入队。若把 CFG 种子并进首相同队遍历，远跳包络会
+> 先把某些入口（如 `_guard_dispatch_icall`）覆盖掉，最终函数集合反而少一个——两者不是
+> 可交换的加法。`工具库/asm/disasm_kit.py` 保留同一顺序的独立实现，用于交叉验证。
 
 ---
 

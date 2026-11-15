@@ -56,6 +56,9 @@ EVIDENCE_GROUPS = {
     "rel": "重定位表",
     "addr": "代码取址",
     "init": "数据表",
+    "delay_import": "数据表",
+    "cfg_table": "数据表",
+    "cfg_table_thunk": "数据表",
     "plt": "PLT/GOT",
     "str": "字符串引用",
     "exhaust-reachable": "穷举+可达",
@@ -63,7 +66,8 @@ EVIDENCE_GROUPS = {
 }
 # 一条入口可能有多个证据；分组取"最强"的那个（权威表 > 直接引用 > 指针表 > 穷举）。
 EVIDENCE_ORDER = ("gopclntab", "eh_frame", "pdata", "entry", "export", "call", "jmp",
-                  "icall", "itab", "ptr", "rel", "addr", "init", "plt", "str",
+                  "icall", "itab", "ptr", "rel", "addr", "init", "delay_import",
+                  "cfg_table", "cfg_table_thunk", "plt", "str",
                   "exhaust-reachable", "exhaust-isolated")
 
 LAYER_A = "A"
@@ -1438,6 +1442,165 @@ def _pe_tls_callbacks(pe: PE) -> list[int]:
     return out
 
 
+# ---------------------------------------------------------------------------
+# PE 加载器元数据里的补充播种源（DD#13 / DD#10）
+#
+# 两者都只作**补充**：不替代 `.pdata` / 入口 / 导出，也不改它们的边界。
+# 与 `工具库/asm/disasm_kit.py` 的同名实现保持同一口径，那份保留为独立验证实现。
+# ---------------------------------------------------------------------------
+
+CFG_FUNCTION_TABLE_PRESENT = 0x400   # IMAGE_GUARD_CF_FUNCTION_TABLE_PRESENT
+CFG_MAX_ENTRIES = 65536              # 损坏样本的 Count 上限保护
+
+
+def delay_import_stubs(pe: PE) -> list[tuple[int, str]]:
+    """DD#13 的 IAT 槽：加载前存的是 DelayLoad 桩地址，登记为函数起点。
+
+    这些桩既不在 `.pdata` 里，也不会被直接 call/jmp 引用（引用点是 IAT 槽本身），
+    递归下降因此不会从它们出发。返回 `(桩 VA, DLL 名)`；坏描述符/越界表项跳过。
+    """
+    if len(pe.directories) <= 13:
+        return []
+    dd_rva, dd_size = pe.directories[13]
+    if not dd_rva or not dd_size:
+        return []
+    foa = pe.rva_to_foa(dd_rva)
+    if foa is None:
+        return []
+    step = 8 if pe.is_64 else 4
+    stubs: list[tuple[int, str]] = []
+
+    def norm(v: int, uses_rva: bool) -> int:
+        # 老式描述符存 VA（dlattrRva=0），要减 ImageBase 才能当 RVA 用
+        if uses_rva or v < pe.image_base:
+            return v
+        return v - pe.image_base
+
+    for i in range(min(max(1, dd_size // 32), 4096)):
+        off = foa + i * 32
+        try:
+            attrs = pe.r.u32(off)
+            name_rva = pe.r.u32(off + 4)
+            iat_rva = pe.r.u32(off + 12)
+            int_rva = pe.r.u32(off + 16)
+        except PEError:
+            break
+        if attrs == 0 and name_rva == 0 and int_rva == 0:  # 全零描述符 = 结束
+            break
+        uses_rva = bool(attrs & 1)
+        dll = ""
+        if name_rva:
+            nfoa = pe.rva_to_foa(norm(name_rva, uses_rva))
+            if nfoa is not None:
+                try:
+                    dll = pe.r.cstr(nfoa, 256)
+                except PEError:
+                    dll = ""
+        iat_foa = pe.rva_to_foa(norm(iat_rva, uses_rva)) if iat_rva else None
+        if iat_foa is None:
+            continue
+        if int_rva:
+            int_foa = pe.rva_to_foa(norm(int_rva, uses_rva))
+            count = 0
+            while int_foa is not None and count < 4096:
+                try:
+                    val = (pe.r.u64(int_foa + count * step) if pe.is_64
+                           else pe.r.u32(int_foa + count * step))
+                except PEError:
+                    break
+                if val == 0:
+                    break
+                count += 1
+        else:
+            count = 4096  # 没有 INT：按 IAT 自身以 0 结束
+        for k in range(count):
+            try:
+                val = (pe.r.u64(iat_foa + k * step) if pe.is_64
+                       else pe.r.u32(iat_foa + k * step))
+            except PEError:
+                break
+            if val == 0:
+                if int_rva:
+                    continue  # INT 数量可信：中间的空槽不截断后续
+                break
+            stubs.append((val if val >= pe.image_base else pe.image_base + val, dll))
+    return stubs
+
+
+def _cfg_thunk_like(space: CodeSpace, va: int) -> bool:
+    """入口是一条 `jmp`、紧随其后是填充 → 跳板形态，与真实函数分开统计。"""
+    insn = space.decode(va)
+    if insn is None or insn.mnemonic != "jmp":
+        return False
+    tail = space.decode(va + insn.size)
+    return tail is None or tail.mnemonic in {"int3", "nop", "ud2", "hlt"}
+
+
+def cfg_function_table(pe: PE, space: CodeSpace) -> tuple[list[tuple[int, bool]], dict[str, Any]]:
+    """DD#10 Load Config 的 `GuardCFFunctionTable` 作为补充播种源。
+
+    防护条件（与工具库实现一致）：
+    - 仅 PE32+（32 位 Load Config 偏移未实测，不猜）；
+    - `GuardFlags & CF_FUNCTION_TABLE_PRESENT`；
+    - 表项步长按高半字节：`4 + ((flags >> 28) & 0xF)`（本样本为 0 → 4 B）；
+    - `Count` 上限 `CFG_MAX_ENTRIES`；
+    - 目标必须落在可执行节（由 `space.has` 判定）。
+    返回 `(目标 VA, 是否跳板形态)`。
+    """
+    stats: dict[str, Any] = {"entries": 0, "used": 0, "rejected": 0, "thunks": 0,
+                             "stride": 0, "reason": ""}
+    if not isinstance(pe, PE) or not pe.is_64:
+        stats["reason"] = "仅实现 PE32+（32 位 Load Config 偏移未实测）"
+        return [], stats
+    if len(pe.directories) <= 10:
+        stats["reason"] = "无 DD#10"
+        return [], stats
+    lc_rva, lc_size = pe.directories[10]
+    if not lc_rva or lc_size < 0x94:
+        stats["reason"] = "Load Config 缺失或长度不足以覆盖 GuardFlags"
+        return [], stats
+    lc_foa = pe.rva_to_foa(lc_rva)
+    if lc_foa is None:
+        stats["reason"] = "Load Config RVA 无法映射"
+        return [], stats
+    try:
+        table_va = pe.r.u64(lc_foa + 0x80)
+        count = pe.r.u64(lc_foa + 0x88)
+        flags = pe.r.u32(lc_foa + 0x90)
+    except PEError:
+        stats["reason"] = "Load Config 字段读取越界"
+        return [], stats
+    if not (flags & CFG_FUNCTION_TABLE_PRESENT):
+        stats["reason"] = "GuardFlags 无 CF_FUNCTION_TABLE_PRESENT"
+        return [], stats
+    if not table_va or not count:
+        stats["reason"] = "表指针或计数为 0"
+        return [], stats
+    stride = 4 + ((flags >> 28) & 0xF)
+    stats["stride"] = stride
+    total = min(int(count), CFG_MAX_ENTRIES)
+    stats["entries"] = total
+    table_rva = table_va - pe.image_base if table_va >= pe.image_base else table_va
+    foa = pe.rva_to_foa(table_rva)
+    if foa is None:
+        stats["reason"] = "表 RVA 无法映射"
+        return [], stats
+    out: list[tuple[int, bool]] = []
+    for i in range(total):
+        try:
+            rva = pe.r.u32(foa + i * stride)
+        except PEError:
+            break
+        va = pe.image_base + rva
+        if not space.has(va):
+            stats["rejected"] += 1
+            continue
+        out.append((va, _cfg_thunk_like(space, va)))
+    stats["used"] = len(out)
+    stats["thunks"] = sum(1 for _, thunk in out if thunk)
+    return out, stats
+
+
 def _pointer_slots(raw: bytes, ptr: int) -> list[int]:
     out: list[int] = []
     for off in range(0, len(raw) - ptr + 1, ptr):
@@ -1889,8 +2052,30 @@ def discover(img: Any, max_functions: int = 50000, pointers: bool = False,
             if space.has(va):
                 seeds.append((va, "export"))
 
+    # 补充播种（非冷启动）：DD#13 延迟导入桩 + DD#10 CFG 取址函数表。
+    # 顺序与 `工具库/asm/disasm_kit.py` 一致：DD#13 直接并入首相；CFG 表先挂起，
+    # 等首相排空后再入队。混进首相会改变遍历顺序——远跳包络（如 0xAAA0 的 end
+    # 被撑到 `.fothk`）会把原本由 call 播种到的 `_guard_dispatch_icall` 挤成
+    # "已被函数体覆盖"，净丢入口；这是实测过的回归，不能退化成简单加法。
+    delay_seeded = cfg_seeded = cfg_thunks = 0
+    cfg_stats: dict[str, Any] = {}
+    cfg_pending: list[tuple[int, str]] = []
+    if isinstance(img, PE) and not cold:
+        for va, _dll in delay_import_stubs(img):
+            if space.has(va):
+                seeds.append((va, "delay_import"))
+                delay_seeded += 1
+        prior = {va for va, _ in seeds}
+        targets, cfg_stats = cfg_function_table(img, space)
+        for va, thunk in targets:
+            if va in prior:
+                continue
+            prior.add(va)
+            cfg_pending.append((va, "cfg_table_thunk" if thunk else "cfg_table"))
+
     queue = deque(seeds)
     queued = {va for va, _ in seeds}
+
     covered: dict[int, int] = {}
     skipped_covered = 0
 
@@ -1997,7 +2182,19 @@ def discover(img: Any, max_functions: int = 50000, pointers: bool = False,
         funcs[start] = fn
         return True
 
-    while queue and len(funcs) < max_functions:
+    while (queue or cfg_pending) and len(funcs) < max_functions:
+        if not queue:
+            # 第二相：入口/`.pdata`/导出/DD#13/递归排空后，再补 CFG 取址函数表。
+            for va, why in cfg_pending:
+                if va in funcs or va in queued:
+                    continue
+                queued.add(va)
+                queue.append((va, why))
+                cfg_seeded += 1
+                if why == "cfg_table_thunk":
+                    cfg_thunks += 1
+            cfg_pending = []
+            continue
         start, why = queue.popleft()
         trace(start, why)
 
@@ -2005,6 +2202,13 @@ def discover(img: Any, max_functions: int = 50000, pointers: bool = False,
         notes.append("没有可执行节，或入口/导出都不在可执行节内")
     if skipped_covered:
         notes.append(f"跳过 {skipped_covered} 个已被函数体覆盖的入口（共享尾部/跳转表分支）")
+    if delay_seeded:
+        notes.append(f"延迟导入桩播种 {delay_seeded} 个（DD#13 IAT）")
+    if cfg_seeded:
+        extra = f"，其中跳板形态 {cfg_thunks} 个单列" if cfg_thunks else ""
+        notes.append(f"CFG 取址函数表播种 {cfg_seeded} 个{extra}（DD#10 GuardCFFunctionTable）")
+    if cfg_stats.get("rejected"):
+        notes.append(f"CFG 表跳过 {cfg_stats['rejected']} 个非可执行目标")
 
     if pointers:
         sections = tuple(ptr_sections) if ptr_sections else default_data_sections(img)
