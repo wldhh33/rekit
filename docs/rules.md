@@ -136,6 +136,26 @@ ABS 条目是块对齐填充（每块 `8 + 2n` 字节需补到 4 字节对齐）
 - 实测：glab 脱壳件（52 MB）一条 `report --family auto` 4.2 s 完成，判 `go`，
   恢复 **43,295** 个函数名、`main.main @ 0x141338D40`；该文件没有 `.gopclntab` 节。
 
+### 0.8 Rust 语言证据：与工具链证据分层，不进 `identify`
+
+- **工具链证据不能推翻语言结论**：Windows 上的 Rust 官方目标用 MSVC 链接器，
+  `identify` 对 fd 10.2.0 给 `msvc` 0.97 是**链接器**结论。Rust 语言证据单独输出，
+  不改 `family` / `verdict` / `confidence`，也不进 M4a/M4b 计分。
+- **强判据**：`/rustc/<40 位提交>[\/]library…`（提交号后两种分隔符都见过）、
+  `registry[\/]src[\/]…[\/]<crate>-<semver>[\/]`（版本可带 `+build` 元数据）。
+  **弱判据**：`panicked at` 等消息串、`C:\Users\<user>\` 构建机路径。
+- **不作判据**：`.fptable` 节（fd/just/zoxide/deno 为 256 B 全零、无重定位、Load Config
+  不引用，dust/eza/hyperfine 根本没有该节，`ucrtbase.dll` 同样有）、缺少 `.rustc` 节
+  （7 个真实目标全缺，缺失 ≠ 非 Rust）。
+- **`&str` 常量对**：代码里 `lea` 的是 `(ptr, len)` 常量对的地址。做 crate→函数归并
+  必须先由常量对反查字符串，否则 fd 上函数归属会从 501 掉到 103。
+  归并结果必须声明为「覆盖率」（fd 6.2%），**不得当召回率**。
+- **名字边界**：无 COFF 符号、无导出、无 `.rustc`/`.debug_*` 时输出 `name_status=none`，
+  **不得输出 demangle 结果、不得用「最近的已知函数」补函数起点**（无 `.pdata` 时返回 `reason`）。
+- 外部复核口径：crate 清单对 `rz-bin -zz`；crate→函数对 Ghidra 引用表。fd 实测
+  指令级一致 1,861/1,986（93.7%，剩余 125 条 Ghidra 未反汇编该地址、反例 0）、
+  函数级精确率 0.8754 / 召回率 0.9696。详见 `docs/rust.md`。
+
 ---
 
 # triage 判据与阈值

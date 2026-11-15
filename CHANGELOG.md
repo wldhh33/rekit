@@ -1,5 +1,23 @@
 # 变更日志
 
+## 0.9.0 — 2026-11-15 — Rust 语言证据层（只读）
+
+能力新增；`identify` 的 `family` / `verdict` / `confidence` 与 M4a/M4b 口径 **0 改动**。
+
+- 新增 `rekit/core/rust_meta.py` + `rekit rust`：rustc 提交、crate 清单、
+  `.rs` 路径分桶（std / crate / app / 尾部合并）、panic 标记、名称状态、
+  `.pdata` 条目、`.fptable` 事实、调试目录与 PDB 名。
+- `--map-crates`：先由 `.rdata` 的 `(ptr, len)` 常量对反查字符串（Rust 的 `&'static str`），
+  再单遍 capstone 收 `lea r64,[rip+disp32]`，按 `.pdata` 归到函数。fd 上函数归属
+  103（只认直指字符串）→ **501/8,017（6.2%）**。
+- 七个真实目标实测（fd/just/zoxide/dust/eza/hyperfine/deno）：rustc 提交 7/7 命中；
+  crate 清单与 `rz-bin -zz` 集合一致；六个目标 `name_status=none`（无 COFF/导出/`.rustc`），
+  因此**不做 demangle**，也不输出猜测名。
+- 解析失败模式入测试：提交号后 `/` 与 `\` 混用、`+build` 版本、链接器尾部合并
+  （fd 最长 1,016 B）、UTF-16LE 路径（deno 的 `libz-sys-1.1.20`）、消息内 `.rs` 不计数。
+- 判据入口 `docs/rules.md` §0.8；说明与外部复核 `docs/rust.md`；
+  `tests/test_rust_meta.py` 10 例（含非 Rust PE 反例、无 `.pdata` 拒绝归因）。
+
 ## 0.8.0 — 2026-11-12 — x86（PE32）支持
 
 功能新增，`schema_version` 与族语义不变（仍为 0.7 的 schema 3）。x86 只新增能力，

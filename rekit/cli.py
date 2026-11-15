@@ -432,6 +432,71 @@ def cmd_dotnet(args: argparse.Namespace) -> int:
     return 0 if results or not errors else 1
 
 
+def cmd_rust(args: argparse.Namespace) -> int:
+    """只读 Rust 语言证据；不参与 identify 的 family/verdict/confidence。"""
+    from .core import rust_meta
+    from .core.pe import PE, PEError
+
+    files: list[str] = []
+    for p in args.paths:
+        if os.path.isdir(p):
+            for cur, _dirs, names in os.walk(p):
+                files.extend(os.path.join(cur, n) for n in sorted(names)
+                             if n.lower().endswith((".exe", ".dll")))
+        else:
+            import glob
+            files.extend(sorted(glob.glob(p)) or [p])
+
+    results, errors = [], []
+    for path in files:
+        try:
+            with PE(path, allow_large=args.allow_large) as pe:
+                info = rust_meta.scan(pe, refs=args.map_crates,
+                                      max_text_mb=args.max_text_mb)
+            results.append({"file": path, **info})
+        except (PEError, OSError, ValueError) as e:
+            errors.append({"file": path, "error": f"{type(e).__name__}: {e}"})
+
+    for r in results:
+        ev, st, sp = r["language_evidence"], r["structure"], r["str_pairs"]
+        print(f"{r['file']}  rustc {ev['rustc_commit'] or '?'}  "
+              f"路径串 {ev['rust_paths']}（std {r['path_strings']['std']} / "
+              f"crate {r['path_strings']['crate']} / app {r['path_strings']['app']} / "
+              f"尾部合并 {r['path_strings']['embedded']}）")
+        print(f"  crate {len(r['crates'])} 个  panic 标记 {ev['panic_markers']} 处  "
+              f"名称状态 {st['name_status']}（COFF {st['coff_symbols']} / "
+              f"导出 {st['exports']}）")
+        if r["crates"]:
+            top = "、".join(c["crate"] for c in r["crates"][:6])
+            print(f"  依赖: {top}" + (" …" if len(r["crates"]) > 6 else ""))
+        if r["rustup_toolchains"] or r["build_users"]:
+            print(f"  工具链目录: {r['rustup_toolchains']}  构建机用户: {r['build_users']}")
+        print(f"  .pdata 条目 {st.get('pdata_entries', 0)}  "
+              f"&str(ptr,len) {sp['pairs']} 对/{sp['with_pair']} 串"
+              f"（可校验 {sp['checked']}）  "
+              f"调试项 {[d['type'] for d in st['debug_entries']]}  PDB {st['pdb']}")
+        if args.map_crates:
+            cr = r.get("crate_refs") or {}
+            if cr.get("reason"):
+                print(f"  [crate→函数] 未做：{cr['reason']}")
+            else:
+                print(f"  [crate→函数] 引用 {cr['refs']} 处，覆盖 "
+                      f"{cr['functions']} 个函数，命中 {cr['targets_hit']} 个常量目标")
+        print()
+
+    for e in errors:
+        print(f"[跳过] {e['file']}: {e['error']}", file=sys.stderr)
+
+    if args.json:
+        try:
+            _write_json(args.json, {"results": results, "errors": errors})
+            print(f"[JSON] {args.json}")
+        except OSError as e:
+            print(f"[输出失败] {type(e).__name__}: {e}", file=sys.stderr)
+            return 1
+    return 0 if results or not errors else 1
+
+
 def cmd_xref(args: argparse.Namespace) -> int:
     from .analyzers.xref import CSV_FIELDS, csv_rows
 
@@ -718,6 +783,17 @@ def build_parser() -> argparse.ArgumentParser:
     dn.add_argument("--allow-large", action="store_true",
                     help="允许解析超过 512 MiB 的文件（默认拒绝）")
     dn.set_defaults(func=cmd_dotnet)
+
+    rs = sub.add_parser("rust", help="只读 Rust 语言证据：rustc 提交/crate/panic 站点（不判家族）")
+    rs.add_argument("paths", nargs="+", help=".exe/.dll、目录或通配符")
+    rs.add_argument("-j", "--json", metavar="PATH", help="输出 JSON")
+    rs.add_argument("--map-crates", action="store_true",
+                    help="把 crate 路径串按 rip 相对引用归到 .pdata 函数（较慢）")
+    rs.add_argument("--max-text-mb", type=int, default=64,
+                    help="--map-crates 的可执行字节上限（默认 64 MiB）")
+    rs.add_argument("--allow-large", action="store_true",
+                    help="允许解析超过 512 MiB 的文件（默认拒绝）")
+    rs.set_defaults(func=cmd_rust)
 
     i = sub.add_parser("identify", help=REGISTRY["identify"].DESCRIPTION)
     i.add_argument("paths", nargs="+", help="文件、目录或通配符")
