@@ -1,5 +1,29 @@
 # 变更日志
 
+## 0.9.2 — 2026-11-15 — `funcs` 解码性能（成块解码 + 序言缓存，未发布）
+
+纯性能改动；`schema_version`、可见输出、阈值、`snapshot_v0.8.0.json` **0 改动**
+（89 个 case 逐字段相等，函数集合逐行一致）。版本号与 tag 由发布流程统一处理，本轮不打。
+
+- **成块解码**：新增 `CodeSpace.decode_block()` 与 `InsnBlock`。顺序扫描处一次解码 64 B，
+  上一块被顺序读完则加倍（上限 4 KiB），块内跳转用二分定位，跳出块退回 64 B。
+  实测 1.0 µs/条 vs 单条 `decode` 3.1 µs/条。用在 `trace`、`_body_targets`、
+  `_reachable_authority` 三处**全量线性扫描**；`_prologue_tags`、`_validate_candidate`
+  这类短扫描保持逐条，避免 4 KiB 块被几百倍放大（第一版踩过，见
+  `实践/2026-11-15-q8-perf/报告.md` §7）。
+- **序言形状缓存**：`_prologue_tags` 拆为缓存包装 + `_prologue_tags_raw`，缓存挂在
+  `CodeSpace` 上按图像隔离；实测 92,586 次调用只有 34,253 个不同键（2.7× 重复）。
+- **实测**（同机、同命令、2 次取小值；default / 冷启动，秒）：
+  `UpdateAgent.dll` 8.014→**6.045** / 24.436→**20.303**；
+  `twinapi.appcore.dll` 4.382→**3.875** / 15.275→**14.088**；
+  `rdpsharercom.dll` 3.070→**2.398** / 8.799→**6.899**。
+  函数数 6,764 / 12,873 / 3,969 前后相同，指令数也相同。
+- **零变化证据**：`工具库/asm/funcs_snapshot.py compare` 6/6 项一致（含 `rows_cold`）。
+- **性能门**：F3 `combase.dll` 冷启动 29.376 s（≤60 s）；五文件中位数 14.057 s（≤30.379 s）。
+- 回归：`pytest` **233 passed**。
+- 回滚：删掉 `BLOCK_BYTES`/`decode_block`/`InsnBlock`，三处 `run.at(va)` 改回
+  `space.decode(va)`，`_prologue_tags` 合并回单函数；无数据迁移。
+
 ## 0.9.1 — 2026-11-15 — PE 补充播种源回流（DD#13 / DD#10）
 
 能力新增；`schema_version`、`identify`/`triage`/`map`/`data` 口径与既有阈值 **0 改动**，
